@@ -1,7 +1,7 @@
 import {useState,useEffect} from 'react'
 import axios from 'axios'
 const Booking = () => {
-  
+  const  [isSubmitted,setIsSubmitted] = useState(false)
    const [formData, setFormData] = useState({
     //  BiltyNo: "",
     //  InvoiceNo: "",
@@ -43,9 +43,15 @@ const Booking = () => {
   const handleSubmit =async (e) => {
     e.preventDefault()
     try {
-      const response = await axios.post('https://courire-system-backend-express.vercel.app/api/addBooking',formData)
+      const response = await axios.post('https://courire-system-backend-express.vercel.app',formData)
       const data = response.data
-      alert(data.data.message)
+      alert(data?.data?.message)
+       // set response data into form
+       setFormData((prev) => ({
+        ...prev,
+        ...data?.data?.bookingData,
+       }));
+      setIsSubmitted(true)
       console.log("success=>",data);
       
     } catch (error) {
@@ -88,6 +94,38 @@ const Booking = () => {
   
 },[formData.UnitRate,formData.TotalWeight,formData.Packaging,formData.Shipping,formData.Clearance,formData.OtherCharges,formData.VAT,formData.Customs])
   
+  
+const handleNewShipment = () => {
+  setFormData({
+    SenderName: "",
+    ReceiverName: "",
+    SenderAddressDetail: "",
+    SenderMobile: "",
+    SenderCity: "",
+    SenderOtherDetails: "",
+    ReceiverAddressDetail: "",
+    ReceiverMobile: "",
+    ReceiverCity: "",
+    ReceiverOtherDetail: "",
+    NoOfPieces: "",
+    DetailOfItems: "",
+    BranchName: "",
+    UnitRate: "",
+    TotalWeight: "",
+    TotalAmount: "",
+    Customs: "",
+    Packaging: "",
+    Shipping: "",
+    Clearance: "",
+    OtherCharges: "",
+    VAT: "",
+    VAT_Value: "",
+    TotalInvoiceAmount: "",
+    BiltyNo: "",
+    InvoiceNo: "",
+  });
+  setIsSubmitted(false);
+};
   return (
     <div className="bg-white w-full px-2 rounded-lg shadow-md">
       <form
@@ -100,12 +138,11 @@ const Booking = () => {
             <input
               name="BiltyNo"
               value={formData.BiltyNo}
-              onChange={handleChange}
-              type="number"
+              // type="number"
               placeholder="Bilty No."
               className="w-full border p-2 mb-2"
                 required
-                disabled
+                readOnly
             />
           </div>
           <div>
@@ -179,12 +216,10 @@ const Booking = () => {
             <input
               name="InvoiceNo"
               value={formData.InvoiceNo}
-              onChange={handleChange}
-              type="number"
               placeholder="Invoice No."
               className="w-full border p-2 mb-2"
                 required
-                disabled
+                readOnly
             />
           </div>
           <div>
@@ -442,13 +477,28 @@ const Booking = () => {
           placeholder="Total Invoice Amount"
           className="w-full border p-2 mb-2"
         />
-      </div>
-      <button
+        </div>
+        {
+          isSubmitted ? 
+          (
+            <button
+              type="button"
+              onClick={handleNewShipment}
+              className="bg-green-600 text-white py-2 px-4 rounded hover:bg-green-700 transition w-full mt-4"
+            >
+              New Shipment
+            </button>
+          )
+            
+          :
+
+     ( <button
         type="submit"
         className="md:col-span-2 bg-blue-600 text-white py-2 px-4 rounded hover:bg-blue-700 transition w-full mt-4"
       >
         Save Shipment
-      </button>
+      </button>)
+        }
     </form>
   </div>
   )
