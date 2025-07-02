@@ -43,7 +43,7 @@ const Booking = () => {
   const handleSubmit =async (e) => {
     e.preventDefault()
     try {
-      const response = await axios.post('http://localhost:5000/api/addBooking',formData)
+      const response = await axios.post('https://courire-system-backend-express.vercel.app/api/addBooking',formData)
       const data = response.data
       alert(data.data.message)
       console.log("success=>",data);
