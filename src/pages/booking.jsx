@@ -43,7 +43,7 @@ const Booking = () => {
   const handleSubmit =async (e) => {
     e.preventDefault()
     try {
-      const response = await axios.post('https://courire-system-backend-express.vercel.app',formData)
+      const response = await axios.post('https://courire-system-backend-express.vercel.app/api/addBooking',formData)
       const data = response.data
       alert(data?.data?.message)
        // set response data into form
@@ -479,27 +479,27 @@ const handleNewShipment = () => {
         />
         </div>
         {
-          isSubmitted ? 
-          (
-            <button
-              type="button"
-              onClick={handleNewShipment}
-              className="bg-green-600 text-white py-2 px-4 rounded hover:bg-green-700 transition w-full mt-4"
-            >
-              New Shipment
-            </button>
-          )
-            
-          :
-
-     ( <button
+          !isSubmitted && 
+          
+      ( <button
         type="submit"
         className="md:col-span-2 bg-blue-600 text-white py-2 px-4 rounded hover:bg-blue-700 transition w-full mt-4"
       >
         Save Shipment
       </button>)
         }
-    </form>
+      </form>
+      {
+        isSubmitted && (
+          <button
+            type="button"
+            onClick={handleNewShipment}
+            className="bg-green-600 text-white py-2 px-4 rounded hover:bg-green-700 transition w-full mt-4"
+          >
+            New Shipment
+          </button>
+        )
+      }
   </div>
   )
 }
