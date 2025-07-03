@@ -1,12 +1,14 @@
 import { Search, Package, Truck, List, BarChart3, Users, CreditCard } from 'lucide-react';
-import { Link } from 'react-router-dom';
+import {useLocation, Link } from 'react-router-dom';
 
 const Sidebar = () => {
+  const location = useLocation();
+
   const menuItems = [
     // { icon: BarChart3, label: 'Dashboard', active: false },
-    { icon: Package, label: 'Create Booking', active: false,path:'/booking' },
+    { icon: Package, label: 'Create Booking',path:'/booking' },
     // { icon: List, label: 'Orders List', active: false },
-    { icon: Package, label: 'Create Container', active: true,path:'/container' },
+    { icon: Package, label: 'Create Container',path:'/container' },
     // { icon: List, label: 'Container List', active: false },
     // { icon: Truck, label: 'Track Your Deliveries', active: false },
     // { icon: Users, label: 'Social Media', active: false },
@@ -35,7 +37,7 @@ const Sidebar = () => {
           <Link to={item.path}
             key={index}
             className={`flex items-center p-3 rounded-lg cursor-pointer transition-colors ${
-              item.active 
+              location.pathname === item.path
                 ? 'bg-yellow-200 text-gray-800 font-medium' 
                 : 'text-gray-700 hover:bg-yellow-50'
             }`}

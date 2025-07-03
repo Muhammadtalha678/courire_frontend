@@ -15,7 +15,8 @@ const ContainerBooking = () => {
         
         const allBookingData = async () => {
             try {
-                const data = await axios.get('http://localhost:5000/api/allBooking')
+                const data = await axios.get('https://courire-system-backend-express.vercel.app/api/allBooking')
+                // const data = await axios.get('http://localhost:5000/api/allBooking')
                 setInvoices(data?.data.data?.bookingInvoices)
             } catch (error) {
                 console.log(error);            }

@@ -1,5 +1,6 @@
 import {useState,useEffect} from 'react'
 import axios from 'axios'
+import Sidebar from '../comonents/Sidebar';
 const Booking = () => {
   const  [isSubmitted,setIsSubmitted] = useState(false)
    const [formData, setFormData] = useState({
@@ -128,6 +129,7 @@ const handleNewShipment = () => {
 };
   return (
     <div className="bg-white w-full px-2 rounded-lg shadow-md">
+      <Sidebar/>
       <form
         onSubmit={handleSubmit}
         className="">
