@@ -7,7 +7,7 @@ const BookingList = () => {
   useEffect(() => {
     const getBookings = async () => {
       try {
-        const response = await axios.get("http://localhost:5000/api/bookings")
+        const response = await axios.get("https://courire-system-backend-express.vercel.app/api/bookings")
         // console.log(response.data)
         setBookings(response?.data?.data?.bookings || [])
       } catch (error) {
