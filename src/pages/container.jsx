@@ -1,6 +1,6 @@
 import React,{useEffect, useState} from 'react'
 import { Search} from 'lucide-react';
-import Sidebar from '../comonents/Sidebar'
+import Sidebar from '../components/Sidebar'
 import axios from 'axios';
 const ContainerBooking = () => {
     const cities = ["Riyadh", "Jeddah", "Mecca", "Dammam", "Madina"];
@@ -9,7 +9,19 @@ const ContainerBooking = () => {
     const [selectedInvoice,setSelectedInvoice] = useState([])
     const [biltySearch, setBiltySearch] = useState("");
 
+    
+    const [containerNumber, setContainerNumber] = useState('');
+    const [supplierName, setSupplierName] = useState('');
+    const [portName, setPortName] = useState('');
+    const [fromDestination, setFromDestination] = useState('');
+    const [toDestination, setToDestination] = useState('');
+    const [containerShipmentNumber,setContainerShipmentNumber] = useState('')
     const filterSearch = invoives.filter((builty) => builty.InvoiceNo.toLowerCase().includes(biltySearch.toLowerCase())) 
+    
+  useEffect(() => {
+      if(containerNumber !== '')
+      setContainerShipmentNumber(`${containerNumber}/${selectedInvoice.length}`)
+    },[containerNumber, selectedInvoice])
     useEffect(() => {
         console.log("filterSearch=>",filterSearch);
         
@@ -22,24 +34,20 @@ const ContainerBooking = () => {
                 console.log(error);            }
         }
          allBookingData() 
+
         
-        
-    },[]) 
-    
-    const [containerNumber, setContainerNumber] = useState('');
-    const [supplierName, setSupplierName] = useState('');
-    const [portName, setPortName] = useState('');
-    const [fromDestination, setFromDestination] = useState('');
-    const [toDestination, setToDestination] = useState('');
-    
+    }, [])
     const handleSubmit = async (e) => {
         e.preventDefault()
         try {
-            const response = await axios.post('https://courire-system-backend-express.vercel.app/api/addContainer',{containerNumber,
+            // const response = await axios.post('https://courire-system-backend-express.vercel.app/api/addContainer',{containerNumber,
+            const response = await axios.post('http://localhost:5000/api/addContainer',{containerNumber,
                 supplierName,
                 portName,
                 fromDestination,
-                toDestination, totalBuilty: selectedInvoice.length
+                toDestination,
+                totalBuilty: selectedInvoice.length,
+                containerShipmentNumber
             })
             const data = response.data
             alert(data?.data?.message)
@@ -176,6 +184,19 @@ const ContainerBooking = () => {
                         placeholder="Bilty No."
                       />
                     ))}
+                  </div>
+
+                    <div className="flex-col justify-items-end">
+                    <h3 className="text-lg font-bold text-gray-800 mb-4">Container Shipment No.</h3>
+                  
+                  <input
+                        disabled
+                        type="text"
+                        value={containerShipmentNumber || ''}
+                            
+                        className="p-2 border border-gray-300 rounded focus:outline-none focus:ring-2 focus:ring-green-500 text-sm font-bold"
+                        placeholder="Container Shipment No."
+                      />
                   </div>
                 </div>
               </div>
