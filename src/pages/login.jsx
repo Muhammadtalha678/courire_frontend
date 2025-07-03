@@ -1,15 +1,44 @@
-import React,{useState} from 'react'
+import axios from 'axios';
+import React,{useState,useEffect} from 'react'
+import { useNavigate  } from 'react-router-dom';
 
 const Login = () => {
-    const [userName, setUserName] = useState('');
+    const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
-  
-    const handleLogin = () => {
-      if (userName.trim() && password.trim()) {
-        console.log('Login attempted with:', { userName, password });
-        // Add your login logic here
+    const navigate = useNavigate();
+    const handleLogin =async () => {
+        try {
+                     // Simple email regex for validation
+    const isValidEmail = /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email);
+    if (!email.trim() || !password.trim()) {
+        alert('Email and password are required!');
+        return;
       }
+  
+      if (!isValidEmail) {
+        alert('Please enter a valid email address!');
+        return;
+    }
+    const response = await axios.post("http://localhost:5000/api/auth/login",{email,password})
+    const data = response.data
+    localStorage.setItem('user',data?.data?.userData?.email)
+    alert(data?.data?.message);
+    navigate('/services')
+    
+    
+} catch (error) {
+    console.log(error);
+    
+    alert(`${error?.response?.data?.errors?.email}` || 'Something went wrong')
+        }
+      
     };
+    useEffect(() => {
+        const user = localStorage.getItem('user');
+        if (user) {
+          navigate('/services');
+        }
+      }, [navigate]);
   return (
     <div className="flex justify-center items-center min-h-96">
           <div className="bg-white/20 backdrop-blur-sm p-8 rounded-lg shadow-lg">
@@ -21,14 +50,14 @@ const Login = () => {
               {/* User Name Field */}
               <div className="flex">
                 <div className="bg-blue-600 text-yellow-300 px-4 py-3 font-medium text-sm w-32 flex items-center">
-                  User Name
+                  Email
                 </div>
                 <input
-                  type="text"
-                  value={userName}
-                  onChange={(e) => setUserName(e.target.value)}
+                  type="email"
+                  value={email}
+                  onChange={(e) => setEmail(e.target.value)}
                   className="flex-1 px-4 py-3 border-2 border-red-500 focus:outline-none focus:border-red-600 bg-gray-200"
-                  placeholder=""
+                  placeholder="Email address"
                 />
               </div>
 
@@ -42,7 +71,7 @@ const Login = () => {
                   value={password}
                   onChange={(e) => setPassword(e.target.value)}
                   className="flex-1 px-4 py-3 border-2 border-red-500 focus:outline-none focus:border-red-600 bg-gray-200"
-                  placeholder=""
+                  placeholder="Password"
                 />
               </div>
 

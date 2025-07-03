@@ -1,5 +1,6 @@
 import axios from 'axios'
 import React, { useEffect, useState } from 'react'
+import Header from '../components/Header'
 
 const BookingList = () => {
   const [bookings, setBookings] = useState([])
@@ -21,6 +22,7 @@ const BookingList = () => {
   
   return (
     <div className="relative overflow-x-auto">
+      <Header/>
       <table className="w-full text-sm text-left text-black bg-white border border-gray-300">
         <thead className="text-xs uppercase bg-gray-100 text-gray-700">
           <tr className="border-b">

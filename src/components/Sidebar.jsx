@@ -9,6 +9,8 @@ const Sidebar = () => {
     { icon: Package, label: 'Create Booking',path:'/booking' },
     // { icon: List, label: 'Orders List', active: false },
     { icon: Package, label: 'Create Container',path:'/container' },
+    { icon: Package, label: 'Container List',path:'/all-containers' },
+    { icon: Package, label: 'Booking List',path:'/all-bookings' },
     // { icon: List, label: 'Container List', active: false },
     // { icon: Truck, label: 'Track Your Deliveries', active: false },
     // { icon: Users, label: 'Social Media', active: false },
