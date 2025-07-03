@@ -4,25 +4,29 @@ import React, { useState } from 'react';
 export default function CargoServicesLanding() {
   const [trackingId, setTrackingId] = useState('');
   const [showtrackingData, setshowtrackingData] = useState(null);
-
+ const [loading,setLoading] = useState(false)
   const handleSearch =async () => {
     try {
+      setLoading(true)
       if (trackingId.trim() === '') return;
-    if (trackingId.length != 12) {
-      alert("tracking id must be of 12 digit")
-      return
-    };
+      if (trackingId.length != 12) {
+        alert("tracking id must be of 12 digit")
+        return
+      };
 
-    console.log('Tracking:', trackingId);
-    // const response = await axios.get(`http://localhost:5000/api/tracking/${trackingId}`) 
-    const response = await axios.get(`https://courire-system-backend-express.vercel.app/api/tracking/${trackingId}`) 
-    const data = response.data
-    // console.log('data:', data);
+      // console.log('Tracking:', trackingId);
+      // const response = await axios.get(`http://localhost:5000/api/tracking/${trackingId}`) 
+      const response = await axios.get(`https://courire-system-backend-express.vercel.app/api/tracking/${trackingId}`)
+      const data = response.data
+      // console.log('data:', data);
       setshowtrackingData(data.data.foundTrackingId)
     
-  } catch (error) {
-    alert(`${error?.response?.data?.errors?.general}` || 'Something went wrong')
-    console.log('error:', error);
+    } catch (error) {
+      alert(`${error?.response?.data?.errors?.general}` || 'Something went wrong')
+      console.log('error:', error);
+    } finally {
+      
+      setLoading(false)
     }
   };
 
@@ -52,10 +56,11 @@ export default function CargoServicesLanding() {
             className="flex-grow p-3 rounded-l-lg border border-gray-300 focus:outline-none"
           />
           <button
+            disabled={loading}
             onClick={handleSearch}
             className="bg-blue-600 text-white px-5 rounded-r-lg hover:bg-blue-700 transition"
           >
-            Search
+            {loading?'... Searching':'Search'}
           </button>
         </div>
           
@@ -72,7 +77,7 @@ export default function CargoServicesLanding() {
                   {Object.entries(showtrackingData).map(([key, value]) =>
                   
                   {
-                    console.log(value);
+                    // console.log(value);
                     
                   return <tr key={key} className="border-b border-gray-200">
                   <td className="font-semibold capitalize px-3 py-2">{key.replace(/([A-Z])/g, ' $1')}</td>
