@@ -143,7 +143,7 @@ const ContainerBooking = () => {
 
                 {/* Add Bilty No Section */}
                 <div className="mt-8">
-                  <h3 className="text-lg font-bold text-gray-800 mb-4">Add Bilty No.</h3>
+                  <h3 className="text-lg font-bold text-gray-800 mb-4">Add Invoice No.</h3>
                   
                   <div className="mb-4">
                     <div className="relative">
@@ -183,7 +183,7 @@ const ContainerBooking = () => {
 
             {/* Display Bilty No Section */}
             <div className="bg-gray-50 p-6 rounded-lg">
-              <h3 className="text-lg font-bold text-gray-800 mb-6">Display Bilty No.</h3>
+              <h3 className="text-lg font-bold text-gray-800 mb-6">Display Invoice No.</h3>
               
               <div className="space-y-3 mb-8">
                 {selectedInvoice.map((invoice,index) => (
@@ -197,7 +197,7 @@ const ContainerBooking = () => {
 
               <div className="border-t pt-4 mb-6">
                 <div className="flex items-center justify-between p-2 bg-blue-50 rounded">
-                                    <span className="text-sm font-medium text-gray-700">Total Bilty No.
+                                    <span className="text-sm font-medium text-gray-700">Total Invoice No.
                                         </span>
                                     <span className="text-sm font-medium text-gray-700">
                                         <b>{ selectedInvoice.length}</b></span>
