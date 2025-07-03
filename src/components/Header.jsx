@@ -1,4 +1,5 @@
 import React from 'react';
+import { Link } from 'react-router-dom';
 
 const Header = () => {
   return (
@@ -14,12 +15,12 @@ const Header = () => {
 
         {/* Login Links */}
         <div className="flex space-x-6">
-          <button className="text-gray-800 font-medium underline hover:text-gray-600">
+          {/* <button className="text-gray-800 font-medium underline hover:text-gray-600">
             User Login
-          </button>
-          <button className="text-gray-800 font-medium underline hover:text-gray-600">
+          </button> */}
+          <Link to={'/login'} className="text-gray-800 font-medium underline hover:text-gray-600">
             Admin Login
-          </button>
+          </Link>
         </div>
       </div>
     </header>

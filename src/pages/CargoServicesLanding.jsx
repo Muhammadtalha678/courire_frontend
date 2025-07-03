@@ -72,7 +72,7 @@ export default function CargoServicesLanding() {
                   {Object.entries(showtrackingData).map(([key, value]) =>
                   
                   {
-                    // console.log(showtrackingData);
+                    console.log(value);
                     
                   return <tr key={key} className="border-b border-gray-200">
                   <td className="font-semibold capitalize px-3 py-2">{key.replace(/([A-Z])/g, ' $1')}</td>
