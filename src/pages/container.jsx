@@ -3,6 +3,7 @@ import { Search} from 'lucide-react';
 import Sidebar from '../components/Sidebar'
 import axios from 'axios';
 import { AppRoutes } from '../constants/AppRoutes';
+import Header from '../components/Header';
 const ContainerBooking = () => {
     const cities = ["Riyadh", "Jeddah", "Mecca", "Dammam", "Madina"];
 
@@ -57,8 +58,8 @@ const ContainerBooking = () => {
   
     return (
     <div className="min-h-screen bg-gray-100 flex">
-        <Sidebar/>
        <div className="flex-1 p-8">
+        <Header/>
         <div className="max-w-7xl mx-auto">
           {/* Header */}
 

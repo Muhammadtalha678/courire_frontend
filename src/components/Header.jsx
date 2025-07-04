@@ -34,35 +34,62 @@ const Header = () => {
 
         {/* Login Links */}
         <div className="flex space-x-6">
+               
           {
-            !user? (
-              <>
-                <Link to={'/'} className="text-gray-800 font-medium underline hover:text-gray-600">
-                  Home
-                </Link>
-              <button className="text-gray-800 font-medium underline hover:text-gray-600">
-                  User Login
-                </button> 
-                <Link to={'/login'} className="text-gray-800 font-medium underline hover:text-gray-600">
-                  Admin Login
-                </Link>
-              </>
-            ) : (
-                <>
-                  {
-                    headerMenuItems.map((m, i) => (
-                      
+            !user && location.pathname === '/' ?
+              (<>
+                {/* <Link to="/" className="text-gray-800 font-medium hover:cursor-pointer underline hover:text-gray-600">
+            Home
+          </Link> */}
+          <button className="text-gray-800 font-medium underline hover:cursor-pointer hover:text-gray-600">
+            User Login
+          </button>
+          <Link to="/login" className="text-gray-800 font-medium hover:cursor-pointer underline hover:text-gray-600">
+            Admin Login
+          </Link> 
+              </>) :
+              user && location.pathname === '/' ?
+                (
+                  <>
+                    <Link to="/services" className="text-gray-800 font-medium hover:cursor-pointer underline hover:text-gray-600">
+            Services
+          </Link>
+                  
+                    <button onClick={handleLogout} className="text-gray-800 font-medium underline hover:cursor-pointer hover:text-gray-600">
+                      Logout
+                    </button>
+                    
+                  </>
+                ) :
+                user && location.pathname === '/services' ?
+                  (
+                    <>
+                    <Link to="/" className="text-gray-800 font-medium hover:cursor-pointer underline hover:text-gray-600">
+                      Home
+                    </Link>
+                    <button onClick={handleLogout} className="text-gray-800 font-medium underline hover:text-gray-600">
+                      Logout
+                    </button>
+                  </>
+                  ) :
+                  !user && location.pathname === '/login' ? (
+                    <>
+                    <Link  to={'/'} className="text-gray-800 font-medium underline hover:text-gray-600">
+                      Home
+                    </Link>
+                    </>
+                  ):
+                  <>
+                  {headerMenuItems.map((m, i) => (
                     <Link key={i} to={m.path} className="text-gray-800 font-medium underline hover:text-gray-600">
                       {m.label}
                     </Link>
-                    ))
-                  }
-               
-                <button onClick={handleLogout} className="text-gray-800 font-medium underline hover:text-gray-600">
-              Logout
-            </button>
+                  ))}
+                  <button onClick={handleLogout} className="text-gray-800 font-medium underline hover:text-gray-600">
+                    Logout
+                  </button>
                 </>
-            )
+
           }
         </div>
       </div>

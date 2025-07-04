@@ -34,7 +34,7 @@ export default function CargoServicesLanding() {
   return (
     <div className="flex flex-col justify-center">
 <div className="backdrop-blur-sm rounded-xl p-8 shadow-lg text-center">
-  <h2 className="text-6xl font-semibold text-yellow-700 mb-6">
+  <h2 className="text-6xl font-semibold text-white mb-6">
     Track Your Shipment
   </h2>
 

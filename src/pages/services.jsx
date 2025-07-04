@@ -30,14 +30,16 @@ const Services = () => {
      
       
     // </div>
-    <div className="flex justify-center items-center bg-amber-500">
-    <div className=" bg-amber-500">
+    <div className="flex justify-center items-center px-8">
+    <div className=" ">
         <ul className="grid grid-cols-3 row-span-3 gap-8 text-center text-2xl ">
           {
             servicesLinks.map((l, index) => (
-            <Link key={index} to={l.path} className=" text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:ring-blue-300 font-medium rounded-lg px-5 py-2.5 me-2 mb-2 dark:bg-blue-600 dark:hover:bg-blue-700 focus:outline-none dark:focus:ring-blue-800">
-              {l.label}
-            </Link>
+              <Link key={index} to={l.path} className=" text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:ring-blue-300 font-medium rounded-lg px-5 py-2.5 me-2 mb-2 dark:bg-blue-600 dark:hover:bg-blue-700 focus:outline-none dark:focus:ring-blue-800 align-middle">
+                {l.label}
+                </Link>
+
+              
               
             ))
           }

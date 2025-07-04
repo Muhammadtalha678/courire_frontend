@@ -1,6 +1,7 @@
 import {useState,useEffect} from 'react'
 import axios from 'axios'
 import { AppRoutes } from '../constants/AppRoutes';
+import Header from '../components/Header';
 const Booking = () => {
   const  [isSubmitted,setIsSubmitted] = useState(false)
    const [formData, setFormData] = useState({
@@ -128,7 +129,8 @@ const handleNewShipment = () => {
   setIsSubmitted(false);
 };
   return (
-    <div className="bg-white w-full px-2 rounded-lg shadow-md">
+    <div className="bg-white w-full px-2 rounded-lg shadow-md py-4">
+      <Header/>
       <form
         onSubmit={handleSubmit}
         className="">
@@ -501,6 +503,53 @@ const handleNewShipment = () => {
           </button>
         )
       }
+      <div className='grid grid-cols-5 gap-8'>
+        <div>
+          <button
+            type="button"
+            // onClick={handleNewShipment}
+            className="bg-green-600 text-white py-2 px-4 rounded hover:bg-green-700 transition w-full mt-4"
+          >
+            Save & Print
+          </button>
+        </div>
+        <div>
+          <button
+            type="button"
+            // onClick={handleNewShipment}
+            className="bg-green-600 text-white py-2 px-4 rounded hover:bg-green-700 transition w-full mt-4"
+          >
+            Save PDF
+          </button>
+        </div>
+        <div>
+          <button
+            type="button"
+            // onClick={handleNewShipment}
+            className="bg-green-600 text-white py-2 px-4 rounded hover:bg-green-700 transition w-full mt-4"
+          >
+            Edit Invoice
+          </button>
+        </div>
+        <div>
+          <button
+            type="button"
+            // onClick={handleNewShipment}
+            className="bg-green-600 text-white py-2 px-4 rounded hover:bg-green-700 transition w-full mt-4"
+          >
+            Del. Invoice
+          </button>
+        </div>
+        <div>
+          <button
+            type="button"
+            // onClick={handleNewShipment}
+            className="bg-green-600 text-white py-2 px-4 rounded hover:bg-green-700 transition w-full mt-4"
+          >
+             PDF To Whatsapp  
+          </button>
+        </div>
+      </div>
   </div>
   )
 }

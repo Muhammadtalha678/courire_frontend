@@ -14,6 +14,7 @@ import { useAuth } from './context/AuthContext.jsx'
 import {Navigate} from 'react-router-dom'
 import PublicRoute from './components/PublicRoute.jsx'
 import NotFound from './components/Not-Found.jsx'
+import UserLogin from './components/UserLogin.jsx'
 function App() {
   const {user} = useAuth()
   return (
@@ -29,10 +30,12 @@ function App() {
           <Route element={<PublicRoute/>}>
             <Route path={'/login'} element={<Login/>}/> 
           
-          </Route>
+         </Route>
+        
           <Route path='/' element={<CargoServicesLanding/>}/> 
           <Route element={<ProtectedRoute/>}>
           <Route path='/services' element={<Services/>}/> 
+          {/* <Route path={'/user-login'} element={<UserLogin/>}/>  */}
         </Route>
       </Route>
       <Route path='*' element={<NotFound/>} />
