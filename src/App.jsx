@@ -13,6 +13,7 @@ import ProtectedRoute from './components/ProtectedRoute.jsx'
 import { useAuth } from './context/AuthContext.jsx'
 import {Navigate} from 'react-router-dom'
 import PublicRoute from './components/PublicRoute.jsx'
+import NotFound from './components/not-found.jsx'
 function App() {
   const {user} = useAuth()
   return (
@@ -34,6 +35,7 @@ function App() {
           <Route path='/services' element={<Services/>}/> 
         </Route>
       </Route>
+      <Route path='*' element={<NotFound/>} />
    </Routes>
   )
 }
