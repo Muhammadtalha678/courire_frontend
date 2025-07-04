@@ -10,20 +10,27 @@ import BookingList from './pages/bookingList.jsx'
 import ContainerList from './pages/containerList.jsx'
 import Services from './pages/services.jsx'
 import ProtectedRoute from './components/ProtectedRoute.jsx'
+import { useAuth } from './context/AuthContext.jsx'
+import {Navigate} from 'react-router-dom'
+import PublicRoute from './components/PublicRoute.jsx'
 function App() {
-
+  const {user} = useAuth()
   return (
     <Routes>
       <Route element={<ProtectedRoute/>}>
-        <Route path='/booking' element={<Booking/>}/> 
-        <Route path='/container' element={<ContainerBooking/>}/> 
+          <Route path='/booking' element={<Booking/>}/> 
+          <Route path='/container' element={<ContainerBooking/>}/> 
           <Route path='/all-bookings' element={<BookingList/>}/> 
           <Route path='/all-containers' element={<ContainerList/>}/> 
+          
       </Route>
       <Route element={<Layout/>}>
-        <Route path='/login' element={<Login/>}/> 
-        <Route path='/' element={<CargoServicesLanding/>}/> 
-        <Route element={<ProtectedRoute/>}>
+          <Route element={<PublicRoute/>}>
+            <Route path={'/login'} element={<Login/>}/> 
+          
+          </Route>
+          <Route path='/' element={<CargoServicesLanding/>}/> 
+          <Route element={<ProtectedRoute/>}>
           <Route path='/services' element={<Services/>}/> 
         </Route>
       </Route>
