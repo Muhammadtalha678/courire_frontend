@@ -34,7 +34,7 @@ const Login = () => {
         return;
       }
     const response = await axios.post(AppRoutes.login,{email,password})
-    const data = response.data
+    const data = response.data;
     
     localStorage.setItem('token',data?.data?.userData?.accessToken)
     setUser(data?.data?.userData?.email)
