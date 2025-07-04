@@ -10,7 +10,17 @@ const Header = () => {
         setUser(null);
         navigate('/login')
         // window.location.href = '/login';
-    };
+  };
+  const headerMenuItems = [
+    { label: 'Home',path:'/' },
+    { label: 'Booking',path:'/booking' },
+    { label: 'Container',path:'/container' },
+    { label: 'All Bookings',path:'/all-bookings' },
+    { label: 'All Containers',path:'/all-containers' },
+    { label: 'Services',path:'/services' },
+   
+    
+  ];
   return (
     <header className="w-full grid px-10 py-10 shadow-sm">
       <div className="  px-4 flex justify-between items-center">
@@ -39,21 +49,15 @@ const Header = () => {
               </>
             ) : (
                 <>
-                <Link to={'/'} className="text-gray-800 font-medium underline hover:text-gray-600">
-                  Home
-                </Link>
-                <Link to={'/booking'} className="text-gray-800 font-medium underline hover:text-gray-600">
-                  Booking
-                </Link>
-                <Link to={'/container'} className="text-gray-800 font-medium underline hover:text-gray-600">
-                  Container
-                </Link>
-                <Link to={'/all-bookings'} className="text-gray-800 font-medium underline hover:text-gray-600">
-                  All Bookings
-                </Link>
-                <Link to={'/all-containers'} className="text-gray-800 font-medium underline hover:text-gray-600">
-                  All Containers
-                </Link>
+                  {
+                    headerMenuItems.map((m, i) => (
+                      
+                    <Link key={i} to={m.path} className="text-gray-800 font-medium underline hover:text-gray-600">
+                      {m.label}
+                    </Link>
+                    ))
+                  }
+               
                 <button onClick={handleLogout} className="text-gray-800 font-medium underline hover:text-gray-600">
               Logout
             </button>
