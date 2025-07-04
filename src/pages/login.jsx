@@ -1,36 +1,60 @@
 import axios from 'axios';
 import React,{useState,useEffect} from 'react'
 import { useNavigate  } from 'react-router-dom';
-
+import { AppRoutes } from '../constants/AppRoutes';
+import {useAuth} from '../context/AuthContext'
 const Login = () => {
+    const {setUser} = useAuth()
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
+    const [emailErr,setEmailErr] = useState('')
+    const [passwordErr,setPasswordErr] = useState('')
+    const [loading,setLoading] = useState(false)
     const navigate = useNavigate();
     const handleLogin =async () => {
-        try {
-                     // Simple email regex for validation
-    const isValidEmail = /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email);
-    if (!email.trim() || !password.trim()) {
-        alert('Email and password are required!');
+      try {
+        setLoading(true)
+        setEmailErr('');
+        setPasswordErr('');
+          // Simple email regex for validation
+          const isValidEmail = /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email);
+      if (!email.trim()) {
+        setEmailErr('Email are required!');
         return;
       }
-  
-      if (!isValidEmail) {
-        alert('Please enter a valid email address!');
+     
+      if (!password.trim()) {
+        setPasswordErr('Password are required!');
         return;
-    }
-    const response = await axios.post("http://localhost:5000/api/auth/login",{email,password})
+        
+      }
+      
+      if (!isValidEmail) {
+        setEmailErr('Please enter a valid email address!');
+        return;
+      }
+    const response = await axios.post(AppRoutes.login,{email,password})
     const data = response.data
-    localStorage.setItem('user',data?.data?.userData?.email)
+    
+    localStorage.setItem('token',data?.data?.userData?.accessToken)
+    setUser(data?.data?.userData?.email)
+    console.log(data);
+    
     alert(data?.data?.message);
     navigate('/services')
     
     
 } catch (error) {
     console.log(error);
-    
-    alert(`${error?.response?.data?.errors?.email}` || 'Something went wrong')
-        }
+    const err = error?.response?.data?.errors;
+    if (err?.email) setEmailErr(err.email);
+    if (err?.general) setEmailErr(err.general);
+    if (!err) alert('Something went wrong');
+  
+} finally{
+  setLoading(false)
+  
+}
       
     };
     useEffect(() => {
@@ -60,6 +84,7 @@ const Login = () => {
                   placeholder="Email address"
                 />
               </div>
+            <p className='text-red-600 text-sm'>{emailErr}</p>
 
               {/* Password Field */}
               <div className="flex">
@@ -74,13 +99,25 @@ const Login = () => {
                   placeholder="Password"
                 />
               </div>
+              <span className='text-red-600 text-sm'>{passwordErr}</span>
 
               {/* Login Button */}
               <button
+                disabled={loading}
                 onClick={handleLogin}
                 className="w-full bg-blue-600 text-white py-3 px-4 rounded font-medium hover:bg-blue-700 transition-colors mt-6"
-              >
-                Login
+          >
+              {loading ? (
+  <div className="flex justify-center">
+    <svg className="animate-spin h-5 w-5 text-white" viewBox="0 0 24 24">
+      <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4"></circle>
+      <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4z" />
+    </svg>
+  </div>
+) : (
+  'Login'
+)}
+
               </button>
             </div>
           </div>
