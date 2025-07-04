@@ -1,7 +1,7 @@
 // import moduleName from 'dotenv/config'
 
-const DEV_URL = import.meta.env.VITE_BASE_URL_DEV
-const PROD_URL = import.meta.env.VITE_BASE_URL_PROD
+const DEV_URL = "http://localhost:5000"
+const PROD_URL = "https://courire-system-backend-express.vercel.app"
 // console.log("process.env.BASE_URL_DEV",process.env.BASE_URL_DEV);
 
 
@@ -9,6 +9,7 @@ const BASE_URL = import.meta.env.NODE_ENV === 'production' ? PROD_URL : DEV_URL
 
 // console.log(DEV_URL);
 // console.log(PROD_URL);
+console.log(BASE_URL);
 
 
 export const AppRoutes = {
