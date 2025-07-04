@@ -1,14 +1,16 @@
-import { Link,useNavigate } from 'react-router-dom';
+import { Link,useNavigate,useLocation } from 'react-router-dom';
+import {useAuth} from '../context/AuthContext'
 
 const Header = () => {
-  const user = localStorage.getItem('user')
-  const navigate = useNavigate();
-  const handleLogout = () => {
-    localStorage.removeItem('user');
-    alert("Logged out successfully!");
-    navigate('/login');
-  };
-
+      const {user,setUser} = useAuth()
+      const navigate = useNavigate()
+      const location = useLocation()
+      const handleLogout = () => {
+        localStorage.removeItem('token');
+        setUser(null);
+        navigate('/login')
+        // window.location.href = '/login';
+    };
   return (
     <header className="w-full grid px-10 py-10 shadow-sm">
       <div className="  px-4 flex justify-between items-center">
@@ -23,8 +25,11 @@ const Header = () => {
         {/* Login Links */}
         <div className="flex space-x-6">
           {
-            !user ? (
+            !user? (
               <>
+                <Link to={'/'} className="text-gray-800 font-medium underline hover:text-gray-600">
+                  Home
+                </Link>
               <button className="text-gray-800 font-medium underline hover:text-gray-600">
                   User Login
                 </button> 
