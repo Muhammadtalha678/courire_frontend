@@ -1,6 +1,7 @@
 import axios from 'axios'
 import React,{useState,useEffect} from 'react'
 import Header from '../components/Header'
+import { AppRoutes } from '../constants/AppRoutes'
 
 const ContainerList = () => {
   const [containerList, setContainerList] = useState([])
@@ -8,8 +9,7 @@ const ContainerList = () => {
     useEffect(() => {
       const getContainerList = async () => {
         try {
-        //   const response = await axios.get("http://localhost:5000/api/allContainersList")
-          const response = await axios.get("https://courire-system-backend-express.vercel.app/api/allContainersList")
+          const response = await axios.get(AppRoutes.allContainersList)
         //   console.log(response.data)
           setContainerList(response?.data?.data?.containersList || [])
         } catch (error) {

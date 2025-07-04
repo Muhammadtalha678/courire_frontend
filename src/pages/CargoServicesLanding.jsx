@@ -2,6 +2,7 @@ CargoServicesLanding.jsx
 import axios from 'axios';
 import React, { useState } from 'react';
 import Background from "../assets/images/990244-cargo.jpg";
+import { AppRoutes } from '../constants/AppRoutes';
 
 export default function CargoServicesLanding() {
   const [trackingId, setTrackingId] = useState('');
@@ -15,10 +16,8 @@ export default function CargoServicesLanding() {
         alert("tracking id must be of 12 digit")
         return
       };
-
-      // console.log('Tracking:', trackingId);
-      // const response = await axios.get(`http://localhost:5000/api/tracking/${trackingId}`) 
-      const response = await axios.get(`https://courire-system-backend-express.vercel.app/api/tracking/${trackingId}`)
+ 
+      const response = await axios.get(`${AppRoutes.tracking}/${trackingId}`)
       const data = response.data
       // console.log('data:', data);
       setshowtrackingData(data.data.foundTrackingId)

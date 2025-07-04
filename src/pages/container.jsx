@@ -2,6 +2,7 @@ import React,{useEffect, useState} from 'react'
 import { Search} from 'lucide-react';
 import Sidebar from '../components/Sidebar'
 import axios from 'axios';
+import { AppRoutes } from '../constants/AppRoutes';
 const ContainerBooking = () => {
     const cities = ["Riyadh", "Jeddah", "Mecca", "Dammam", "Madina"];
 
@@ -27,8 +28,7 @@ const ContainerBooking = () => {
         
         const allBookingData = async () => {
             try {
-                const data = await axios.get('https://courire-system-backend-express.vercel.app/api/allBooking')
-                // const data = await axios.get('http://localhost:5000/api/allBooking')
+                const data = await axios.get(AppRoutes.allBookingInvoiceNo)
                 setInvoices(data?.data.data?.bookingInvoices)
             } catch (error) {
                 console.log(error);            }
@@ -40,8 +40,7 @@ const ContainerBooking = () => {
     const handleSubmit = async (e) => {
         e.preventDefault()
         try {
-            // const response = await axios.post('https://courire-system-backend-express.vercel.app/api/addContainer',{containerNumber,
-            const response = await axios.post('http://localhost:5000/api/addContainer',{containerNumber,
+            const response = await axios.post(AppRoutes.addContainer,{containerNumber,
                 supplierName,
                 portName,
                 fromDestination,

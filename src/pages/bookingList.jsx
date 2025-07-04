@@ -1,6 +1,7 @@
 import axios from 'axios'
 import React, { useEffect, useState } from 'react'
 import Header from '../components/Header'
+import { AppRoutes } from '../constants/AppRoutes'
 
 const BookingList = () => {
   const [bookings, setBookings] = useState([])
@@ -8,7 +9,7 @@ const BookingList = () => {
   useEffect(() => {
     const getBookings = async () => {
       try {
-        const response = await axios.get("https://courire-system-backend-express.vercel.app/api/bookings")
+        const response = await axios.get(AppRoutes.allBookings)
         // console.log(response.data)
         setBookings(response?.data?.data?.bookings || [])
       } catch (error) {

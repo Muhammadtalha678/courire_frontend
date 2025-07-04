@@ -1,6 +1,6 @@
 import {useState,useEffect} from 'react'
 import axios from 'axios'
-import Sidebar from '../components/Sidebar';
+import { AppRoutes } from '../constants/AppRoutes';
 const Booking = () => {
   const  [isSubmitted,setIsSubmitted] = useState(false)
    const [formData, setFormData] = useState({
@@ -44,7 +44,7 @@ const Booking = () => {
   const handleSubmit =async (e) => {
     e.preventDefault()
     try {
-      const response = await axios.post('https://courire-system-backend-express.vercel.app/api/addBooking',formData)
+      const response = await axios.post(AppRoutes.addBooking,formData)
       const data = response.data
       alert(data?.data?.message)
        // set response data into form
