@@ -6,7 +6,7 @@ const Sidebar = () => {
 
   const menuItems = [
     // { icon: BarChart3, label: 'Dashboard', active: false },
-    { icon: Package, label: 'Create Booking',path:'/booking' },
+    { icon: Package, label: 'Create Booking',path:'/add-booking' },
     // { icon: List, label: 'Orders List', active: false },
     { icon: Package, label: 'Create Container',path:'/container' },
     { icon: Package, label: 'Container List',path:'/all-containers' },

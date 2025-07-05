@@ -4,7 +4,7 @@ const Services = () => {
   
   const servicesLinks = [
     { label: 'Home',path:'/' },
-    { label: 'Create Booking',path:'/booking' },
+    { label: 'Create Booking',path:'/add-booking' },
     { label: 'Create Container',path:'/container' },
     { label: 'Bookings Lists',path:'/all-bookings' },
     { label: 'Containers Lists',path:'/all-containers' },
@@ -43,6 +43,7 @@ const Services = () => {
               
             ))
           }
+          
       </ul>
     </div>
   </div>

@@ -13,7 +13,7 @@ const Header = () => {
   };
   const headerMenuItems = [
     { label: 'Home',path:'/' },
-    { label: 'Booking',path:'/booking' },
+    { label: 'Booking',path:'/add-booking' },
     { label: 'Container',path:'/container' },
     { label: 'All Bookings',path:'/all-bookings' },
     { label: 'All Containers',path:'/all-containers' },
