@@ -49,7 +49,7 @@ const Booking = () => {
     try {
       const response = await axios.post(AppRoutes.addBooking,formData)
       const data = response.data
-      alert(data?.data?.message)
+      toast.success(data?.data?.message)
        // set response data into form
        setFormData((prev) => ({
         ...prev,
@@ -60,7 +60,9 @@ const Booking = () => {
       
     } catch (error) {
       console.log("error=>",error);
-      
+      const err = error?.response?.data?.errors;
+      if (err?.general) toast.error(err.general);
+      if (!err) toast.error('Something went wrong');
     }
     
   }
@@ -145,7 +147,7 @@ const handleDelete = async(builtNo) => {
   } catch (error) {
     const err = error?.response?.data?.errors;
     if (err?.general) toast.error(err?.general)
-    if (!err) alert('Something went wrong');
+    if (!err) toast.error('Something went wrong');
   }
 }
  

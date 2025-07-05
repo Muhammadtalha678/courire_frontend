@@ -3,6 +3,7 @@ import React,{useState,useEffect} from 'react'
 import { useNavigate  } from 'react-router-dom';
 import { AppRoutes } from '../constants/AppRoutes';
 import {useAuth} from '../context/AuthContext'
+import { toast } from 'react-toastify';
 const Login = () => {
     const {setUser} = useAuth()
     const [email, setEmail] = useState('');
@@ -40,7 +41,7 @@ const Login = () => {
     setUser(data?.data?.userData?.email)
     console.log(data);
     
-    alert(data?.data?.message);
+    toast.successerror(data?.data?.message);
     navigate('/services')
     
     
@@ -48,8 +49,8 @@ const Login = () => {
     console.log(error);
     const err = error?.response?.data?.errors;
     if (err?.email) setEmailErr(err.email);
-    if (err?.general) setEmailErr(err.general);
-    if (!err) alert('Something went wrong');
+    if (err?.general) toast.error(err.general);
+    if (!err) toast.error('Something went wrong');
   
 } finally{
   setLoading(false)
