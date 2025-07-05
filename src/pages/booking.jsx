@@ -6,7 +6,10 @@ import {handlePdfSave} from '../lib/helper/pdf_generator'
 import { toast } from 'react-toastify';
 const Booking = () => {
   const  [isSubmitted,setIsSubmitted] = useState(false)
-   const [formData, setFormData] = useState({
+  const  [isSubmittedBooking,setIsSubmittedBooking] = useState(false)
+  const  [isEditingBooking,setIsEditingBooking] = useState(false)
+   
+  const [formData, setFormData] = useState({
     //  BiltyNo: "",
     //  InvoiceNo: "",
       SenderName: "",
@@ -47,7 +50,8 @@ const Booking = () => {
   const handleSubmit =async (e) => {
     e.preventDefault()
     try {
-        const response = await axios.post(AppRoutes.addBooking,formData)
+      setIsSubmittedBooking(true)
+      const response = await axios.post(AppRoutes.addBooking,formData)
       const data = response.data
       toast.success(data?.data?.message)
        // set response data into form
@@ -63,12 +67,16 @@ const Booking = () => {
       const err = error?.response?.data?.errors;
       if (err?.general) toast.error(err.general);
       if (!err) toast.error('Something went wrong');
+    } finally {
+      setIsSubmittedBooking(false)
+      
     }
     
   }
   const handleEdit =async () => {
     try {
-        const response = await axios.post(AppRoutes.editBooking,formData)
+      setIsEditingBooking(true)
+      const response = await axios.post(AppRoutes.editBooking,formData)
       const data = response.data
       toast.success(data?.data?.message)
        // set response data into form
@@ -83,6 +91,9 @@ const Booking = () => {
       const err = error?.response?.data?.errors;
       if (err?.general) toast.error(err.general);
       if (!err) toast.error('Something went wrong');
+    } finally {
+      setIsEditingBooking(false)
+      
     }
     
   }
@@ -528,10 +539,20 @@ const handleDelete = async(builtNo) => {
           !isSubmitted && 
           
       ( <button
+      disabled={isSubmittedBooking}
         type="submit"
         className="md:col-span-2 bg-blue-600 text-white py-2 px-4 rounded hover:bg-blue-700 transition w-full mt-4"
       >
-        Save Shipment
+        {
+              isSubmittedBooking ?
+              <div className="flex justify-center">
+              <svg className="animate-spin h-5 w-5 text-white" viewBox="0 0 24 24">
+                <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4"></circle>
+                <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4z" />
+              </svg>
+            </div>:
+        "Save Shipment"
+        }
       </button>)
         }
       </form>
@@ -568,9 +589,19 @@ const handleDelete = async(builtNo) => {
                 <button
                   type="button"
                   onClick={handleEdit}
+                  disabled={isEditingBooking}
                   className="bg-green-600 text-white py-2 px-4 rounded hover:bg-green-700 transition w-full mt-4"
                 >
-                  Edit Invoice
+                  {
+                    isEditingBooking ?
+                    <div className="flex justify-center">
+                    <svg className="animate-spin h-5 w-5 text-white" viewBox="0 0 24 24">
+                      <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4"></circle>
+                      <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4z" />
+                    </svg>
+                  </div> :
+                  'Edit Invoice'
+                  }
                 </button>
               </div>
               <div>
