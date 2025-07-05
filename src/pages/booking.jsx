@@ -2,6 +2,7 @@ import {useState,useEffect} from 'react'
 import axios from 'axios'
 import { AppRoutes } from '../constants/AppRoutes';
 import Header from '../components/Header';
+import {handlePdfSave} from '../lib/helper/pdf_generator'
 const Booking = () => {
   const  [isSubmitted,setIsSubmitted] = useState(false)
    const [formData, setFormData] = useState({
@@ -127,7 +128,9 @@ const handleNewShipment = () => {
     InvoiceNo: "",
   });
   setIsSubmitted(false);
-};
+  };
+
+ 
   return (
     <div className="bg-white w-full px-2 rounded-lg shadow-md py-4">
       <Header/>
@@ -494,62 +497,66 @@ const handleNewShipment = () => {
       </form>
       {
         isSubmitted && (
-          <button
-            type="button"
-            onClick={handleNewShipment}
-            className="bg-green-600 text-white py-2 px-4 rounded hover:bg-green-700 transition w-full mt-4"
-          >
-            New Shipment
-          </button>
+          <>
+            <button
+              type="button"
+              onClick={handleNewShipment}
+              className="bg-green-600 text-white py-2 px-4 rounded hover:bg-green-700 transition w-full mt-4"
+            >
+              New Shipment
+            </button>
+            <div className='grid grid-cols-5 gap-8'>
+              <div>
+                <button
+                  type="button"
+                  onClick={() => {handlePdfSave(formData,'Save&PRINT')}}
+                  className="bg-green-600 text-white py-2 px-4 rounded hover:bg-green-700 transition w-full mt-4"
+                >
+                  Save & Print
+                </button>
+              </div>
+              <div>
+                <button
+                  type="button"
+                  onClick={() =>{handlePdfSave(formData,'SavePDF')}}
+                  className="bg-green-600 text-white py-2 px-4 rounded hover:bg-green-700 transition w-full mt-4"
+                >
+                  Save PDF
+                </button>
+              </div>
+              <div>
+                <button
+                  type="button"
+                  // onClick={handleNewShipment}
+                  className="bg-green-600 text-white py-2 px-4 rounded hover:bg-green-700 transition w-full mt-4"
+                >
+                  Edit Invoice
+                </button>
+              </div>
+              <div>
+                <button
+                  type="button"
+                  // onClick={handleNewShipment}
+                  className="bg-green-600 text-white py-2 px-4 rounded hover:bg-green-700 transition w-full mt-4"
+                >
+                  Del. Invoice
+                </button>
+              </div>
+              <div>
+                <button
+                  type="button"
+                
+                  onClick={() => {handlePdfSave(formData,'SendToWhatsapp')}}
+                  className="bg-green-600 text-white py-2 px-4 rounded hover:bg-green-700 transition w-full mt-4"
+                >
+                  PDF To Whatsapp  
+                </button>
+              </div>
+            </div>
+          </>
         )
       }
-      <div className='grid grid-cols-5 gap-8'>
-        <div>
-          <button
-            type="button"
-            // onClick={handleNewShipment}
-            className="bg-green-600 text-white py-2 px-4 rounded hover:bg-green-700 transition w-full mt-4"
-          >
-            Save & Print
-          </button>
-        </div>
-        <div>
-          <button
-            type="button"
-            // onClick={handleNewShipment}
-            className="bg-green-600 text-white py-2 px-4 rounded hover:bg-green-700 transition w-full mt-4"
-          >
-            Save PDF
-          </button>
-        </div>
-        <div>
-          <button
-            type="button"
-            // onClick={handleNewShipment}
-            className="bg-green-600 text-white py-2 px-4 rounded hover:bg-green-700 transition w-full mt-4"
-          >
-            Edit Invoice
-          </button>
-        </div>
-        <div>
-          <button
-            type="button"
-            // onClick={handleNewShipment}
-            className="bg-green-600 text-white py-2 px-4 rounded hover:bg-green-700 transition w-full mt-4"
-          >
-            Del. Invoice
-          </button>
-        </div>
-        <div>
-          <button
-            type="button"
-            // onClick={handleNewShipment}
-            className="bg-green-600 text-white py-2 px-4 rounded hover:bg-green-700 transition w-full mt-4"
-          >
-             PDF To Whatsapp  
-          </button>
-        </div>
-      </div>
+     
   </div>
   )
 }
