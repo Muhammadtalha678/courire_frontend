@@ -47,7 +47,7 @@ const Booking = () => {
   const handleSubmit =async (e) => {
     e.preventDefault()
     try {
-      const response = await axios.post(AppRoutes.addBooking,formData)
+        const response = await axios.post(AppRoutes.addBooking,formData)
       const data = response.data
       toast.success(data?.data?.message)
        // set response data into form
@@ -56,6 +56,26 @@ const Booking = () => {
         ...data?.data?.bookingData,
        }));
       setIsSubmitted(true)
+      console.log("success=>",data);
+      
+    } catch (error) {
+      console.log("error=>",error);
+      const err = error?.response?.data?.errors;
+      if (err?.general) toast.error(err.general);
+      if (!err) toast.error('Something went wrong');
+    }
+    
+  }
+  const handleEdit =async () => {
+    try {
+        const response = await axios.post(AppRoutes.editBooking,formData)
+      const data = response.data
+      toast.success(data?.data?.message)
+       // set response data into form
+       setFormData((prev) => ({
+        ...prev,
+        ...data?.data?.bookingData,
+       }));
       console.log("success=>",data);
       
     } catch (error) {
@@ -547,7 +567,7 @@ const handleDelete = async(builtNo) => {
               <div>
                 <button
                   type="button"
-                  // onClick={handleNewShipment}
+                  onClick={handleEdit}
                   className="bg-green-600 text-white py-2 px-4 rounded hover:bg-green-700 transition w-full mt-4"
                 >
                   Edit Invoice

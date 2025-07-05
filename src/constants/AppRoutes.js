@@ -9,6 +9,10 @@ export const AppRoutes = {
     // booking routers
     addBooking: BASE_URL + "/api/addBooking",
     allBookings: BASE_URL + "/api/bookings",
+    // delet booking by bilty no
+    deleteBooking: BASE_URL + "/api/deleteBooking",
+    // edit booking by bilty no
+    editBooking: BASE_URL + "/api/editBooking",
     
     // container routers
     addContainer: BASE_URL + "/api/addContainer",
@@ -21,6 +25,4 @@ export const AppRoutes = {
     // user info route
     userInfo: BASE_URL + "/api/userInfo",
     
-    // delet booking by bilty no
-    deleteBooking: BASE_URL + "/api/deleteBooking",
 }
