@@ -41,7 +41,7 @@ const Login = () => {
     setUser(data?.data?.userData?.email)
     console.log(data);
     
-    toast.successerror(data?.data?.message);
+    toast.success(data?.data?.message);
     navigate('/services')
     
     
