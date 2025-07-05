@@ -9,6 +9,7 @@ const InvoiceForm = () => {
     const  [isSubmitted,setIsSubmitted] = useState(false)
     const  [isSubmittedBooking,setIsSubmittedBooking] = useState(false)
     const  [isEditingBooking,setIsEditingBooking] = useState(false)
+    const  [isDeleting,setIsDeleting] = useState(false)
 
     const [formData, setFormData] = useState({
     SenderName: "",
@@ -234,6 +235,23 @@ const InvoiceForm = () => {
       
     }
     
+  }
+  const handleDelete = async(builtNo) => {
+    try {
+      if (!builtNo) {
+        toast.error('Builty no is missing')
+        return
+      }
+      const response = await axios.delete(AppRoutes.deleteBooking, { data: { BiltyNo: builtNo } })
+      const data = response.data
+      toast.success(data?.data?.message)
+      handleNewShipment()
+      
+    } catch (error) {
+      const err = error?.response?.data?.errors;
+      if (err?.general) toast.error(err?.general)
+      if (!err) toast.error('Something went wrong');
+    }
   }
   useEffect(() => {
         
@@ -633,6 +651,7 @@ const InvoiceForm = () => {
                 {
                   label: "Del. Invoice",
                   onClick: () => handleDelete(formData.BiltyNo),
+                  isLoading: isDeleting
                 },
                 ].map(({label,onClick,isLoading},index) => (
                 <button
