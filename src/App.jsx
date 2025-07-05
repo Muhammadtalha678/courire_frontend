@@ -15,9 +15,11 @@ import {Navigate} from 'react-router-dom'
 import PublicRoute from './components/PublicRoute.jsx'
 import NotFound from './components/Not-Found.jsx'
 import UserLogin from './components/UserLogin.jsx'
+import { ToastContainer } from 'react-toastify'
 function App() {
   const {user} = useAuth()
   return (
+    <>
     <Routes>
       <Route element={<ProtectedRoute/>}>
           <Route path='/booking' element={<Booking/>}/> 
@@ -28,8 +30,7 @@ function App() {
       </Route>
       <Route element={<Layout/>}>
           <Route element={<PublicRoute/>}>
-            <Route path={'/login'} element={<Login/>}/> 
-          
+            <Route path={'/login'} element={<Login/>}/>        
          </Route>
         
           <Route path='/' element={<CargoServicesLanding/>}/> 
@@ -38,8 +39,11 @@ function App() {
           {/* <Route path={'/user-login'} element={<UserLogin/>}/>  */}
         </Route>
       </Route>
-      <Route path='*' element={<NotFound/>} />
-   </Routes>
+      <Route path='*' element={<NotFound />} />
+      
+      </Routes>
+      <ToastContainer position='top-center' autoClose={2000} />
+    </>
   )
 }
 
