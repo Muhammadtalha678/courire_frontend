@@ -20,4 +20,7 @@ export const AppRoutes = {
     
     // user info route
     userInfo: BASE_URL + "/api/userInfo",
+    
+    // delet booking by bilty no
+    deleteBooking: BASE_URL + "/api/deleteBooking",
 }

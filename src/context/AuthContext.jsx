@@ -8,9 +8,9 @@ const AuthContextProvider = ({ children }) => {
     const [loading, setLoading] = useState(true); // added loading state
     useEffect(() => {
         
-        console.log(user);
+        // console.log(user);
         const token = localStorage.getItem('token')
-        console.log(token);
+        // console.log(token);
         if (token && !user) {
             getUserInfo(token)
         }
