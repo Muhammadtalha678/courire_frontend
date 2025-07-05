@@ -1,8 +1,6 @@
 import './App.css'
 import {Routes,Route} from 'react-router-dom'
-import Booking from './pages/booking.jsx'
 import ContainerBooking from './pages/container.jsx'
-// import TrackingPage from './pages/tracking.jsx'
 import Layout from './components/Layout.jsx'
 import CargoServicesLanding from './pages/CargoServicesLanding.jsx'
 import Login from './pages/login.jsx'
@@ -11,18 +9,17 @@ import ContainerList from './pages/containerList.jsx'
 import Services from './pages/services.jsx'
 import ProtectedRoute from './components/ProtectedRoute.jsx'
 import { useAuth } from './context/AuthContext.jsx'
-import {Navigate} from 'react-router-dom'
 import PublicRoute from './components/PublicRoute.jsx'
 import NotFound from './components/Not-Found.jsx'
-import UserLogin from './components/UserLogin.jsx'
 import { ToastContainer } from 'react-toastify'
+import AddBooking from './pages/add-booking.jsx'
 function App() {
   const {user} = useAuth()
   return (
     <>
     <Routes>
       <Route element={<ProtectedRoute/>}>
-          <Route path='/booking' element={<Booking/>}/> 
+          <Route path='/add-booking' element={<AddBooking/>}/> 
           <Route path='/container' element={<ContainerBooking/>}/> 
           <Route path='/all-bookings' element={<BookingList/>}/> 
           <Route path='/all-containers' element={<ContainerList/>}/> 
