@@ -43,9 +43,9 @@ const [loading,setLoading] = useState(false)
       className="flex-1 px-4 py-3  w-full bg-gray-200"
       placeholder="Add Branch"
     />
-    <p className='text-red-600 text-sm'>{branchErr}</p>
+    {branchErr && <p className='text-red-600 text-sm'>{branchErr}</p>}
 
-    <button disabled={loading} onClick={handleSubmit} className="hover:cursor-pointer bg-blue-600 text-white px-4 py-3 font-medium text-lg w-32 ">
+    <button disabled={loading} onClick={handleSubmit} className="hover:cursor-pointer green-600 text-white px-4 py-3 font-medium text-lg w-32 ">
     {loading ? (
   <div className="flex justify-center">
     <svg className="animate-spin h-5 w-5 text-white" viewBox="0 0 24 24">

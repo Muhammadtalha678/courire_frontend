@@ -45,8 +45,8 @@ const AddCity = () => {
       className="flex-1 px-4 py-3  w-full bg-gray-200"
       placeholder="Add City"
     />
-    <p className='text-red-600 text-sm'>{cityErr}</p>
-            <button disabled={loading} onClick={handleSubmit}  className="hover:cursor-pointer bg-blue-600 text-white px-4 py-3 font-medium text-lg w-32 ">
+    {cityErr && <p className='text-red-600 text-sm'>{cityErr}</p>}
+            <button disabled={loading} onClick={handleSubmit}  className="hover:cursor-pointer bg-green-600 text-white px-4 py-3 font-medium text-lg w-32 ">
             {loading ? (
   <div className="flex justify-center">
     <svg className="animate-spin h-5 w-5 text-white" viewBox="0 0 24 24">
