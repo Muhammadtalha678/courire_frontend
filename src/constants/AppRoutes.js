@@ -28,8 +28,10 @@ export const AppRoutes = {
     
     // Add city route
     addCity: BASE_URL + "/api/addCity",
+    allCity: BASE_URL + "/api/allCity",
     
     // Add branch route
     addBranch: BASE_URL + "/api/addBranch",
+    allBranch: BASE_URL + "/api/allBranch",
     
 }
