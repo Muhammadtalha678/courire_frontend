@@ -84,9 +84,9 @@ const Header = () => {
                     user && location.pathname === '/add-booking' ?
                       (
                         <>
-                          <Link  to={'/services'} className="text-gray-800 font-medium underline hover:text-gray-600">
+                          <button  to={'/services'} className="text-gray-800 font-medium underline hover:text-gray-600">
                             Go Back
-                          </Link>
+                          </button>
                           <button onClick={handleLogout} className="text-gray-800 font-medium underline hover:text-gray-600">
                             Logout
                           </button>
@@ -96,9 +96,12 @@ const Header = () => {
                     user && location.pathname === '/create-user' ?
                       (
                         <>
-                          <Link  to={'/admin-pannel'} className="text-gray-800 font-medium underline hover:text-gray-600">
-                            Go Back
-                          </Link>
+                           <button
+      onClick={() => navigate(-1)} // goes back to the previous page
+      className="text-gray-800 font-medium underline hover:text-gray-600"
+    >
+      Go Back
+    </button>
                           <button onClick={handleLogout} className="text-gray-800 font-medium underline hover:text-gray-600">
                             Logout
                           </button>
@@ -108,9 +111,9 @@ const Header = () => {
                     user && location.pathname === '/admin-pannel' ?
                       (
                         <>
-                          <Link  to={'/services'} className="text-gray-800 font-medium underline hover:text-gray-600">
+                          <button  to={'/services'} className="text-gray-800 font-medium underline hover:text-gray-600">
                             Go Back
-                          </Link>
+                          </button>
                           <Link  to={'/add-booking'} className="text-gray-800 font-medium underline hover:text-gray-600">
                             Inv
                           </Link>
