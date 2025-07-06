@@ -37,7 +37,8 @@ const Header = () => {
                
           {
             !user && location.pathname === '/' ?
-              (<>
+              (
+                <>
                 {/* <Link to="/" className="text-gray-800 font-medium hover:cursor-pointer underline hover:text-gray-600">
             Home
           </Link> */}
@@ -47,7 +48,8 @@ const Header = () => {
           <Link to="/login" className="text-gray-800 font-medium hover:cursor-pointer underline hover:text-gray-600">
             Admin Login
           </Link> 
-              </>) :
+                </>
+              ) :
               user && location.pathname === '/' ?
                 (
                   <>
@@ -79,7 +81,47 @@ const Header = () => {
                     </Link>
                     </>
                   ):
+                    user && location.pathname === '/add-booking' ?
+                      (
+                        <>
+                          <Link  to={'/services'} className="text-gray-800 font-medium underline hover:text-gray-600">
+                            Go Back
+                          </Link>
+                          <button onClick={handleLogout} className="text-gray-800 font-medium underline hover:text-gray-600">
+                            Logout
+                          </button>
+                    
+                        </>
+                      ):
+                    user && location.pathname === '/create-user' ?
+                      (
+                        <>
+                          <Link  to={'/admin-pannel'} className="text-gray-800 font-medium underline hover:text-gray-600">
+                            Go Back
+                          </Link>
+                          <button onClick={handleLogout} className="text-gray-800 font-medium underline hover:text-gray-600">
+                            Logout
+                          </button>
+                    
+                        </>
+                      ):
+                    user && location.pathname === '/admin-pannel' ?
+                      (
+                        <>
+                          <Link  to={'/services'} className="text-gray-800 font-medium underline hover:text-gray-600">
+                            Go Back
+                          </Link>
+                          <Link  to={'/add-booking'} className="text-gray-800 font-medium underline hover:text-gray-600">
+                            Inv
+                          </Link>
+                          <button onClick={handleLogout} className="text-gray-800 font-medium underline hover:text-gray-600">
+                            Logout
+                          </button>
+                    
+                        </>
+                      ):
                   <>
+                  
                   {headerMenuItems.map((m, i) => (
                     <Link key={i} to={m.path} className="text-gray-800 font-medium underline hover:text-gray-600">
                       {m.label}
@@ -88,7 +130,7 @@ const Header = () => {
                   <button onClick={handleLogout} className="text-gray-800 font-medium underline hover:text-gray-600">
                     Logout
                   </button>
-                </>
+                  </>
 
           }
         </div>
