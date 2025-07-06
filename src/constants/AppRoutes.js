@@ -25,4 +25,10 @@ export const AppRoutes = {
     // user info route
     userInfo: BASE_URL + "/api/userInfo",
     
+    // Add city route
+    addCity: BASE_URL + "/api/addCity",
+    
+    // Add branch route
+    addBranch: BASE_URL + "/api/addBranch",
+    
 }
