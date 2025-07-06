@@ -42,7 +42,7 @@ const Header = () => {
                 {/* <Link to="/" className="text-gray-800 font-medium hover:cursor-pointer underline hover:text-gray-600">
             Home
           </Link> */}
-          <button className="text-gray-800 font-medium underline hover:cursor-pointer hover:text-gray-600">
+          <button className="text-gray-800 font-medium underline cursor-pointer hover:text-gray-600">
             User Login
           </button>
           <Link to="/login" className="text-gray-800 font-medium hover:cursor-pointer underline hover:text-gray-600">
@@ -57,7 +57,7 @@ const Header = () => {
             Services
           </Link>
                   
-                    <button onClick={handleLogout} className="text-gray-800 font-medium underline hover:cursor-pointer hover:text-gray-600">
+                    <button onClick={handleLogout} className=" text-gray-800 font-medium underline cursor-pointer hover:text-gray-600">
                       Logout
                     </button>
                     
@@ -69,7 +69,7 @@ const Header = () => {
                     <Link to="/" className="text-gray-800 font-medium hover:cursor-pointer underline hover:text-gray-600">
                       Home
                     </Link>
-                    <button onClick={handleLogout} className="text-gray-800 font-medium underline hover:text-gray-600">
+                    <button onClick={handleLogout} className="text-gray-800 font-medium underline hover:text-gray-600 cursor-pointer">
                       Logout
                     </button>
                   </>
@@ -84,25 +84,10 @@ const Header = () => {
                     user && location.pathname === '/add-booking' ?
                       (
                         <>
-                          <button  to={'/services'} className="text-gray-800 font-medium underline hover:text-gray-600">
+                          <button  onClick={() => navigate(-1)} className="text-gray-800 font-medium underline hover:text-gray-600 cursor-pointer">
                             Go Back
                           </button>
-                          <button onClick={handleLogout} className="text-gray-800 font-medium underline hover:text-gray-600">
-                            Logout
-                          </button>
-                    
-                        </>
-                      ):
-                    user && location.pathname === '/create-user' ?
-                      (
-                        <>
-                           <button
-      onClick={() => navigate(-1)} // goes back to the previous page
-      className="text-gray-800 font-medium underline hover:text-gray-600"
-    >
-      Go Back
-    </button>
-                          <button onClick={handleLogout} className="text-gray-800 font-medium underline hover:text-gray-600">
+                          <button onClick={handleLogout} className="text-gray-800 font-medium underline hover:text-gray-600 cursor-pointer">
                             Logout
                           </button>
                     
@@ -111,13 +96,13 @@ const Header = () => {
                     user && location.pathname === '/admin-pannel' ?
                       (
                         <>
-                          <button  to={'/services'} className="text-gray-800 font-medium underline hover:text-gray-600">
+                          <button  onClick={() => navigate(-1)} className="text-gray-800 font-medium underline hover:text-gray-600 cursor-pointer">
                             Go Back
                           </button>
                           <Link  to={'/add-booking'} className="text-gray-800 font-medium underline hover:text-gray-600">
                             Inv
                           </Link>
-                          <button onClick={handleLogout} className="text-gray-800 font-medium underline hover:text-gray-600">
+                          <button onClick={handleLogout} className="text-gray-800 font-medium underline hover:text-gray-600 cursor-pointer">
                             Logout
                           </button>
                     
