@@ -12,6 +12,9 @@ const InvoiceForm = () => {
     const  [isEditingBooking,setIsEditingBooking] = useState(false)
     const  [isDeleting,setIsDeleting] = useState(false)
 
+    const [branchList, setBranchList] = useState([]);
+    const [cityList, setCityList] = useState([]);
+
     const [formData, setFormData] = useState({
     SenderName: "",
     SenderMobile: "",
@@ -109,7 +112,7 @@ const InvoiceForm = () => {
    
     const handleSubmit = async(e) => {
         e.preventDefault();
-        // console.log(formData);
+        console.log(formData);
         
         const newErrors = {};
          // Required Fields
@@ -290,7 +293,31 @@ const InvoiceForm = () => {
           AmountInWords:amountInWords
         }));
       }, [formData.Charges, formData.Vat, formData.Discount]);
-      
+     
+  useEffect(() => {
+    const fetchData = async () => {
+      try {
+        const [branchRes, cityRes] = await Promise.all([
+          axios.get(AppRoutes.allBranch),
+          axios.get(AppRoutes.allCity),
+        ]);
+        // console.log(branchRes);
+        // console.log(cityRes)
+        
+        const allBranches = branchRes.data?.data?.allBranches || [];
+        const allCities = cityRes.data?.data?.allCities || [];
+  
+        setBranchList(allBranches);
+        setCityList(allCities);
+
+      } catch (error) {
+        const err = error?.response?.data?.errors;
+            if (err?.general) toast.error(err.general);
+            if (!err) toast.error('Something went wrong');
+      }
+    }  
+    fetchData()
+  },[])
   return (
     <div className="min-h-screen bg-gradient-to-br from-gray-100 to-gray-300 p-6">
         <form onSubmit={handleSubmit} className="max-w-7xl mx-auto bg-white shadow-xl rounded-xl p-6 space-y-6">
@@ -321,7 +348,19 @@ const InvoiceForm = () => {
           </div>
             <div>
             <label  className="font-medium">Branch</label>
-            <input name='Branch' onChange={handleChange} value={formData.Branch} type="text" className="w-full border rounded px-2 py-1" />
+            <select
+              name="Branch"
+              value={formData.Branch}
+              onChange={handleChange}
+              className="w-full px-4 py-2 border rounded"
+            >
+              <option value="">Select Branch</option>
+              {branchList.map((branch,index) => (
+                <option key={index} value={branch.branch}>
+                  {branch.branch}
+                </option>
+              ))}
+            </select>
             {errors["Branch"] && (
                     <p className="text-sm text-red-600 mt-1">{errors["Branch"]}</p>
                     )}
@@ -347,13 +386,30 @@ const InvoiceForm = () => {
                 <label className="block text-sm font-medium text-gray-700">
                     {sender.label}
                 </label>
-                <input
+                {
+                 sender.key === "SenderArea" ? (
+                  <select
+                    name="SenderArea"
+                    value={formData.SenderArea}
+                    onChange={handleChange}
+                    className="w-full border rounded px-2 py-1"
+                  >
+                    <option value="">Select Area</option>
+                    {cityList.map((area, idx) => (
+                      <option key={idx} value={area.city}>
+                        {area.city}
+                      </option>
+                    ))}
+                  </select>
+                ) 
+                :(<input
                     name={sender.key}
                     type="text"
                     value={formData[sender.key]}
                     onChange={handleChange}
                     className="w-full border rounded px-2 py-1"
-                    />
+                    />)
+                }
                      {errors[sender.key] && (
                     <p className="text-sm text-red-600 mt-1">{errors[sender.key]}</p>
                     )}
