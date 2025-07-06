@@ -3,7 +3,7 @@ import Header from '../components/Header'
 import CreateUser from '../components/CreateUser'
 import AddCity from '../components/AddCity'
 import AddBranch from '../components/AddBranch'
-import AdminPanelButton from '../components/AdminPannelButton'
+import AdminPanelButton  from '../components/AdminPannelButton'
 const AdminPannel = () => {
   const [isBranchAdd,setIsBranchAdd] = useState(false)
   const [isCityAdd,setIsCityAdd] = useState(false)
