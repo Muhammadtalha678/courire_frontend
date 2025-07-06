@@ -3,6 +3,7 @@ import {numberToWords} from '../lib/helper/numberToWord'
 import { toast } from 'react-toastify';
 import axios from 'axios';
 import { AppRoutes } from '../constants/AppRoutes';
+import {handlePdfSave} from '../lib/helper/pdfGenerator'
 const InvoiceForm = () => {
     
     const [errors, setErrors] = useState({});
@@ -644,6 +645,14 @@ const InvoiceForm = () => {
                 // "Del. Invoice",
                 // "PDF To Whatsapp",
                 {
+                  label: "Save & Print",
+                  onClick: () => handlePdfSave(formData,'Save&PRINT'),
+                },
+                {
+                  label: "Save PDF",
+                  onClick: () => () =>  handlePdfSave(formData, 'SavePDF'),
+                },
+                {
                   label: "Edit Invoice",
                   onClick: handleEdit,
                   isLoading: isEditingBooking,
@@ -652,6 +661,10 @@ const InvoiceForm = () => {
                   label: "Del. Invoice",
                   onClick: () => handleDelete(formData.BiltyNo),
                   isLoading: isDeleting
+                },
+                {
+                  label: "PDF To Whatsapp",
+                  onClick: () => handlePdfSave(formData,"SendToWhatsapp"),
                 },
                 ].map(({label,onClick,isLoading},index) => (
                 <button
