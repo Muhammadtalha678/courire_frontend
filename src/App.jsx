@@ -13,6 +13,7 @@ import PublicRoute from './components/PublicRoute.jsx'
 import NotFound from './components/Not-Found.jsx'
 import { ToastContainer } from 'react-toastify'
 import AddBooking from './pages/add-booking.jsx'
+import AdminPannel from './pages/admin-pannel.jsx'
 function App() {
   const {user} = useAuth()
   return (
@@ -23,6 +24,7 @@ function App() {
           <Route path='/container' element={<ContainerBooking/>}/> 
           <Route path='/all-bookings' element={<BookingList/>}/> 
           <Route path='/all-containers' element={<ContainerList/>}/> 
+          <Route path={'/admin-pannel'} element={<AdminPannel/>}/>        
           
       </Route>
       <Route element={<Layout/>}>
