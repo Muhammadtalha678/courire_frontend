@@ -706,7 +706,7 @@ const InvoiceForm = () => {
                 },
                 {
                   label: "Save PDF",
-                  onClick: () => () =>  handlePdfSave(formData, 'SavePDF'),
+                  onClick: () =>  handlePdfSave(formData, 'SavePDF'),
                 },
                 {
                   label: "Edit Invoice",
