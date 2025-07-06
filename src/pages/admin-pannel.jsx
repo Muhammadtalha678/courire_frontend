@@ -84,7 +84,7 @@ const AdminPannel = () => {
                  <AdminPanelButton 
          disabled={isCityAdd} 
          onClick={() => {
-            setIsCityAdd(false); setIsUserAdd(true); setIsBranchAdd(false)
+            setIsCityAdd(true); setIsUserAdd(false); setIsBranchAdd(false)
          }}
          label={"Add City"}
         />
