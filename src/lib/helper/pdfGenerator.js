@@ -94,7 +94,7 @@ export const handlePdfSave = (formData, buttonType) => {
   doc.setFontSize(16);
   doc.text(`$${formData.InvoiceTotal || "0.00"}`, 160, finalY + 25);
 
-  const fileName = `booking_${formData.trackingId || "record"}`;
+  const fileName = `booking_${formData.InvoiceNo || "record"}`;
 
   if (buttonType === "SavePDF") {
     doc.save(`${fileName}.pdf`);
