@@ -36,9 +36,9 @@ export function numberToWords(num) {
   return words.trim();
 }
 
-// Example usage:
-console.log(numberToWords(123));     // Output: one hundred and twenty-three
-console.log(numberToWords(7890));    // Output: seven thousand eight hundred and ninety
-console.log(numberToWords(1000000)); // Output: one million
-console.log(numberToWords(543210987)); // Output: five hundred forty-three million two hundred ten thousand nine hundred eighty-seven
-console.log(numberToWords(0));       // Output: zero
+// // Example usage:
+// console.log(numberToWords(123));     // Output: one hundred and twenty-three
+// console.log(numberToWords(7890));    // Output: seven thousand eight hundred and ninety
+// console.log(numberToWords(1000000)); // Output: one million
+// console.log(numberToWords(543210987)); // Output: five hundred forty-three million two hundred ten thousand nine hundred eighty-seven
+// console.log(numberToWords(0));       // Output: zero
