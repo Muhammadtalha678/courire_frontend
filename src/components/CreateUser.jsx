@@ -2,6 +2,7 @@ import axios from 'axios';
 import React,{useState,useEffect} from 'react'
 import {useNavigate} from 'react-router-dom'
 import { toast } from 'react-toastify';
+import { AppRoutes } from '../constants/AppRoutes';
 
 const CreateUser = () => {
     const [email, setEmail] = useState('');
@@ -32,7 +33,7 @@ const CreateUser = () => {
         setEmailErr('Please enter a valid email address!');
         return;
       }
-    const response = await axios.post(AppRoutes.login,{email,password})
+    const response = await axios.post(AppRoutes.register,{email,password})
     const data = response.data;
     
     // localStorage.setItem('token',data?.data?.userData?.accessToken)
@@ -40,7 +41,7 @@ const CreateUser = () => {
     console.log(data);
     
     toast.success(data?.data?.message);
-    navigate('/services')
+    // navigate('/services')
     
     
 } catch (error) {

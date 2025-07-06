@@ -5,6 +5,7 @@ console.log(BASE_URL);
 
 
 export const AppRoutes = {
+    register: BASE_URL + "/api/auth/register",
     login: BASE_URL + "/api/auth/login",
     // booking routers
     addBooking: BASE_URL + "/api/addBooking",
