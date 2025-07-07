@@ -15,7 +15,14 @@ import { ToastContainer } from 'react-toastify'
 import AddBooking from './pages/add-booking.jsx'
 import AdminPannel from './pages/admin-pannel.jsx'
 function App() {
-  const {user} = useAuth()
+  const { user,loading } = useAuth()
+  if (loading) {
+    return (
+      <div className="flex items-center justify-center h-screen bg-gray-50 text-purple-600 text-xl">
+        Loading...
+      </div>
+    );
+  }
   return (
     <>
     <Routes>

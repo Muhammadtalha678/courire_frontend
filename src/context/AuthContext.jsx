@@ -40,7 +40,7 @@ const AuthContextProvider = ({ children }) => {
             setLoading(false)
         }
     }
-    return <AuthContext.Provider value={{user,setUser}}>
+    return <AuthContext.Provider value={{user,setUser,loading }}>
         {children}
     </AuthContext.Provider>
 }
