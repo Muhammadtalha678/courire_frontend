@@ -4,7 +4,7 @@
   import axios from 'axios';
   import { AppRoutes } from '../constants/AppRoutes';
   import {handlePdfSave} from '../lib/helper/pdfGenerator'
-  const InvoiceForm = ({cityList,branchList}) => {
+  const InvoiceForm = ({cityList,branchList,loadingList}) => {
       
       const [errors, setErrors] = useState({});
       const  [isSubmitted,setIsSubmitted] = useState(false)
@@ -332,21 +332,27 @@
               </div>
                 <div>
                 <label  className="font-medium">Branch</label>
-                <select
-                  disabled={isSubmitted && !isEditClicked}
-                  name="Branch"
-                  value={formData.Branch}
-                  // onChange={isSubmitted && !isEditClicked ? () => { }  :handleChange}
-                  onChange={handleChange}
-                  className="w-full px-4 py-2 border rounded"
-                >
-                  <option value="">Select Branch</option>
-                  {branchList.map((branch,index) => (
-                    <option key={index} value={branch.branch}>
-                      {branch.branch}
-                    </option>
-                  ))}
-                </select>
+                {
+                  loadingList ? (<h1>Loading...</h1>) : (
+                    <select
+                    disabled={isSubmitted && !isEditClicked}
+                    name="Branch"
+                    value={formData.Branch}
+                    // onChange={isSubmitted && !isEditClicked ? () => { }  :handleChange}
+                    onChange={handleChange}
+                    className="w-full px-4 py-2 border rounded"
+                  >
+                    <option value="">Select Branch</option>
+                    {branchList.map((branch,index) => (
+                      <option key={index} value={branch.branch}>
+                        {branch.branch}
+                      </option>
+                    ))}
+                  </select>
+                  ) 
+               
+                }
+               
                 {errors["Branch"] && (
                         <p className="text-sm text-red-600 mt-1">{errors["Branch"]}</p>
                         )}
@@ -373,31 +379,35 @@
                         {sender.label}
                     </label>
                     {
-                    sender.key === "SenderArea" ? (
-                        <select
-                          disabled={isSubmitted && !isEditClicked}
-                        readOnly={isSubmitted && !isEditClicked}
-                        name="SenderArea"
-                        value={formData.SenderArea}
-                        onChange={handleChange}
-                        className="w-full border rounded px-2 py-1"
-                      >
-                        <option value="">Select Area</option>
-                        {cityList.map((area, idx) => (
-                          <option key={idx} value={area.city}>
-                            {area.city}
-                          </option>
-                        ))}
-                      </select>
-                    ) 
-                    :(<input 
-                      readOnly={isSubmitted && !isEditClicked}
-                        name={sender.key}
-                        type="text"
-                        value={formData[sender.key]}
-                        onChange={handleChange}
-                        className="w-full border rounded px-2 py-1"
-                        />)
+                      loadingList ? (<h1>loading...</h1>) :
+                        (
+                          sender.key === "SenderArea" ? (
+                        
+                            <select
+                              disabled={isSubmitted && !isEditClicked}
+                            readOnly={isSubmitted && !isEditClicked}
+                            name="SenderArea"
+                            value={formData.SenderArea}
+                            onChange={handleChange}
+                            className="w-full border rounded px-2 py-1"
+                          >
+                            <option value="">Select Area</option>
+                            {cityList.map((area, idx) => (
+                              <option key={idx} value={area.city}>
+                                {area.city}
+                              </option>
+                            ))}
+                          </select>
+                        ) 
+                        :(<input 
+                          readOnly={isSubmitted && !isEditClicked}
+                            name={sender.key}
+                            type="text"
+                            value={formData[sender.key]}
+                            onChange={handleChange}
+                            className="w-full border rounded px-2 py-1"
+                            />)
+                     )
                     }
                         {errors[sender.key] && (
                         <p className="text-sm text-red-600 mt-1">{errors[sender.key]}</p>

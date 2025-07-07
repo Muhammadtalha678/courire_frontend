@@ -4,14 +4,17 @@ import InvoiceForm from '../components/InvoiceForm'
 import { toast } from 'react-toastify';
 import axios from 'axios';
 import { AppRoutes } from '../constants/AppRoutes';
+import {useAuth} from '../context/AuthContext'
 const AddBooking = () => {
   const [branchList, setBranchList] = useState([]);
   const [cityList, setCityList] = useState([]);
-  const [loading, setLoading] = useState(false);
-    useEffect(() => {
+  const [loadingList, setLoadingList] = useState(false);
+  const {loading} = useAuth  
+  useEffect(() => {
       const fetchData = async () => {
         try {
-          setLoading(true)
+          loading == false && setLoadingList(true) 
+          
           const [branchRes, cityRes] = await Promise.all([
             axios.get(AppRoutes.allBranch),
             axios.get(AppRoutes.allCity),
@@ -31,20 +34,18 @@ const AddBooking = () => {
               if (err?.general) toast.error(err.general);
               if (!err) toast.error('Something went wrong');
         } finally {
-          setLoading(false)
+          loading == false && setLoadingList(false)
           
         }
       }  
       fetchData()
     },[])
-  if (loading) {
-    return <h2 className='text-3xl text-blue-700   flex flex-col justify-center items-center h-screen'>Loading....</h2>
-  }
+  
   return (
      
     <div>
           <Header />
-          <InvoiceForm cityList={cityList} branchList={branchList}/>
+          <InvoiceForm cityList={cityList} branchList={branchList} loadingList={loadingList}/>
     </div>
   )
 }
