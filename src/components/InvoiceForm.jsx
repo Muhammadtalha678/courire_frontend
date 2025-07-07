@@ -101,7 +101,7 @@
     
       const handleSubmit = async(e) => {
           e.preventDefault();
-          console.log(formData);
+          // console.log(formData);
           
           const newErrors = {};
           // Required Fields
@@ -134,7 +134,7 @@
           });
           setErrors(newErrors);
           // If errors exist, return and prevent submit
-          // console.log(Object.keys(newErrors));
+          console.log(Object.keys(newErrors));
           
           if (Object.keys(newErrors).length > 0) {
             return;
@@ -151,7 +151,7 @@
         toast.success(data?.data?.message)
         setIsSubmitted(true)
         } catch (error) {
-          console.log(error);
+          // console.log(error);
           
           const err = error?.response?.data?.errors;
           if (err?.general) toast.error(err.general);
@@ -220,10 +220,10 @@
             ...prev,
             ...data?.data?.bookingData,
           }));
-          console.log("success=>",data);
+          // console.log("success=>",data);
           
         } catch (error) {
-          console.log("error=>",error);
+          // console.log("error=>",error);
           const err = error?.response?.data?.errors;
           if (err?.general) toast.error(err.general);
           if (!err) toast.error('Something went wrong');
@@ -258,7 +258,7 @@
     useEffect(() => {
           
           const allCharges = Object.entries(formData.Charges);
-          console.log(allCharges);
+          // console.log(allCharges);
           let subtotal = allCharges.reduce((sum, [key,value]) => {
             
             if (key === 'Discount') return sum; // Skip Discount
@@ -267,7 +267,7 @@
           }, 0);
           // Apply discount only if enabled
           const discount = parseFloat(formData.Charges.Discount?.total) || 0;
-          // console.log(discount);
+          console.log(discount);
           subtotal -= discount;
           
           // Subtract discount from subtotal (if enabled)
@@ -276,7 +276,7 @@
           
       
       const selectedCharges = allCharges.filter(([key,value]) => value.enabled);
-      console.log(selectedCharges);
+      // console.log(selectedCharges);
       
           let selectedTotal = selectedCharges.reduce((sum, [key,charge]) => {
             const total = parseFloat(charge.total) || 0;
@@ -289,7 +289,7 @@
         
           const invoiceTotal = subtotal + vatTotal ;
         const amountInWords = numberToWords(invoiceTotal.toFixed(2));
-        // console.log(amountInWords);
+        console.log(amountInWords);
         
           setFormData(prev => ({
             ...prev,
