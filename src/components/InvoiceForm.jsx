@@ -4,7 +4,7 @@ import { toast } from 'react-toastify';
 import axios from 'axios';
 import { AppRoutes } from '../constants/AppRoutes';
 import {handlePdfSave} from '../lib/helper/pdfGenerator'
-const InvoiceForm = () => {
+const InvoiceForm = ({cityList,branchList}) => {
     
     const [errors, setErrors] = useState({});
     const  [isSubmitted,setIsSubmitted] = useState(false)
@@ -12,8 +12,7 @@ const InvoiceForm = () => {
     const  [isEditingBooking,setIsEditingBooking] = useState(false)
     const  [isDeleting,setIsDeleting] = useState(false)
 
-    const [branchList, setBranchList] = useState([]);
-    const [cityList, setCityList] = useState([]);
+    
 
     const [formData, setFormData] = useState({
     SenderName: "",
@@ -294,30 +293,7 @@ const InvoiceForm = () => {
         }));
       }, [formData.Charges, formData.Vat, formData.Discount]);
      
-  useEffect(() => {
-    const fetchData = async () => {
-      try {
-        const [branchRes, cityRes] = await Promise.all([
-          axios.get(AppRoutes.allBranch),
-          axios.get(AppRoutes.allCity),
-        ]);
-        // console.log(branchRes);
-        // console.log(cityRes)
-        
-        const allBranches = branchRes.data?.data?.allBranches || [];
-        const allCities = cityRes.data?.data?.allCities || [];
-  
-        setBranchList(allBranches);
-        setCityList(allCities);
 
-      } catch (error) {
-        const err = error?.response?.data?.errors;
-            if (err?.general) toast.error(err.general);
-            if (!err) toast.error('Something went wrong');
-      }
-    }  
-    fetchData()
-  },[])
   return (
     <div className="min-h-screen bg-gradient-to-br from-gray-100 to-gray-300 p-6">
         <form onSubmit={handleSubmit} className="max-w-7xl mx-auto bg-white shadow-xl rounded-xl p-6 space-y-6">
@@ -379,8 +355,8 @@ const InvoiceForm = () => {
                 { label: "ID Number", key: "SenderIdNumber" },
                 { label: "Address", key: "SenderAddress" },
                 { label: "Area", key: "SenderArea" },
-                { label: "Other Details", key: "SenderOtherDetails" },
-                { label: "Item Details", key: "SenderItemDetails" },
+                { label: "Other Details", key: "otherDetails" },
+                { label: "Item Details", key: "itemDetails" },
             ].map((sender,index) => (
                 <div key={index} className="mb-2">
                 <label className="block text-sm font-medium text-gray-700">
