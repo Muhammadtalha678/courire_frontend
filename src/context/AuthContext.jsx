@@ -10,6 +10,7 @@ const AuthContextProvider = ({ children }) => {
         
         // console.log(user);
         const token = localStorage.getItem('token')
+        if (!token) { setLoading(false); return}
         // console.log(token);
         if (token && !user) {
             getUserInfo(token)
