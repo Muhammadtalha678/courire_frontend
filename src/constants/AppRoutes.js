@@ -19,6 +19,8 @@ export const AppRoutes = {
     addContainer: BASE_URL + "/api/addContainer",
     allBookingInvoiceNo: BASE_URL + "/api/allBookingInvoiceNo",
     allContainersList: BASE_URL + "/api/allContainersList",
+    getSingleContainer: BASE_URL + "/api/container",
+    updateSingleContainer: BASE_URL + "/api/update-container",
     
     //search data by tracking id
     tracking: BASE_URL + "/api/tracking",
@@ -34,4 +36,9 @@ export const AppRoutes = {
     addBranch: BASE_URL + "/api/addBranch",
     allBranch: BASE_URL + "/api/allBranch",
     
+    // Add ContainerNo route
+    addContainerNo: BASE_URL + "/api/addContainerNo",
+    editContainerNo: BASE_URL + "/api/editContainerNo",
+    deleteContainerNo: BASE_URL + "/api/deleteContainerNo",
+    allContainerNoList: BASE_URL + "/api/allContainerNoList",
 }
