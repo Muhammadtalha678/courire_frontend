@@ -13,23 +13,21 @@ import {
 
 export default function TrackingStatus({ status,BuiltNo }) {
   const steps = [
-    "Shipment at Godown",
-    "Shipment In Container",
-    "Shipment In Transit",
-    "Shipment at Sending Port",
-    "Shipment Arrived At Port",
-    "Shipment Under Clearance",
-    "Shipment Arrived At Godown",
-    "Out For Delivery",
-    "Delivered",
+    'Shipment at Godown',
+    'Shipment In Container',
+    'Shipment at Sending Port',
+    'Shipment In Transit',
+    'Shipment Arrived At Port',
+    'Shipment Under Clearance',
+    'Shipmen Arrived At Godown',
+    'Out For Delivery',
+    'Delivered'
   ];
-
   const icons = [
     <FaWarehouse />,
     <FaBoxOpen />,
     <FaShippingFast />,
     <FaShip />,
-    <FaPlaneArrival />,
     <FaClipboardList />,
     <FaStore />,
     <FaTruckMoving />,
@@ -38,7 +36,17 @@ export default function TrackingStatus({ status,BuiltNo }) {
 
   const currentStepIndex = steps.indexOf(status);
   console.log(currentStepIndex);
-  
+
+// If manual, render just one step:
+  const isManualStatus = !steps.includes(status);
+if (isManualStatus) {
+  return (
+    <div className="flex items-center space-x-2 p-4 border rounded bg-yellow-100">
+      <i className="fas fa-edit text-yellow-600"></i> {/* Manual FontAwesome icon */}
+      <span className="font-bold">{status}</span>
+    </div>
+  );
+}
   return (
     <section className=" flex items-center justify-center py-10">
       <div className="bg-white rounded-2xl shadow-lg w-full max-w-7xl p-8">
@@ -48,6 +56,7 @@ export default function TrackingStatus({ status,BuiltNo }) {
               BILTY{" "}
               <span className="text-indigo-600 font-bold">#{BuiltNo}</span>
             </h2>
+<FaPlaneArrival />
           </div>
         </div>
 
