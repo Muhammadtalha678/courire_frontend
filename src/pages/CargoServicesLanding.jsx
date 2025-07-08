@@ -88,7 +88,7 @@ export default function CargoServicesLanding() {
           // </div>
           // <></>
     <TrackingStatus
-  status={shipmentStatus}
+  status={shipmentStatus} BuiltNo={showtrackingData.BiltyNo}
 />
 
   )}

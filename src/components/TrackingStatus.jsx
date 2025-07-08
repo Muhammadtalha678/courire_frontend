@@ -11,7 +11,7 @@ import {
   FaCheckCircle,
 } from "react-icons/fa";
 
-export default function TrackingStatus({ status }) {
+export default function TrackingStatus({ status,BuiltNo }) {
   const steps = [
     "Shipment at Godown",
     "Shipment In Container",
@@ -45,8 +45,8 @@ export default function TrackingStatus({ status }) {
         <div className="flex justify-between items-start mb-8 flex-wrap">
           <div>
             <h2 className="text-xl font-semibold">
-              INVOICE{" "}
-              <span className="text-indigo-600 font-bold">#{status.InvoiceNo}</span>
+              BILTY{" "}
+              <span className="text-indigo-600 font-bold">#{BuiltNo}</span>
             </h2>
           </div>
         </div>
