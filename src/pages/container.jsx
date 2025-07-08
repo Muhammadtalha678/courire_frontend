@@ -11,6 +11,7 @@ export default function ContainerBooking() {
   const [cities,SetCities] = useState([])
   const [invoices, SetInvoices] = useState([])
   const [containerList, setContainerList] = useState([])
+  const [containerBookedList, setContainerBookedList] = useState([])
  
   const [loadingList, setLoadingList] = useState(false);
   const {loading} = useAuth
@@ -32,21 +33,25 @@ export default function ContainerBooking() {
       try {
         setLoadingList(true) 
           
-        const [cityRes, invoiceRes,containerRes] = await Promise.all([
+        const [cityRes, invoiceRes,containerRes,bookedContainerRes] = await Promise.all([
           axios.get(AppRoutes.allCity),
           axios.get(AppRoutes.allBookingInvoiceNo),
           axios.get(AppRoutes.allContainerNoList),
+          axios.get(AppRoutes.allContainersList),
         ]) 
         console.log("Cities:", cityRes);
         console.log("Invoices:", invoiceRes);
         console.log("Containers:", containerRes);
+        console.log("Containers:", bookedContainerRes);
 
           const allCities = cityRes.data?.data?.allCities || [];
         const allInvoices = invoiceRes.data?.data?.bookingInvoices || [];
         const allContainers = containerRes.data?.data?.containerNumberRecord || [];
+        const allbookedContainers = bookedContainerRes.data?.data?.containersList || [];
         SetCities(allCities);
         SetInvoices(allInvoices);
         setContainerList(allContainers)
+        setContainerBookedList(allbookedContainers)
           
       } catch (error) {
         const err = error?.response?.data?.errors;
@@ -85,13 +90,34 @@ export default function ContainerBooking() {
                   </tr>
                 </thead>
                 <tbody>
-                  {/* {formData.selectedBilti.map((bilti, i) => (
-                    <tr key={i}>
-                      <td><input value={bilti.containerNo} className="border w-full" /></td>
-                      <td><input value={bilti.invNo} className="border w-full" /></td>
-                      <td><input value={bilti.shippedPieces} className="border w-full" /></td>
-                    </tr>
-                  ))} */}
+                {containerBookedList.map((containerBook, i) => {
+  const invoiceList = containerBook.Invoices || [];
+
+  // Convert Invoices to comma-separated string
+  const invoiceString = invoiceList.join(', ');
+
+  // Calculate total shipped pieces
+  const shippedTotal = invoiceList.reduce((total, invoice) => {
+    const parts = invoice.split('/');
+    const pieces = parseInt(parts[1], 10);
+    return total + (isNaN(pieces) ? 0 : pieces);
+  }, 0);
+
+  return (
+    <tr key={i}>
+      <td>
+        <input className="border w-full text-center" value={containerBook.ContainerNumber} readOnly />
+      </td>
+      <td>
+        <input className="border w-full text-center" value={invoiceString} readOnly />
+      </td>
+      <td>
+        <input className="border w-full text-center" value={shippedTotal} readOnly />
+      </td>
+    </tr>
+  );
+})}
+
                 </tbody>
               </table>
             </div>
