@@ -2,10 +2,11 @@ import axios from 'axios';
 import React, { useState, useEffect } from 'react';
 import Header from '../components/Header';
 import { AppRoutes } from '../constants/AppRoutes';
+import { useNavigate } from 'react-router-dom';
 
 const ContainerList = () => {
     const [containerList, setContainerList] = useState([]);
-
+    const navigate = useNavigate()
     useEffect(() => {
         const getContainerList = async () => {
             try {
@@ -23,7 +24,8 @@ const ContainerList = () => {
     const handleEdit = (id) => {
         console.log("Edit Container with ID:", id);
         // Yahan aap edit page pe navigate kar sakte hain
-        // Misaal ke tor par: navigate(`/containers/edit/${id}`);
+         navigate(`/update-container/edit/${id}`);
+
     };
 
     const handleDelete = (id) => {
@@ -71,17 +73,12 @@ const ContainerList = () => {
                                         <td className="px-6 py-4">
                                             <div className="flex items-center justify-center gap-4">
                                                 <button
-                                                    onClick={() => handleEdit(container._id)}
-                                                    className="font-medium text-blue-600 hover:text-blue-800"
+                                                    onClick={ ()=> handleEdit(container._id)}
+                                                    className="font-medium text-blue-600 hover:text-blue-800 cursor-pointer"
                                                 >
-                                                    Edit
+                                                    Update Status
                                                 </button>
-                                                <button
-                                                    onClick={() => handleDelete(container._id)}
-                                                    className="font-medium text-red-600 hover:text-red-800"
-                                                >
-                                                    Delete
-                                                </button>
+                                                
                                             </div>
                                         </td>
                                     </tr>
