@@ -1,12 +1,14 @@
 CargoServicesLanding.jsx
 import axios from 'axios';
-import React, { useState } from 'react';
+import React, { useState,useEffect } from 'react';
 import Background from "../assets/images/990244-cargo.jpg";
 import { AppRoutes } from '../constants/AppRoutes';
+import TrackingStatus from '../components/TrackingStatus';
 
 export default function CargoServicesLanding() {
   const [trackingId, setTrackingId] = useState('');
   const [showtrackingData, setshowtrackingData] = useState(null);
+  const [shipmentStatus, setShipmentStatus] = useState('');
  const [loading,setLoading] = useState(false)
   const handleSearch =async () => {
     try {
@@ -19,18 +21,19 @@ export default function CargoServicesLanding() {
  
       const response = await axios.get(`${AppRoutes.tracking}/${trackingId}`)
       const data = response.data
-      // console.log('data:', data);
+      console.log('data',data);
+      
       setshowtrackingData(data.data.foundTrackingId)
-    
+      setShipmentStatus(data.data.status)
+      
     } catch (error) {
       alert(`${error?.response?.data?.errors?.general}` || 'Something went wrong')
       console.log('error:', error);
     } finally {
-
+      
       setLoading(false)
     }
   };
-
   return (
     <div className="flex flex-col justify-center">
 <div className="backdrop-blur-sm rounded-xl p-8 shadow-lg text-center">
@@ -60,29 +63,34 @@ export default function CargoServicesLanding() {
   </div>
 
   {showtrackingData && (
-    <div className="overflow-x-auto">
-      <table className="w-full text-sm text-left border border-gray-300">
-        <tbody>
-          {/* object.entries ny convert kra array ma is trha objet ko
-      [
-        ["name","talha"]
-        ]
-      phr map ma destructor method array krky key value haskil krli */}
-          {Object.entries(showtrackingData).map(([key, value]) => {
-            // console.log(value);
+    // <div className="overflow-x-auto">
+    //   <table className="w-full text-sm text-left border border-gray-300">
+    //     <tbody>
+    //       {/* object.entries ny convert kra array ma is trha objet ko
+    //   [
+    //     ["name","talha"]
+    //     ]
+    //   phr map ma destructor method array krky key value haskil krli */}
+    //       {Object.entries(showtrackingData).map(([key, value]) => {
+    //         // console.log(value);
 
-            return (
-              <tr key={key} className="border-b border-gray-200">
-                <td className="font-semibold capitalize px-3 py-2">
-                  {key.replace(/([A-Z])/g, " $1")}
-                </td>
-                <td className="px-3 py-2">{value}</td>
-              </tr>
-            );
-          })}
-        </tbody>
-      </table>
-    </div>
+    //         return (
+    //           <tr key={key} className="border-b border-gray-200">
+    //             <td className="font-semibold capitalize px-3 py-2">
+    //               {key.replace(/([A-Z])/g, " $1")}
+    //             </td>
+    //             <td className="px-3 py-2">{value}</td>
+    //           </tr>
+    //         );
+    //       })}
+    //     </tbody>
+    //   </table>
+          // </div>
+          // <></>
+    <TrackingStatus
+  status={shipmentStatus}
+/>
+
   )}
 </div>
 </div>
