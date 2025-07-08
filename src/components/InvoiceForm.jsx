@@ -438,7 +438,7 @@
                         <select
                         disabled={isSubmitted && !isEditClicked}
                         name="ReceiverArea"
-                        value={formData.SenderArea}
+                        value={formData.ReceiverArea}
                         onChange={handleChange}
                         className="w-full border rounded px-2 py-1"
                       >
