@@ -9,7 +9,7 @@ const AuthContextProvider = ({ children }) => {
     useEffect(() => {
         
         // console.log(user);
-        const token = localStorage.getItem('token')
+        const token = sessionStorage.getItem('token')
         if (!token) { setLoading(false); return}
         // console.log(token);
         if (token && !user) {
@@ -33,7 +33,7 @@ const AuthContextProvider = ({ children }) => {
             const status = error.response?.status
             const apiErrors = error.response?.data?.errors || {};
             if (status === 401 || status === 403) {
-                localStorage.removeItem('token')
+                sessionStorage.removeItem('token')
                 setUser(null)
             }
         }
