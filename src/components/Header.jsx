@@ -93,6 +93,36 @@ const Header = () => {
                     
                         </>
                       ):
+                    user && location.pathname === '/container' ?
+                      (
+                        <>
+                          <button  onClick={() => navigate(-1)} className="text-gray-800 font-medium underline hover:text-gray-600 cursor-pointer">
+                            Back
+                          </button>
+                          <Link  to={'/add-booking'} className="text-gray-800 font-medium underline hover:text-gray-600">
+                            Invoice
+                          </Link>
+                          <button onClick={handleLogout} className="text-gray-800 font-medium underline hover:text-gray-600 cursor-pointer">
+                            Logout
+                          </button>
+                    
+                        </>
+                      ):
+                      user && location.pathname.includes('update-container') ?
+                      (
+                        <>
+                          <button  onClick={() => navigate(-1)} className="text-gray-800 font-medium underline hover:text-gray-600 cursor-pointer">
+                            Back
+                          </button>
+                          <Link  to={'/add-booking'} className="text-gray-800 font-medium underline hover:text-gray-600">
+                            Inv
+                          </Link>
+                          <button onClick={handleLogout} className="text-gray-800 font-medium underline hover:text-gray-600 cursor-pointer">
+                            Logout
+                          </button>
+                    
+                        </>
+                      ):
                     user && location.pathname === '/admin-pannel' ?
                       (
                         <>
