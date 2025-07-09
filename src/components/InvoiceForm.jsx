@@ -483,19 +483,33 @@
 
                 {Object.entries(formData.Charges).map(([chargeKey, chargeData], index) => {
       if (chargeKey === "SubTotal") return null;
-
+                  
       return (
         <div key={chargeKey} className="grid grid-cols-6 gap-2 items-center mt-1">
           <div>
-            <input 
-              disabled={isSubmitted && !isEditClicked}
-              type="checkbox"
-              checked={chargeData.enabled}
-              onChange={handleChange}
-              data-charge={chargeKey}
-              data-field="enabled"
-              className="h-4 w-4 text-blue-600"
-            />
+            {chargeKey === "Discount" ? (
+              <input 
+                disabled={true}
+                type="checkbox"
+                // checked={false}
+                // onChange={handleChange}
+                // data-charge={chargeKey}
+                // data-field="enabled"
+                className="h-4 w-4 text-blue-600"
+              />
+              
+            ) : (
+              <input 
+                disabled={isSubmitted && !isEditClicked}
+                type="checkbox"
+                checked={chargeData.enabled}
+                onChange={handleChange}
+                data-charge={chargeKey}
+                data-field="enabled"
+                className="h-4 w-4 text-blue-600"
+              />
+              
+            ) } 
           </div>
           <div className="text-sm font-medium text-gray-700">{chargeKey}</div>
           <input 
@@ -613,7 +627,7 @@
                 ( <button
                 disabled={isSubmittedBooking}
                   type="submit"
-                  className="md:col-span-2 bg-blue-600 text-white py-2 px-4 rounded hover:bg-blue-700 transition w-full mt-4"
+                  className="md:col-span-2 bg-blue-600 text-white py-2 px-4 rounded hover:bg-blue-700 transition w-full mt-4 cursor-pointer"
                 >
                   {
                         isSubmittedBooking ?
@@ -637,7 +651,7 @@
               <button
                 type="button"
                 onClick={handleNewShipment}
-                className="bg-green-600 text-white py-2 px-4 rounded hover:bg-green-700 transition w-full mt-4"
+                className="bg-green-600 text-white py-2 px-4 rounded hover:bg-green-700 transition w-full mt-4 cursor-pointer"
               >
                 New Shipment
               </button>
@@ -651,7 +665,7 @@
               <button
                 type="button"
                 onClick={handleEdit}
-                className="bg-green-600 text-white py-2 px-4 rounded hover:bg-green-700 transition w-full mt-4"
+                className="bg-green-600 text-white py-2 px-4 rounded hover:bg-green-700 transition w-full mt-4 cursor-pointer"
               >
                   {isEditingBooking ?
                     <div className="flex justify-center">
@@ -721,7 +735,7 @@
                       key={index}
                       onClick={onClick}
                       disabled={isLoading}
-                      className="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded shadow-md"
+                      className="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded shadow-md cursor-pointer"
                   >
                       {isLoading ? (
             <div className="flex justify-center">
