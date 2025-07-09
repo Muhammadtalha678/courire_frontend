@@ -97,12 +97,24 @@ const ContainerList = () => {
             <td className="px-6 py-4 text-center">{invoiceNumbers.join(', ') || '-'}</td>
             <td className="px-6 py-4 text-center">{totalShipped}</td>
             <td className="px-6 py-4 text-center">{container.Status || '-'}</td>
-            <td className="px-6 py-4 text-center">
+            <td className="px-6 flex gap-4 py-4 text-center">
               <button
                 onClick={() => handleEdit(container._id)}
-                className="text-blue-600 hover:text-blue-800"
+                className="text-blue-600 whitespace-nowrap hover:text-blue-800"
               >
                 Update Status
+              </button>
+              <button
+                onClick={() => handleEdit(container._id)}
+                className="text-green-600 whitespace-nowrap hover:text-blue-800"
+              >
+                Edit Container
+              </button>
+              <button
+                onClick={() => handleEdit(container._id)}
+                className="text-red-600 whitespace-nowrap hover:text-blue-800"
+              >
+                Delete Container
               </button>
             </td>
           </tr>
