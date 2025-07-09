@@ -45,54 +45,76 @@ const ContainerList = () => {
             <Header />
             <div className="p-4">
                 <div className="relative overflow-x-auto shadow-md sm:rounded-lg">
-                    <table className="w-full text-sm text-left text-gray-700 bg-white">
-                        <thead className="text-xl uppercase bg-gray-200 text-gray-800">
-                            <tr className="border-b border-gray-300">
-                                <th scope="col" className="px-6 py-3">S.No</th>
-                                {allKeys.map((key) => (
-                                    <th key={key} scope="col" className="px-6 py-3 capitalize text-center">{key.replace(/([A-Z])/g, ' $1')}</th>
-                                ))}
-                                {/* --- Actions ka naya column --- */}
-                                <th scope="col" className="px-6 py-3 text-center">Actions</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            {containerList.length > 0 ? (
-                                containerList.map((container, index) => (
-                                    <tr key={container._id || index} className="bg-white border-b hover:bg-gray-50">
-                                        <td className="px-6 py-4 font-medium text-gray-900 text-center">{index + 1}</td>
-                                        {allKeys.map((key) => {
-                                            let value = container[key];
-                                            // --- Aapka custom logic barqarar rakha gaya hai ---
-                                            if (key === 'Destination' && typeof value === 'object' && value !== null) {
-                                                value = `From: ${value.From} → To: ${value.To}`;
-                                            }
-                                            return <td className="px-6 py-4 text-center" key={key}>{value}</td>;
-                                        })}
-                                        {/* --- Edit/Delete buttons wala naya cell --- */}
-                                        <td className="px-6 py-4">
-                                            <div className="flex items-center justify-center gap-4">
-                                                <button
-                                                    onClick={ ()=> handleEdit(container._id)}
-                                                    className="font-medium text-blue-600 hover:text-blue-800 cursor-pointer"
-                                                >
-                                                    Update Status
-                                                </button>
-                                                
-                                            </div>
-                                        </td>
-                                    </tr>
-                                ))
-                            ) : (
-                                <tr>
-                                    {/* --- colSpan ab dynamic hai --- */}
-                                    <td colSpan={allKeys.length + 2} className="text-center py-8 text-red-600 font-semibold text-lg">
-                                        No Containers Data Found
-                                    </td>
-                                </tr>
-                            )}
-                        </tbody>
-                    </table>
+                <table className="w-full text-sm text-left text-gray-700 bg-white">
+  <thead className="text-xl uppercase bg-gray-200 text-gray-800">
+    <tr className="border-b border-gray-300">
+      <th className="px-6 py-3 text-center">S.No</th>
+      <th className="px-6 py-3 text-center">Container No</th>
+      <th className="px-6 py-3 text-center">Destination</th>
+      <th className="px-6 py-3 text-center">Invoices</th>
+      <th className="px-6 py-3 text-center">Shipped</th>
+      <th className="px-6 py-3 text-center">Status</th>
+      <th className="px-6 py-3 text-center">Actions</th>
+    </tr>
+  </thead>
+  <tbody>
+    {containerList.length > 0 ? (
+      containerList.map((container, index) => {
+        // --- Invoices parsing ---
+        const invoiceNumbers = [];
+        let totalShipped = 0;
+
+        // if (Array.isArray(container.Invoices)) {
+        //   container.Invoices.forEach(item => {
+        //     const [inv, qty] = item.split('/');
+        //     invoiceNumbers.push(inv);
+        //     totalShipped += parseInt(qty || 0);
+        //   });
+          // }
+          let Destination
+        if (container.Destination) {
+              Destination =` From: ${container.Destination.From} → To: ${container.Destination.To}`
+          }
+          console.log(Destination);
+          
+          if (container.Invoices) {
+              container.Invoices.forEach((item) => {
+                  const [inv, qty] = item.split('/');
+                  invoiceNumbers.push(inv);
+                  totalShipped += parseInt(qty || 0);
+              });
+                
+          }
+          
+        return (
+          <tr key={container._id || index} className="bg-white border-b hover:bg-gray-50">
+            <td className="px-6 py-4 text-center">{index + 1}</td>
+            <td className="px-6 py-4 text-center">{container.ContainerNumber || '-'}</td>
+            <td className="px-6 py-4 text-center">{Destination}</td>
+            <td className="px-6 py-4 text-center">{invoiceNumbers.join(', ') || '-'}</td>
+            <td className="px-6 py-4 text-center">{totalShipped}</td>
+            <td className="px-6 py-4 text-center">{container.Status || '-'}</td>
+            <td className="px-6 py-4 text-center">
+              <button
+                onClick={() => handleEdit(container._id)}
+                className="text-blue-600 hover:text-blue-800"
+              >
+                Update Status
+              </button>
+            </td>
+          </tr>
+        );
+      })
+    ) : (
+      <tr>
+        <td colSpan={7} className="text-center py-8 text-red-600 font-semibold text-lg">
+          No Containers Data Found
+        </td>
+      </tr>
+    )}
+  </tbody>
+</table>
+
                 </div>
             </div>
         </div>
