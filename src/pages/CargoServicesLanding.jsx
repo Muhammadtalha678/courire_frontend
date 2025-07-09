@@ -8,9 +8,12 @@ import TrackingStatus from '../components/TrackingStatus';
 export default function CargoServicesLanding() {
   const [trackingId, setTrackingId] = useState('');
   const [showtrackingData, setshowtrackingData] = useState(null);
-  const [shipmentStatus, setShipmentStatus] = useState('');
- const [loading,setLoading] = useState(false)
+  // const [shipmentStatus, setShipmentStatus] = useState('');
+  const [shipmentContainerDetails, setShipmentContainerDetails] = useState([]);
+
+  const [loading, setLoading] = useState(false)
   const handleSearch =async () => {
+    
     try {
       setLoading(true)
       if (trackingId.trim() === '') return;
@@ -20,11 +23,13 @@ export default function CargoServicesLanding() {
       };
  
       const response = await axios.get(`${AppRoutes.tracking}/${trackingId}`)
-      const data = response.data
-      console.log('data',data);
+      // console.log(response);
       
-      setshowtrackingData(data.data.foundTrackingId)
-      setShipmentStatus(data.data.status)
+      const data = response.data
+      // console.log('data',data.data.shipmentParts);
+      
+      setshowtrackingData(data?.data?.foundTrackingId)
+      setShipmentContainerDetails(data?.data?.shipmentParts)
       
     } catch (error) {
       alert(`${error?.response?.data?.errors?.general}` || 'Something went wrong')
@@ -34,6 +39,8 @@ export default function CargoServicesLanding() {
       setLoading(false)
     }
   };
+  console.log("shipmentContainerDetails",shipmentContainerDetails);
+  console.log("showtrackingData ",showtrackingData );
   return (
     <div className="flex flex-col justify-center">
 <div className="backdrop-blur-sm rounded-xl p-8 shadow-lg text-center">
@@ -66,37 +73,35 @@ export default function CargoServicesLanding() {
   </div>) :( "Search")}
     </button>
   </div>
+  {
+    shipmentContainerDetails.length >0 &&
+    shipmentContainerDetails.map((detail,index) => {
+      return <TrackingStatus status={detail?.container?.Status} BuiltNo={trackingId} BookingDate={showtrackingData.BookingDate} InvoiceId={`${detail?.invoiceId}/${detail?.pieces}`} ContainerNumber={detail?.container?.ContainerNumber}/>
+    })
+  }
+  {/* {showtrackingData && (
+    <div className="overflow-x-auto">
+      <table className="w-full text-sm text-left border border-gray-300">
+        <tbody>
+          {Object.entries(showtrackingData).map(([key, value]) => {
 
-  {showtrackingData && (
-    // <div className="overflow-x-auto">
-    //   <table className="w-full text-sm text-left border border-gray-300">
-    //     <tbody>
-    //       {/* object.entries ny convert kra array ma is trha objet ko
-    //   [
-    //     ["name","talha"]
-    //     ]
-    //   phr map ma destructor method array krky key value haskil krli */}
-    //       {Object.entries(showtrackingData).map(([key, value]) => {
-    //         // console.log(value);
+            return (
+              <tr key={key} className="border-b border-gray-200">
+                <td className="font-semibold capitalize px-3 py-2">
+                  {key.replace(/([A-Z])/g, " $1")}
+                </td>
+                <td className="px-3 py-2">{value}</td>
+              </tr>
+            );
+          })}
+        </tbody>
+      </table>
+          </div>
 
-    //         return (
-    //           <tr key={key} className="border-b border-gray-200">
-    //             <td className="font-semibold capitalize px-3 py-2">
-    //               {key.replace(/([A-Z])/g, " $1")}
-    //             </td>
-    //             <td className="px-3 py-2">{value}</td>
-    //           </tr>
-    //         );
-    //       })}
-    //     </tbody>
-    //   </table>
-          // </div>
-          // <></>
-    <TrackingStatus
-  status={shipmentStatus} BuiltNo={showtrackingData.BiltyNo}
-/>
+    
+  
 
-  )}
+  )} */}
 </div>
 </div>
   );

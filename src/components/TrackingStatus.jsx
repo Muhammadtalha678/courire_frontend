@@ -11,7 +11,7 @@ import {
   FaCheckCircle,
 } from "react-icons/fa";
 
-export default function TrackingStatus({ status,BuiltNo }) {
+export default function TrackingStatus({ status,BuiltNo,BookingDate,InvoiceId,ContainerNumber }) {
   const steps = [
     'Shipment at Godown',
     'Shipment In Container',
@@ -51,13 +51,34 @@ if (isManualStatus) {
     <section className=" flex items-center justify-center py-10">
       <div className="bg-white rounded-2xl shadow-lg w-full max-w-7xl p-8">
         <div className="flex justify-between items-start mb-8 flex-wrap">
-          <div>
-            <h2 className="text-xl font-semibold">
-              BILTY{" "}
-              <span className="text-indigo-600 font-bold">#{BuiltNo}</span>
-            </h2>
-<FaPlaneArrival />
-          </div>
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+  <h5 className="text-md font-semibold">
+    BILTY#{" "}
+    <span className="text-indigo-600 font-bold">{BuiltNo}</span>
+  </h5>
+
+  {BookingDate && (
+    <h5 className="text-md font-semibold">
+      BOOKING DATE{" "}
+      <span className="text-indigo-600 font-bold">{BookingDate}</span>
+    </h5>
+  )}
+
+  {InvoiceId && (
+    <h5 className="text-md font-semibold">
+      INVOICE{" "}
+      <span className="text-indigo-600 font-bold">#{InvoiceId}</span>
+    </h5>
+  )}
+
+  {ContainerNumber && (
+    <h5 className="text-md font-semibold">
+      CONTAINER {" "}
+      <span className="text-indigo-600 font-bold">#{ContainerNumber}</span>
+    </h5>
+  )}
+</div>
+
         </div>
 
         {/* Full Progress Steps */}
