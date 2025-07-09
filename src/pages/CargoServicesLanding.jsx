@@ -4,6 +4,7 @@ import React, { useState,useEffect } from 'react';
 import Background from "../assets/images/990244-cargo.jpg";
 import { AppRoutes } from '../constants/AppRoutes';
 import TrackingStatus from '../components/TrackingStatus';
+import { toast } from 'react-toastify';
 
 export default function CargoServicesLanding() {
   const [trackingId, setTrackingId] = useState('');
@@ -18,7 +19,7 @@ export default function CargoServicesLanding() {
       setLoading(true)
       if (trackingId.trim() === '') return;
       if (trackingId.length != 12) {
-        alert("tracking id must be of 12 digit")
+        toast.error("tracking id must be of 12 digit")
         return
       };
  
@@ -32,7 +33,7 @@ export default function CargoServicesLanding() {
       setShipmentContainerDetails(data?.data?.shipmentParts)
       
     } catch (error) {
-      alert(`${error?.response?.data?.errors?.general}` || 'Something went wrong')
+      toast.error(`${error?.response?.data?.errors?.general}` || 'Something went wrong')
       console.log('error:', error);
     } finally {
       
@@ -76,7 +77,7 @@ export default function CargoServicesLanding() {
   {
     shipmentContainerDetails.length >0 &&
     shipmentContainerDetails.map((detail,index) => {
-      return <TrackingStatus status={detail?.container?.Status} BuiltNo={trackingId} BookingDate={showtrackingData.BookingDate} InvoiceId={`${detail?.invoiceId}/${detail?.pieces}`} ContainerNumber={detail?.container?.ContainerNumber}/>
+      return <TrackingStatus status={detail?.container?.Status} BuiltNo={detail?.trackingId} BookingDate={showtrackingData.BookingDate} InvoiceId={`${detail?.invoiceId}/${detail?.pieces}`} ContainerNumber={detail?.container?.ContainerNumber}/>
     })
   }
   {/* {showtrackingData && (
