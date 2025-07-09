@@ -9,6 +9,7 @@ import { toast } from 'react-toastify';
 export default function CargoServicesLanding() {
   const [trackingId, setTrackingId] = useState('');
   const [showtrackingData, setshowtrackingData] = useState(null);
+  const [showMoreDetails, setshowMoreDetails] = useState(false);
   // const [shipmentStatus, setShipmentStatus] = useState('');
   const [shipmentContainerDetails, setShipmentContainerDetails] = useState([]);
 
@@ -77,32 +78,70 @@ export default function CargoServicesLanding() {
   {
     shipmentContainerDetails.length >0 &&
     shipmentContainerDetails.map((detail,index) => {
-      return <TrackingStatus status={detail?.container?.Status} BuiltNo={detail?.trackingId} BookingDate={showtrackingData.BookingDate} InvoiceId={`${detail?.invoiceId}/${detail?.pieces}`} ContainerNumber={detail?.container?.ContainerNumber}/>
+      return <TrackingStatus key={index} status={detail?.container?.Status} BuiltNo={detail?.trackingId} BookingDate={showtrackingData.BookingDate} InvoiceId={`${detail?.invoiceId}/${detail?.pieces}`} ContainerNumber={detail?.container?.ContainerNumber}/>
     })
   }
-  {/* {showtrackingData && (
-    <div className="overflow-x-auto">
-      <table className="w-full text-sm text-left border border-gray-300">
-        <tbody>
-          {Object.entries(showtrackingData).map(([key, value]) => {
+  {
+    !showMoreDetails && 
+    <button
+    onClick={() => setshowMoreDetails(true)}
+    className="bg-blue-600 text-white px-5 py-2 mt-4 rounded-lg hover:bg-blue-700 transition"
+  >
+    Show More Details
+  </button>
+  
+  }
+  {showMoreDetails && showtrackingData && (
+    <div className="w-full px-4">
+  <div className="w-full overflow-x-auto shadow-md sm:rounded-lg">
+    <table className="min-w-full text-sm text-left text-gray-700 bg-white">
+      <thead className="text-xl uppercase bg-gray-200 text-gray-800">
+        <tr className="border-b border-gray-300">
+          <th className="px-6 py-3 text-center whitespace-nowrap">Bilty No</th>
+          <th className="px-6 py-3 text-center whitespace-nowrap">Invoice No</th>
+          <th className="px-6 py-3 text-center whitespace-nowrap">Booking Date</th>
+          <th className="px-6 py-3 text-center whitespace-nowrap">Sender Name</th>
+          <th className="px-6 py-3 text-center whitespace-nowrap">Sender Mobile</th>
+          <th className="px-6 py-3 text-center whitespace-nowrap">Sender City</th>
+          <th className="px-6 py-3 text-center whitespace-nowrap">Receiver Name</th>
+          <th className="px-6 py-3 text-center whitespace-nowrap">Receiver Mobile 1</th>
+          <th className="px-6 py-3 text-center whitespace-nowrap">Receiver Mobile 2</th>
+          <th className="px-6 py-3 text-center whitespace-nowrap">Receiver City</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr className="bg-white border-b hover:bg-gray-50">
+          <td className="px-6 py-4 text-center">{showtrackingData.BiltyNo}</td>
+          <td className="px-6 py-4 text-center">{showtrackingData.InvoiceNo}</td>
+          <td className="px-6 py-4 text-center">{showtrackingData.BookingDate}</td>
+          <td className="px-6 py-4 text-center">{showtrackingData.SenderName}</td>
+          <td className="px-6 py-4 text-center">{showtrackingData.SenderMobile}</td>
+          <td className="px-6 py-4 text-center">{showtrackingData.SenderArea}</td>
+          <td className="px-6 py-4 text-center">{showtrackingData.ReceiverName}</td>
+          <td className="px-6 py-4 text-center">{showtrackingData.ReceiverMobile}</td>
+          <td className="px-6 py-4 text-center">{showtrackingData.ReceiverMobile}</td>
+          <td className="px-6 py-4 text-center">{showtrackingData.ReceiverArea}</td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+</div>
 
-            return (
-              <tr key={key} className="border-b border-gray-200">
-                <td className="font-semibold capitalize px-3 py-2">
-                  {key.replace(/([A-Z])/g, " $1")}
-                </td>
-                <td className="px-3 py-2">{value}</td>
-              </tr>
-            );
-          })}
-        </tbody>
-      </table>
-          </div>
 
     
   
 
-  )} */}
+  )}
+  {
+    showMoreDetails && 
+    <button
+    onClick={() => setshowMoreDetails(false)}
+    className="bg-blue-600 text-white px-5 py-2 mt-4 rounded-lg hover:bg-blue-700 transition"
+  >
+    Hide Details
+  </button>
+  
+  }
 </div>
 </div>
   );
