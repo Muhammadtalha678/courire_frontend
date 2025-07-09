@@ -51,30 +51,39 @@ export const handlePdfSave = (formData, buttonType) => {
   doc.text(safeText(formData.ReceiverArea), 15, 118);
   doc.text("Saudia Arabia", 15, 124);
 
-  // --- PIECES & ITEMS ---
-  doc.setFont("helvetica", "bold");
-  doc.text("PIECES # :", 150, 100);
-  doc.setFont("helvetica", "normal");
-  doc.text(safeText(formData.NoOfPieces), 174, 100);
+  // --- PIECES # (exactly as before) ---
+doc.setFont("helvetica", "bold");
+doc.text("PIECES # :", 150, 100);
+doc.setFont("helvetica", "normal");
+doc.text(safeText(formData.NoOfPieces), 174, 100);
 
-  doc.setFont("helvetica", "bold");
-  doc.text("ITEM DETAILS :", 150, 108);
-  doc.setFont("helvetica", "normal");
-  doc.text(safeText(formData.ItemDetails), 150, 114);
+// --- ITEM DETAILS (just this block changed) ---
+doc.setFont("helvetica", "bold");
+// Move the label down under your pieces line
+doc.text("ITEM DETAILS :", 150, 108);
+doc.setFont("helvetica", "normal");
+// Wrap the detail text at ~50 mm width
+const detailLines = doc.splitTextToSize(safeText(formData.ItemDetails), 50);
+// Each line starts at y=112 and steps down by 6
+detailLines.forEach((line, i) => {
+  doc.text(line, 150, 114 + i * 6);
+});
 
-  // --- CHARGES TABLE ---
-  autoTable(doc, {
-    head: [["#", "CHARGES", "UNIT/RATE", "QUANTITY", "TOTAL"]],
-    body: Object.entries(formData.Charges || {}).map(([key, value], index) => [
-      index + 1,
-      safeText(key),
-      `SAR ${safeText(value.unitRate)}`,
-      value.qty > 0 ? `${value.qty}` : "",
-      value.qty > 0 ? `SAR ${safeText(value.total)}` : "",
-    ]),
-    startY: 135,
-    theme: "grid",
-  });
+// --- CHARGES TABLE ---
+// Shift table down based on how many wrapped lines you used
+autoTable(doc, {
+  head: [["#", "CHARGES", "UNIT/RATE", "QUANTITY", "TOTAL"]],
+  body: Object.entries(formData.Charges || {}).map(([key, value], index) => [
+    index + 1,
+    safeText(key),
+    `SAR ${safeText(value.unitRate)}`,
+    value.qty > 0 ? `${value.qty}` : "",
+    value.qty > 0 ? `SAR ${safeText(value.total)}` : "",
+  ]),
+  startY: 135 + detailLines.length * 6,
+  theme: "grid",
+});
+
 
   const finalY = doc.lastAutoTable?.finalY || 150;
 
