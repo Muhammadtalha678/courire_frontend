@@ -13,64 +13,64 @@ const BookingList = () => {
         setBookings(response?.data?.data?.bookings || []);
       } catch (error) {
         console.log(error);
-        // You might want to show an error message to the user here
       }
     };
     getBookings();
   }, []);
 
-console.log(bookings);
-
-  // Dynamically get all keys except for internal ones like _id and __v
-  const allKeys = bookings.length > 0 ? Object.keys(bookings[0]).filter((key) => key !== '_id' && key !== '__v' && key !== 'createdAt' && key !== 'updatedAt' && key !== 'Charges') : [];
-
   return (
     <div className="bg-gray-50 min-h-screen">
       <Header />
+      <h1 className="text-center text-2xl font-bold text-blue-800 px-4 pt-6 pb-2">
+    All Bookings Details
+  </h1>
       <div className="p-4">
         <div className="relative overflow-x-auto shadow-md sm:rounded-lg">
-          {
-            bookings.length > 0 ?
-              (<table className="w-full text-sm text-left text-gray-700 bg-white">
-          
-                <thead className="text-xl uppercase bg-gray-200 text-gray-800">
-              
-                  <tr className="border-b border-gray-300">
-                    <th scope="col" className="px-6 py-3">S.No</th>
-                    {
-                      allKeys.map((key) => (
-                        // Replace camelCase with spaces for better readability
-                        <th key={key} scope="col" className="px-6 py-3 capitalize">{key.replace(/([A-Z])/g, ' $1')}</th>
-                      ))
-                    }
-                    
-                  </tr>
-                </thead>
-                <tbody>
-                {bookings.map((row, index) => (
-  <tr key={index} className="bg-white border-b hover:bg-gray-50">
-    <td className="px-6 py-4 font-medium text-gray-900">{index + 1}</td>
-    
-    {allKeys.map((key) => {
-      if (key === "Charges") return null; // ❗ Skip Charges key
-      return (
-        <td className="px-6 py-4" key={key}>
-          {row[key]}
-        </td>
-      );
-    })}
+          {bookings.length > 0 ? (
+            <table className="w-full text-sm text-left text-gray-700 bg-white">
+              <thead className="text-xl uppercase bg-gray-200 text-gray-800">
+  <tr className="border-b border-gray-300 text-center">
+    <th className="px-6 py-3 whitespace-nowrap">S.No</th>
+    <th className="px-6 py-3 whitespace-nowrap">Bilty No</th>
+    <th className="px-6 py-3 whitespace-nowrap">Invoice No</th>
+    <th className="px-6 py-3 whitespace-nowrap">Booking Date</th>
+    <th className="px-6 py-3 whitespace-nowrap">Sender Name</th>
+    <th className="px-6 py-3 whitespace-nowrap">Sender Mobile</th>
+    <th className="px-6 py-3 whitespace-nowrap">Sender City</th>
+    <th className="px-6 py-3 whitespace-nowrap">Receiver Name</th>
+    <th className="px-6 py-3 whitespace-nowrap">Receiver Mobile 1</th>
+    <th className="px-6 py-3 whitespace-nowrap">Receiver Mobile 2</th>
+    <th className="px-6 py-3 whitespace-nowrap">Receiver City</th>
+    <th className="px-6 py-3 whitespace-nowrap">No. of Pieces</th>
+    <th className="px-6 py-3 whitespace-nowrap">Branch</th>
   </tr>
-))}
+</thead>
 
-                </tbody>
-              </table>) : (
-                 (
-                    <span colSpan={allKeys.length + 2} className="text-center py-8 text-red-600 font-semibold text-lg flex justify-center items-center w-full h-full">
-                      No Bookings Found
-                    </span>
-                )
-              )
-}  
+              <tbody>
+                {bookings.map((row, index) => (
+                  <tr key={index} className="bg-white border-b hover:bg-gray-50 text-center">
+                    <td className="px-4 py-2">{index + 1}</td>
+                    <td className="px-4 py-2">{row.BiltyNo || '-'}</td>
+                    <td className="px-4 py-2">{row.InvoiceNo || '-'}</td>
+                    <td className="px-4 py-2">{row.BookingDate || '-'}</td>
+                    <td className="px-4 py-2">{row.SenderName || '-'}</td>
+                    <td className="px-4 py-2">{row.SenderMobile || '-'}</td>
+                    <td className="px-4 py-2">{row.SenderArea || '-'}</td>
+                    <td className="px-4 py-2">{row.ReceiverName || '-'}</td>
+                    <td className="px-4 py-2">{row.ReceiverMobile1 || '-'}</td>
+                    <td className="px-4 py-2">{row.ReceiverMobile2 || '-'}</td>
+                    <td className="px-4 py-2">{row.ReceiverArea || '-'}</td>
+                    <td className="px-4 py-2">{row.NoOfPieces || '-'}</td>
+                    <td className="px-4 py-2">{row.Branch || '-'}</td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          ) : (
+            <div className="text-center py-8 text-red-600 font-semibold text-lg">
+              No Bookings Found
+            </div>
+          )}
         </div>
       </div>
     </div>

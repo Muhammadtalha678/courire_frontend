@@ -34,27 +34,30 @@ const ContainerList = () => {
     };
 
     // Columns ke liye keys hasil karna, internal keys ko filter karte hue
-    const allKeys = containerList.length > 0
-        ? Object.keys(containerList[0]).filter(
-              (key) => key !== '_id' && key !== '__v' && key !== 'createdAt' && key !== 'updatedAt'
-          )
-        : [];
+    // const allKeys = containerList.length > 0
+    //     ? Object.keys(containerList[0]).filter(
+    //           (key) => key !== '_id' && key !== '__v' && key !== 'createdAt' && key !== 'updatedAt'
+    //       )
+    //     : [];
 
     return (
         <div className="bg-gray-50 min-h-screen">
             <Header />
+            <h1 className="text-center text-2xl font-bold text-blue-800 px-4 pt-6 pb-2">
+    All Bookings Details
+  </h1>
             <div className="p-4">
                 <div className="relative overflow-x-auto shadow-md sm:rounded-lg">
                 <table className="w-full text-sm text-left text-gray-700 bg-white">
   <thead className="text-xl uppercase bg-gray-200 text-gray-800">
     <tr className="border-b border-gray-300">
-      <th className="px-6 py-3 text-center">S.No</th>
-      <th className="px-6 py-3 text-center">Container No</th>
-      <th className="px-6 py-3 text-center">Destination</th>
-      <th className="px-6 py-3 text-center">Invoices</th>
-      <th className="px-6 py-3 text-center">Shipped</th>
-      <th className="px-6 py-3 text-center">Status</th>
-      <th className="px-6 py-3 text-center">Actions</th>
+      <th className="px-6 py-3 text-center whitespace-nowrap">S.No</th>
+      <th className="px-6 py-3 text-center whitespace-nowrap">Container No</th>
+      <th className="px-6 py-3 text-center whitespace-nowrap">Destination</th>
+      <th className="px-6 py-3 text-center whitespace-nowrap">Invoices</th>
+      <th className="px-6 py-3 text-center whitespace-nowrap">Shipped</th>
+      <th className="px-6 py-3 text-center whitespace-nowrap">Status</th>
+      <th className="px-6 py-3 text-center whitespace-nowrap">Actions</th>
     </tr>
   </thead>
   <tbody>
