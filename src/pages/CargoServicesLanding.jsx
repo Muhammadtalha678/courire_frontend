@@ -118,8 +118,8 @@ export default function CargoServicesLanding() {
           <td className="px-6 py-4 text-center">{showtrackingData.SenderMobile}</td>
           <td className="px-6 py-4 text-center">{showtrackingData.SenderArea}</td>
           <td className="px-6 py-4 text-center">{showtrackingData.ReceiverName}</td>
-          <td className="px-6 py-4 text-center">{showtrackingData.ReceiverMobile}</td>
-          <td className="px-6 py-4 text-center">{showtrackingData.ReceiverMobile}</td>
+          <td className="px-6 py-4 text-center">{showtrackingData.ReceiverMobile1}</td>
+          <td className="px-6 py-4 text-center">{showtrackingData.ReceiverMobile2}</td>
           <td className="px-6 py-4 text-center">{showtrackingData.ReceiverArea}</td>
         </tr>
       </tbody>
