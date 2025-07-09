@@ -45,8 +45,10 @@ export default function CargoServicesLanding() {
       setLoading(false)
     }
   };
+  
   console.log("shipmentContainerDetails",shipmentContainerDetails);
   console.log("showtrackingData ",showtrackingData );
+  // console.log(r);
   return (
     <div className="flex flex-col justify-center">
 <div className="backdrop-blur-sm rounded-xl p-8 shadow-lg text-center">
@@ -79,12 +81,22 @@ export default function CargoServicesLanding() {
   </div>) :( "Search")}
     </button>
   </div>
-  {
-    shipmentContainerDetails.length >0 &&
-    shipmentContainerDetails.map((detail,index) => {
-      return <TrackingStatus key={index} status={detail?.container?.Status} BuiltNo={detail?.trackingId} BookingDate={showtrackingData.BookingDate} InvoiceId={`${detail?.invoiceId}/${detail?.pieces}`} ContainerNumber={detail?.container?.ContainerNumber}/>
-    })
-  }
+ {shipmentContainerDetails.length > 0 &&
+  shipmentContainerDetails.map((detail, index) => {
+    const containerStatus = detail?.container?.Status || detail?.status || "Status not available";
+    const containerNumber = detail?.container?.ContainerNumber || "N/A";
+    return (
+      <TrackingStatus
+        key={index}
+        status={containerStatus}
+        BuiltNo={detail?.trackingId}
+        BookingDate={showtrackingData.BookingDate}
+        InvoiceId={`${detail?.invoiceId}/${detail?.pieces}`}
+        ContainerNumber={containerNumber}
+      />
+    );
+  })}
+
   {
     !showMoreDetails && showtrackingData && 
     <button
