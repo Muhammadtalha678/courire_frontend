@@ -82,7 +82,7 @@ export default function CargoServicesLanding() {
     })
   }
   {
-    !showMoreDetails && 
+    !showMoreDetails && showtrackingData && 
     <button
     onClick={() => setshowMoreDetails(true)}
     className="bg-blue-600 text-white px-5 py-2 mt-4 rounded-lg hover:bg-blue-700 transition"
@@ -133,7 +133,7 @@ export default function CargoServicesLanding() {
 
   )}
   {
-    showMoreDetails && 
+    showMoreDetails && showtrackingData &&
     <button
     onClick={() => setshowMoreDetails(false)}
     className="bg-blue-600 text-white px-5 py-2 mt-4 rounded-lg hover:bg-blue-700 transition"
