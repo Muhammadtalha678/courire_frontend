@@ -1,108 +1,109 @@
-import axios from 'axios';
 import React, { useEffect, useState } from 'react';
+import axios from 'axios';
 import { toast } from 'react-toastify';
 import { AppRoutes } from '../constants/AppRoutes';
 import { useNavigate } from 'react-router-dom';
 
-const AddContainer = ({ containerList, invoiceList }) => {
-const [totalInvoices, setTotalInvoices] = useState(invoiceList.length);
-
+const AddContainer = ({
+  containerList = [],
+  invoiceList = [],
+  bookedContainerList = [],
+  refreshBookedContainer,
+  refreshInvoices,
+  refreshContainerNoList
+}) => {
+  const navigate = useNavigate();
   const [selectedContainer, setSelectedContainer] = useState('');
   const [fromCity, setFromCity] = useState('');
   const [toCity, setToCity] = useState('');
   const [selectAll, setSelectAll] = useState(false);
-  const[loadingSave,setLoadingSave] = useState(false)
-  const navigate = useNavigate()
-  const [invoices, setInvoices] = useState(
-    invoiceList.map((invoice) => {
+  const [loadingSave, setLoadingSave] = useState(false);
+  const [totalInvoices, setTotalInvoices] = useState(invoiceList.length);
+  const [invoices, setInvoices] = useState([]);
+
+  // ✅ Sync invoices when invoiceList changes
+  useEffect(() => {
+    const updatedInvoices = invoiceList.map((invoice) => {
       const [invNo = ''] = invoice.InvoiceNo?.split('/') || [];
-    const pcs = invoice.RemainingPieces ?? 0; // ✅ Use RemainingPieces, fallback to 0
-    return {
+      const pcs = invoice.RemainingPieces ?? 0;
+      return {
         ...invoice,
         invNo,
-        pcs:pcs,
+        pcs,
         shipped: null,
         balance: null,
         selected: false,
       };
-    })
-  );
-console.log(invoices);
-
-const handleSelect = (index, checked) => {
-  setInvoices((prev) => {
-    const updated = prev.map((inv, i) =>
-      i === index
-        ? {
-            ...inv,
-            selected: checked,
-            shipped: checked ? inv.pcs : null,
-            balance: checked ? 0 : null,
-          }
-        : inv
-    );
-
-    recalculateTotalInvoices(updated); // ✅ recalculate here
-    return updated;
-  });
-};
-
-
-
-const handleSelectAll = (checked) => {
-  setSelectAll(checked);
-  setInvoices((prev) => {
-    const updated = prev.map((inv) => ({
-      ...inv,
-      selected: checked,
-      shipped: checked ? inv.pcs : null,
-      balance: checked ? 0 : null,
-    }));
-
-    const fullyShipped = updated.filter((inv) => inv.selected && inv.balance === 0).length;
-    setTotalInvoices(invoiceList.length - fullyShipped);
-
-    return updated;
-  });
-};
-
-
-const handleShippedChange = (index, value) => {
-  setInvoices((prev) => {
-    const updated = prev.map((inv, i) => {
-      if (i !== index) return inv;
-
-      const pcs = inv.pcs;
-      const shipped = Number(value);
-
-      if (isNaN(shipped) || shipped < 0 || shipped > pcs) {
-        return { ...inv, shipped: '', balance: '' };
-      }
-
-      const balance = pcs - shipped;
-
-      return {
-        ...inv,
-        shipped,
-        balance,
-        selected: shipped === pcs ? true : inv.selected // ✅ Auto select if fully shipped
-      };
     });
 
-    recalculateTotalInvoices(updated); // ✅ recalculate here too
-    return updated;
-  });
-};
+    setInvoices(updatedInvoices);
+    setTotalInvoices(invoiceList.length);
+  }, [invoiceList]);
 
+  const handleSelect = (index, checked) => {
+    setInvoices((prev) => {
+      const updated = prev.map((inv, i) =>
+        i === index
+          ? {
+              ...inv,
+              selected: checked,
+              shipped: checked ? inv.pcs : null,
+              balance: checked ? 0 : null,
+            }
+          : inv
+      );
+      recalculateTotalInvoices(updated);
+      return updated;
+    });
+  };
 
-const recalculateTotalInvoices = (invoices) => {
-  const fullyShipped = invoices.filter(
-    (inv) => inv.selected && inv.shipped === inv.pcs
-  ).length;
-  setTotalInvoices(invoiceList.length - fullyShipped);
-};
+  const handleSelectAll = (checked) => {
+    setSelectAll(checked);
+    setInvoices((prev) => {
+      const updated = prev.map((inv) => ({
+        ...inv,
+        selected: checked,
+        shipped: checked ? inv.pcs : null,
+        balance: checked ? 0 : null,
+      }));
+      const fullyShipped = updated.filter((inv) => inv.selected && inv.balance === 0).length;
+      setTotalInvoices(invoiceList.length - fullyShipped);
+      return updated;
+    });
+  };
 
-  
+  const handleShippedChange = (index, value) => {
+    setInvoices((prev) => {
+      const updated = prev.map((inv, i) => {
+        if (i !== index) return inv;
+        const pcs = inv.pcs;
+        const shipped = Number(value);
+
+        if (isNaN(shipped) || shipped < 0 || shipped > pcs) {
+          return { ...inv, shipped: '', balance: '' };
+        }
+
+        const balance = pcs - shipped;
+
+        return {
+          ...inv,
+          shipped,
+          balance,
+          selected: shipped === pcs ? true : inv.selected,
+        };
+      });
+
+      recalculateTotalInvoices(updated);
+      return updated;
+    });
+  };
+
+  const recalculateTotalInvoices = (invoices) => {
+    const fullyShipped = invoices.filter(
+      (inv) => inv.selected && inv.shipped === inv.pcs
+    ).length;
+    setTotalInvoices(invoiceList.length - fullyShipped);
+  };
 
   const handleSave = async () => {
     if (!selectedContainer) {
@@ -131,18 +132,18 @@ const recalculateTotalInvoices = (invoices) => {
     };
 
     try {
-      setLoadingSave(true)
+      setLoadingSave(true);
       const response = await axios.post(AppRoutes.addContainer, payload);
       toast.success(response?.data?.data?.message);
-      
-      navigate("/all-containers")
+      refreshBookedContainer?.();
+      refreshContainerNoList?.();
+      refreshInvoices?.();
     } catch (error) {
       const err = error?.response?.data?.errors;
-      console.log(error);
       if (err?.general) toast.error(err.general);
       else toast.error('Something went wrong');
     } finally {
-      setLoadingSave(false)
+      setLoadingSave(false);
     }
   };
 
@@ -152,137 +153,166 @@ const recalculateTotalInvoices = (invoices) => {
       setFromCity(cities.From);
       setToCity(cities.To);
     }
-  }, [selectedContainer]);
+  }, [selectedContainer, containerList]);
+
+  const selectedBilty = bookedContainerList.filter(
+    (b) => b.Status === 'Shipment In Container'
+  );
+console.log(bookedContainerList);
 
   return (
     <>
-      <div className="bg-yellow-400 text-black font-bold py-2 px-4 w-fit">
+      <h3 className="text-lg font-semibold text-yellow-700 mb-2">
         Attach Bilty To Container
-      </div>
+      </h3>
 
-      <div>
+      <div className="flex justify-between gap-4 items-center mb-4">
         <select
-          name="selectedContainer"
-          className="border p-2"
+          className="w-full border px-3 py-2 rounded-md focus:outline-none"
           value={selectedContainer}
           onChange={(e) => setSelectedContainer(e.target.value)}
         >
-          <option value="">Select Container Number</option>
-          {containerList.map((container, index) => (
-            <option key={index} value={container.ContainerNumber}>
-              {container.ContainerNumber}
+          <option value="">Select Container No</option>
+          {containerList.map((c, i) => (
+            <option key={i} value={c.ContainerNumber}>
+              {c.ContainerNumber}
             </option>
           ))}
         </select>
+
+        <div className="flex gap-2 w-full">
+          <button
+            className="w-full bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded shadow cursor-pointer"
+            onClick={handleSave}
+            disabled={loadingSave}
+          >
+            {loadingSave ? 'Saving...' : 'Save'}
+          </button>
+          <button className="w-full bg-yellow-500 hover:bg-yellow-600 text-white px-4 py-2 rounded shadow cursor-pointer">Edit</button>
+          <button className="w-full bg-red-600 hover:bg-red-700 text-white px-4 py-2 rounded shadow cursor-pointer">Del</button>
+        </div>
       </div>
 
-      <div className="bg-blue-600 text-white px-4 py-2 w-fit mt-2">
-        Show & Select Bookings
-      </div>
-
-      <table className="w-full border mt-2">
-        <thead>
-          <tr className="bg-gray-200">
-            <th>Inv #</th>
-            <th>Pieces</th>
-            <th>Shipped</th>
-            <th>Balance</th>
-            <th>
-              <input
-                type="checkbox"
-                onChange={(e) => handleSelectAll(e.target.checked)}
-                checked={selectAll}
-              />
-            </th>
-          </tr>
-        </thead>
-        <tbody>
-          {invoices.length === 0 ? (
-            <tr>
-              <td colSpan={5} className="text-center py-4">
-                No invoices found.
-              </td>
-            </tr>
-          ) : (
-            invoices.map((invoice, index) => (
-              <tr key={index}>
-                <td>
-                  <input
-                    value={invoice.invNo}
-                    readOnly
-                    className="text-center border w-full"
-                  />
-                </td>
-                <td>
-                  <input
-                    value={invoice.pcs}
-                    readOnly
-                    className="text-center border w-full"
-                  />
-                </td>
-                <td>
-                  <input
-  type="number"
-  value={invoice.shipped ?? ''}
-  onChange={(e) => handleShippedChange(index, e.target.value)}
-  className="text-center border w-full bg-gray-100 className={`text-center border w-full ${invoice.selected ? 'bg-gray-200 cursor-not-allowed' : ''}`}
-"
-  min={0}
-  max={invoice.pcs}
-  readOnly={invoice.selected} // ✅ Disable if selected
-/>
-
-                </td>
-                <td>
-                  <input
-                    value={invoice.balance ?? ''}
-                    readOnly
-                    className="text-center border w-full"
-                  />
-                </td>
-                <td>
-                  <input
-                    type="checkbox"
-                    className="text-center"
-                    checked={!!invoice.selected}
-                    onChange={(e) => handleSelect(index, e.target.checked)}
-                  />
-                </td>
-              </tr>
-            ))
-          )}
-        </tbody>
-      </table>
-
-      <div className="flex justify-between items-center mt-4">
-  <div className="flex space-x-2">
-    <button onClick={handleSave} className="bg-blue-600 text-white px-4 py-2" disabled={loadingSave}>
-      {
-        loadingSave ? (
-          <div className="flex justify-center">
-            <svg className="animate-spin h-5 w-5 text-white" viewBox="0 0 24 24">
-              <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4"></circle>
-              <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4z" />
-            </svg>
+      <div className="flex gap-4">
+        {/* Left Table */}
+        <div className="flex-1">
+          <div className="flex justify-between items-center mb-1">
+            <h4 className="bg-blue-700 text-white px-4 py-2 rounded-t-md font-semibold">
+              Show & Select Bookings
+            </h4>
+            <input
+              type="text"
+              disabled
+              value={`Total Available Bilty: ${invoices.length}`}
+              className="border text-center rounded px-2 py-1 text-sm"
+            />
           </div>
-        ) : "Save"
-      }
-    </button>
-    <button className="bg-blue-600 text-white px-4 py-2">Edit</button>
-    <button className="bg-blue-600 text-white px-4 py-2">Del</button>
-  </div>
 
-  <div className="text-right">
-    <div className="font-bold">Total No Of Bilty</div>
-    <input
-      readOnly
-      value={totalInvoices}
-      className="border mt-1 px-2 py-1 w-32 text-center"
-    />
-  </div>
-</div>
+          <div className={`${invoices.length > 0 ? 'h-[200px]' : 'h-[100px]'} overflow-auto border rounded`}>
+            <table className="w-full border border-t-0">
+              <thead className="bg-gray-100 text-sm">
+                <tr className="text-center">
+                  <th className="border px-2 py-1">Inv #</th>
+                  <th className="border px-2 py-1">Pieces</th>
+                  <th className="border px-2 py-1">Shipped</th>
+                  <th className="border px-2 py-1">Balance</th>
+                  <th className="border px-2 py-1">
+                    <input
+                      type="checkbox"
+                      checked={selectAll}
+                      onChange={(e) => handleSelectAll(e.target.checked)}
+                    />
+                  </th>
+                </tr>
+              </thead>
+              <tbody>
+                {invoices.map((b, i) => (
+                  <tr key={i} className="text-center text-sm">
+                    <td className="border px-2 py-1">{b.invNo}</td>
+                    <td className="border px-2 py-1">{b.pcs}</td>
+                    <td className="border px-2 py-1">
+                      <input
+                        type="number"
+                        value={b.shipped ?? ''}
+                        disabled={b.selected}
+                        onChange={(e) => handleShippedChange(i, e.target.value)}
+                        className="w-16 border rounded px-2 py-1 text-sm"
+                      />
+                    </td>
+                    <td className="border px-2 py-1">{b.balance ?? ''}</td>
+                    <td className="border px-2 py-1">
+                      <input
+                        type="checkbox"
+                        checked={b.selected}
+                        onChange={(e) => handleSelect(i, e.target.checked)}
+                      />
+                    </td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          </div>
 
-      
+          <div className="mt-2">
+            <button
+              onClick={handleSave}
+              className="bg-green-700 text-white px-3 py-1 rounded"
+              disabled={loadingSave}
+            >
+              {loadingSave ? 'Linking...' : 'Link to Container'}
+            </button>
+          </div>
+        </div>
+
+        {/* Right Table */}
+        <div className="w-1/2">
+          <div className="flex justify-between items-center mb-1">
+            <h4 className="bg-blue-700 text-white px-4 py-2 rounded-t-md font-semibold">
+              Selected Bilty
+            </h4>
+            <input
+              type="text"
+              disabled
+              value={`Total No Of Bilty: ${selectedBilty.length}`}
+              className="border text-center rounded px-2 py-1 text-sm"
+            />
+          </div>
+
+          <div className={`${selectedBilty.length > 0 ? 'h-[200px]' : 'h-[100px]'} overflow-auto border rounded`}>
+            <table className="w-full border border-t-0">
+              <thead className="bg-gray-100 text-sm">
+                <tr className="text-center">
+                  <th className="border px-2 py-1">Container No</th>
+                  <th className="border px-2 py-1">Inv No</th>
+                  <th className="border px-2 py-1">Shipped Pieces</th>
+                  <th className="border px-2 py-1">Total</th>
+                </tr>
+              </thead>
+              <tbody>
+              {selectedBilty.map((b, i) => {
+                const invoiceNumbers = [];
+                let totalShipped = 0;
+
+                b.Invoices.forEach((item) => {
+                    const [inv, qty] = item.split('/');
+                    invoiceNumbers.push(inv);
+                    totalShipped += parseInt(qty || 0);
+                });
+                return (
+                    <tr key={i} className="text-center text-sm">
+                    <td className="border px-2 py-1">{b.ContainerNumber}</td>
+                    <td className="border px-2 py-1">{invoiceNumbers.join(', ')}</td>
+                    <td className="border px-2 py-1">{totalShipped}</td>
+                    <td className="border px-2 py-1">{totalShipped}</td>
+                    </tr>
+                );
+                })}
+
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </div>
     </>
   );
 };

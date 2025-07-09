@@ -1,13 +1,12 @@
 import React, { useEffect, useState } from 'react';
-import Header from '../components/Header';
-import ContainerNumber from '../components/ContainerNumber';
 import axios from 'axios';
 import { AppRoutes } from '../constants/AppRoutes';
 import { useAuth } from '../context/AuthContext';
-import AddContainer from '../components/AddContainer';
 import { toast } from 'react-toastify';
-
-export default function ContainerBooking() {
+import AddContainerNumber from "../components/AddContainerNumber";
+import AddContainer from '../components/AddContainer'
+import Header from '../components/Header';
+const ContainerBooking = () => {
   const [cities,SetCities] = useState([])
   const [invoices, SetInvoices] = useState([])
   const [containerList, setContainerList] = useState([])
@@ -24,6 +23,26 @@ export default function ContainerBooking() {
       setContainerList(updatedContainers);
     } catch (error) {
       toast.error('Failed to refresh container list');
+    }
+  };
+   
+  // ✅ This function can be called after adding a new container
+   const refreshBookedContainer = async () => {
+    try {
+      const response = await axios.get(AppRoutes.allContainersList);
+      const updatedBookContainers = response.data?.data?.containersList || [];
+      setContainerBookedList(updatedBookContainers);
+    } catch (error) {
+      toast.error('Failed to refresh Booked container list');
+    }
+  };
+   const refreshInvoices = async () => {
+    try {
+      const response = await axios.get(AppRoutes.allBookingInvoiceNo);
+      const updatedInvoices = response.data?.data?.bookingInvoices || [];
+      SetInvoices(updatedInvoices);
+    } catch (error) {
+      toast.error('Failed to refresh Booked container list');
     }
   };
 
@@ -63,73 +82,32 @@ export default function ContainerBooking() {
       }
     }
     fetchCities()
-  },[])
+  },[]) 
 
   return (
-    <div >
-      <Header/>
+    <div>
+      <Header />
       {
         loadingList ? (<div className="flex items-center justify-center h-screen bg-gray-50 text-purple-600 text-xl">
-        Loading...
+          Loading...
         </div>) :
-        (<div className="p-6 space-y-4 bg-gray-100 min-h-screen">
-        
-            <ContainerNumber cities={cities} onContainerAdded={refreshContainerList} />
-
-            <AddContainer containerList={containerList} invoiceList={invoices}/>
-
-          <div className="flex justify-between items-center mt-4">
-            <div>
-              <div className="bg-blue-600 text-white px-4 py-2 w-fit">Selected Bilty</div>
-              <table className="border w-full mt-2">
-                <thead>
-                  <tr className="bg-gray-200">
-                    <th>Container No</th>
-                    <th>Inv No</th>
-                    <th>Shipped Pieces</th>
-                  </tr>
-                </thead>
-                <tbody>
-                {containerBookedList.map((containerBook, i) => {
-  const invoiceList = containerBook.Invoices || [];
-
-  // Convert Invoices to comma-separated string
-  const invoiceString = invoiceList.join(', ');
-
-  // Calculate total shipped pieces
-  const shippedTotal = invoiceList.reduce((total, invoice) => {
-    const parts = invoice.split('/');
-    const pieces = parseInt(parts[1], 10);
-    return total + (isNaN(pieces) ? 0 : pieces);
-  }, 0);
-
-  return (
-    <tr key={i}>
-      <td>
-        <input className="border w-full text-center" value={containerBook.ContainerNumber} readOnly />
-      </td>
-      <td>
-        <input className="border w-full text-center" value={invoiceString} readOnly />
-      </td>
-      <td>
-        <input className="border w-full text-center" value={shippedTotal} readOnly />
-      </td>
-    </tr>
-  );
-})}
-
-                </tbody>
-              </table>
+          (
+            <div className="min-h-screen bg-gradient-to-b from-white to-gray-100 py-6 px-4">
+            <div className="max-w-7xl mx-auto bg-white shadow-2xl rounded-2xl p-6 space-y-6">
+              
+              <AddContainerNumber cities={cities} onContainerAdded={refreshContainerList}/>
+                <AddContainer
+                  containerList={containerList}
+                  invoiceList={invoices}
+                  bookedContainerList={containerBookedList} refreshBookedContainer={refreshBookedContainer} refreshInvoices={refreshInvoices} refreshContainerNoList={refreshContainerList} />
             </div>
-
-            
           </div>
-
-         
-        </div>)
-          
+        )     
       }
+     
 
     </div>
   );
-}
+};
+
+export default ContainerBooking;
