@@ -18,7 +18,9 @@ export default function CargoServicesLanding() {
     
     try {
       setLoading(true)
-      if (trackingId.trim() === '') return;
+      if (trackingId.trim() === '') {
+        setshowtrackingData(null); setshowMoreDetails(false); setShipmentContainerDetails([]);  
+      };
       if (trackingId.length != 12) {
         toast.error("tracking id must be of 12 digit")
         return
@@ -32,10 +34,12 @@ export default function CargoServicesLanding() {
       
       setshowtrackingData(data?.data?.foundTrackingId)
       setShipmentContainerDetails(data?.data?.shipmentParts)
-      
     } catch (error) {
-      toast.error(`${error?.response?.data?.errors?.general}` || 'Something went wrong')
-      console.log('error:', error);
+       console.log(error);
+          const err = error?.response?.data?.errors;
+      if (err?.trackingId) { setshowtrackingData(null); setshowMoreDetails(false); setShipmentContainerDetails([]);   toast.error(err.trackingId)};
+          if (err?.general) toast.error(err.general);
+          if (!err) toast.error('Something went wrong');
     } finally {
       
       setLoading(false)
