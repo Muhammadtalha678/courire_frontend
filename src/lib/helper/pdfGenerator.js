@@ -68,9 +68,9 @@ export const handlePdfSave = (formData, buttonType) => {
     body: Object.entries(formData.Charges || {}).map(([key, value], index) => [
       index + 1,
       safeText(key),
-      `$${safeText(value.unitRate)}`,
+      `SAR ${safeText(value.unitRate)}`,
       value.qty > 0 ? `${value.qty}` : "",
-      value.qty > 0 ? `$${safeText(value.total)}` : "",
+      value.qty > 0 ? `SAR ${safeText(value.total)}` : "",
     ]),
     startY: 135,
     theme: "grid",
@@ -94,9 +94,9 @@ export const handlePdfSave = (formData, buttonType) => {
   let summaryY = finalY + 10;
 
   const summaryItems = [
-    { label: "SUBTOTAL", value: `$${safeText(formData.SubTotal)}` },
-    { label: "VAT", value: `$${safeText(formData.VatTotal)}` },
-    { label: "TOTAL", value: `$${safeText(formData.InvoiceTotal)}` },
+    { label: "SUBTOTAL", value: `SAR ${safeText(formData.SubTotal)}` },
+    { label: "VAT", value: `SAR ${safeText(formData.VatTotal)}` },
+    { label: "TOTAL", value: `SAR ${safeText(formData.InvoiceTotal)}` },
   ];
 
   summaryItems.forEach((item, i) => {
