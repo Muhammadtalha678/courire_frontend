@@ -3,7 +3,9 @@ import { toast } from 'react-toastify'
 import { AppRoutes } from '../constants/AppRoutes'
 import axios from 'axios'
 
-const AddContainerNumber = ({ cities, onContainerAdded }) => {
+const AddContainerNumber = ({ cities, onContainerAdded,isEdit = false,editDestination, editContainerNumber }) => {
+// console.log(editDestination);
+
   const [formdata, setFormData] = useState({
     ContainerNumber:"",
     From:"",
@@ -78,44 +80,57 @@ const handleSubmit = async () => {
 <div className="grid grid-cols-7 gap-4 items-center">
   <input
     placeholder="Type Container No"
-    value={formdata.ContainerNumber}
-    onChange={handleChange}
+    value={!isEdit ? formdata.ContainerNumber :editContainerNumber }
+    onChange={!isEdit ? handleChange:undefined}
     name="ContainerNumber"
+          disabled={isEdit}
     className="col-span-2 border px-3 py-2 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
   />
   {containerErr && <span className="text-red-500 text-sm">{containerErr}</span>}
   <h1 className="bg-blue-700 text-white px-4 py-2 rounded-t-md font-semibold">
     Location
   </h1>
-  <select
+        <select
+          disabled={isEdit}
             name="From"
-            value={formdata.From}
-            onChange={handleChange}
+            value={!isEdit ? formdata.From:editDestination.From}
+            onChange={!isEdit ? handleChange:undefined}
             className="border p-2"
           >
             <option value="">Select From</option>
-            {cities.map((city, index) => (
+            {!isEdit &&  cities.map((city, index) => (
               <option key={index} value={city.city}>{city.city}</option>
             ))}
+            {isEdit &&  
+              <option  value={editDestination.From}>{editDestination.From}</option>
+            }
           </select>
-          {fromCityErr && <span className="text-red-500 text-sm">{fromCityErr}</span>}
+          {!isEdit && fromCityErr && <span className="text-red-500 text-sm">{fromCityErr}</span>}
           <select
-            name="To"
-            value={formdata.To}
-            onChange={handleChange}
-            className="border p-2"
+          value={!isEdit ? formdata.To : editDestination.To}
+          name="To"
+          onChange={!isEdit ? handleChange:undefined}
+          className="border p-2"
+          disabled={isEdit}
           >
             <option value="">Select To</option>
-            {cities.map((city, index) => (
+            {!isEdit && cities.map((city, index) => (
               <option key={index} value={city.city}>{city.city}</option>
             ))}
+            {isEdit &&  
+              <option  value={editDestination.To}>{editDestination.To}</option>
+            }
           </select>
-          {toCityErr && <span className="text-red-500 text-sm">{toCityErr}</span>}
-  <button
-    onClick={handleSubmit}
+          {!isEdit && toCityErr && <span className="text-red-500 text-sm">{toCityErr}</span>}
+  {
+          !isEdit &&
+          <>
+        <button
+   disabled ={isEdit ? isEdit : loading}
+    onClick={!isEdit ? handleSubmit: undefined}
     className="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded shadow"
   >
-    {loading ? (
+    {!isEdit && loading ? (
               <svg className="animate-spin h-5 w-5 mx-auto text-white" viewBox="0 0 24 24">
                 <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4"></circle>
                 <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4z" />
@@ -128,6 +143,8 @@ const handleSubmit = async () => {
   <button className="bg-red-600 hover:bg-red-700 text-white px-4 py-2 rounded shadow">
     Del
   </button>
+          </>
+  }
 </div>
     </>
   )

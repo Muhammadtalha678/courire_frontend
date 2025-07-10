@@ -10,7 +10,8 @@ const AddContainer = ({
   bookedContainerList = [],
   refreshBookedContainer,
   refreshInvoices,
-  refreshContainerNoList
+  refreshContainerNoList,
+  isEdit
 }) => {
   const navigate = useNavigate();
   const [selectedContainer, setSelectedContainer] = useState('');

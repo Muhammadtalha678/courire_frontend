@@ -27,6 +27,13 @@ const ContainerList = () => {
          navigate(`/update-container/edit/${id}`);
 
     };
+    // --- Action Handlers (Edit/Delete ke liye) ---
+    const handleEditContainer = (id) => {
+        console.log("Edit Container with ID:", id);
+        // Yahan aap edit page pe navigate kar sakte hain
+         navigate(`/edit-container/edit/${id}`);
+
+    };
 
     const handleDelete = (id) => {
         console.log("Delete Container with ID:", id);
@@ -100,19 +107,19 @@ const ContainerList = () => {
             <td className="px-6 flex gap-4 py-4 text-center">
               <button
                 onClick={() => handleEdit(container._id)}
-                className="text-blue-600 whitespace-nowrap hover:text-blue-800"
+                className="cursor-pointer text-blue-600 whitespace-nowrap hover:text-blue-800"
               >
                 Update Status
               </button>
               <button
-                onClick={() => handleEdit(container._id)}
-                className="text-green-600 whitespace-nowrap hover:text-blue-800"
+                onClick={() => handleEditContainer(container._id)}
+                className="cursor-pointer text-green-600 whitespace-nowrap hover:text-blue-800"
               >
                 Edit Container
               </button>
               <button
-                onClick={() => handleEdit(container._id)}
-                className="text-red-600 whitespace-nowrap hover:text-blue-800"
+                // onClick={() => handleEdit(container._id)}
+                className="cursor-pointer text-red-600 whitespace-nowrap hover:text-blue-800"
               >
                 Delete Container
               </button>

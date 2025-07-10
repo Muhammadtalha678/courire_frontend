@@ -95,8 +95,9 @@ const ContainerBooking = () => {
             <div className="min-h-screen bg-gradient-to-b from-white to-gray-100 py-6 px-4">
             <div className="max-w-7xl mx-auto bg-white shadow-2xl rounded-2xl p-6 space-y-6">
               
-              <AddContainerNumber cities={cities} onContainerAdded={refreshContainerList}/>
+                <AddContainerNumber isEdit={false} cities={cities} onContainerAdded={refreshContainerList}/>
                 <AddContainer
+                  isEdit={false}
                   containerList={containerList}
                   invoiceList={invoices}
                   bookedContainerList={containerBookedList} refreshBookedContainer={refreshBookedContainer} refreshInvoices={refreshInvoices} refreshContainerNoList={refreshContainerList} />

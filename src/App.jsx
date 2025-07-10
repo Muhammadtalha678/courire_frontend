@@ -15,6 +15,7 @@ import { ToastContainer } from 'react-toastify'
 import AddBooking from './pages/add-booking.jsx'
 import AdminPannel from './pages/admin-pannel.jsx'
 import UpdateContainer from './pages/update-container.jsx'
+import EditContainer from './pages/edit-container.jsx'
 function App() {
   const { loading } = useAuth()
   if (loading) {
@@ -36,6 +37,7 @@ function App() {
           <Route path='/all-containers' element={<ContainerList/>}/> 
           <Route path={'/admin-pannel'} element={<AdminPannel/>}/>        
           <Route path="/update-container/edit/:id" element={<UpdateContainer />} />
+          <Route path="/edit-container/edit/:id" element={<EditContainer />} />
        
           
       </Route>
