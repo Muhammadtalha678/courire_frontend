@@ -3,21 +3,44 @@ import React, { useEffect, useState } from 'react';
 import Header from '../components/Header';
 import { AppRoutes } from '../constants/AppRoutes';
 import { useNavigate } from 'react-router-dom';
+import { toast } from 'react-toastify';
 
 const BookingList = () => {
   const [bookings, setBookings] = useState([]);
       const navigate = useNavigate()
+      const getBookings = async () => {
+        try {
+          const response = await axios.get(AppRoutes.allBookings);
+          setBookings(response?.data?.data?.bookings || []);
+        } catch (error) {
+          const err = error?.response?.data?.errors;
+      if (err?.general) toast.error(err?.general)
+      if (!err) toast.error('Something went wrong');
+        }
+      };
   useEffect(() => {
-    const getBookings = async () => {
-      try {
-        const response = await axios.get(AppRoutes.allBookings);
-        setBookings(response?.data?.data?.bookings || []);
-      } catch (error) {
-        console.log(error);
-      }
-    };
     getBookings();
   }, []);
+
+  const handleDelete = async(id,builtNo) => {
+    try {
+      if (!builtNo) {
+        toast.error('Builty no is missing')
+        return
+      }
+      const confirmed = window.confirm('Are you sure you want to delete this booking?');
+      if (!confirmed) return;
+      const response = await axios.delete(AppRoutes.deleteBooking, { data: { BiltyNo: builtNo } })
+      const data = response.data
+      toast.success(data?.data?.message)
+      // handleNewShipment()
+      getBookings();
+    } catch (error) {
+      const err = error?.response?.data?.errors;
+      if (err?.general) toast.error(err?.general)
+      if (!err) toast.error('Something went wrong');
+    }
+  }
 
   return (
     <div className="bg-gray-50 min-h-screen">
@@ -73,7 +96,7 @@ const BookingList = () => {
                 Edit Booking
               </button>
               <button
-                // onClick={() => handleEdit(container._id)}
+                onClick={() => handleDelete(row._id,row.BiltyNo)}
                 className="cursor-pointer text-red-600 whitespace-nowrap hover:text-blue-800"
               >
                 Delete Booking
