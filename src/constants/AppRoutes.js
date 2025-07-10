@@ -21,6 +21,7 @@ export const AppRoutes = {
     allContainersList: BASE_URL + "/api/allContainersList",
     getSingleContainer: BASE_URL + "/api/container",
     updateSingleContainer: BASE_URL + "/api/update-container",
+    updateSingleContainerBYID: BASE_URL + "/api/updateSingleContainer",
     
     //search data by tracking id
     tracking: BASE_URL + "/api/tracking",

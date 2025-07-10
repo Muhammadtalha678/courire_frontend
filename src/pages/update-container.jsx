@@ -6,7 +6,7 @@ import { toast } from 'react-toastify';
 import axios from 'axios';
 import { AppRoutes } from '../constants/AppRoutes';
 
-const UpdateContainer = () => {
+const UpdateContainer = ({remainingInvoices}) => {
     const { id } = useParams(); // 👈 Gets the :id from URL
     const navigate = useNavigate(); // 👈 Gets the :id from URL
     // console.log(id);

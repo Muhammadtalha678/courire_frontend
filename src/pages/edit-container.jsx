@@ -12,8 +12,10 @@ const EditContainerPage = () => {
     // console.log(id);
     const [container,setContainer] = useState(null); 
     const [loadingContainer,setloadingContainer] = useState(false); 
-    const [loadingSaveContainer,setloadingSaveContainer] = useState(false); 
-    
+    const [loadingSaveContainer,setloadingSaveContainer] = useState
+    (false); 
+    const [remainiginvoices, SetRemainigInvoices] = useState([])
+      
     const handleSave = async(update) => {
         console.log(update);
         try {
@@ -40,12 +42,17 @@ const EditContainerPage = () => {
       const fetchContainer = async () => {
         try {
           setloadingContainer(true)
-          const response = await axios.get(`${AppRoutes.getSingleContainer}/${id}`)
+          const [response, allRemainigInvoices] = await Promise.all([
+            axios.get(`${AppRoutes.getSingleContainer}/${id}`),
+            axios.get(AppRoutes.allBookingInvoiceNo),
+          ])
           const data = response.data;
+          const invoicesRes = allRemainigInvoices.data
           console.log("data",data.data.foundContainer);
           // setContainer(data?.data.foundContainer)
                 
-            setContainer(data?.data.foundContainer)
+            setContainer(data?.data?.foundContainer)
+            SetRemainigInvoices(invoicesRes?.data?.bookingInvoices || [])
             } catch (error) {
                 const err = error?.response?.data?.errors;
                 // if (err?.email) setEmailErr(err.email);
@@ -68,11 +75,12 @@ const EditContainerPage = () => {
       </div>
     )
   }
-  // console.log(container);
+
+  console.log(remainiginvoices);
   return (
     <div>
       <Header/>
-          <EditContainer editData={container} />
+      <EditContainer editData={container} remainingInvoices={remainiginvoices} />
           {/* <ContainerStatusUpdate container={container}  onSave={handleSave} loadingSave={loadingSaveContainer}/> */}
     </div>
   )
