@@ -2,10 +2,11 @@ import axios from 'axios';
 import React, { useEffect, useState } from 'react';
 import Header from '../components/Header';
 import { AppRoutes } from '../constants/AppRoutes';
+import { useNavigate } from 'react-router-dom';
 
 const BookingList = () => {
   const [bookings, setBookings] = useState([]);
-
+      const navigate = useNavigate()
   useEffect(() => {
     const getBookings = async () => {
       try {
@@ -43,6 +44,7 @@ const BookingList = () => {
     <th className="px-6 py-3 whitespace-nowrap">Receiver City</th>
     <th className="px-6 py-3 whitespace-nowrap">No. of Pieces</th>
     <th className="px-6 py-3 whitespace-nowrap">Branch</th>
+    <th className="px-6 py-3 text-center whitespace-nowrap">Actions</th>
   </tr>
 </thead>
 
@@ -62,6 +64,21 @@ const BookingList = () => {
                     <td className="px-4 py-2">{row.ReceiverArea || '-'}</td>
                     <td className="px-4 py-2">{row.NoOfPieces || '-'}</td>
                     <td className="px-4 py-2">{row.Branch || '-'}</td>
+                    <td className="px-6 flex gap-4 py-4 text-center">
+              
+              <button
+                onClick={() =>  navigate(`/edit-booking/edit/${row._id}`)}
+                className="cursor-pointer text-green-600 whitespace-nowrap hover:text-blue-800"
+              >
+                Edit Booking
+              </button>
+              <button
+                // onClick={() => handleEdit(container._id)}
+                className="cursor-pointer text-red-600 whitespace-nowrap hover:text-blue-800"
+              >
+                Delete Booking
+              </button>
+            </td>
                   </tr>
                 ))}
               </tbody>

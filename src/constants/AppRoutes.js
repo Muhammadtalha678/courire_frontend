@@ -14,6 +14,7 @@ export const AppRoutes = {
     deleteBooking: BASE_URL + "/api/deleteBooking",
     // edit booking by bilty no
     editBooking: BASE_URL + "/api/editBooking",
+    editBookingById: BASE_URL + "/api/editBookingById",
     
     // container routers
     addContainer: BASE_URL + "/api/addContainer",
@@ -21,7 +22,8 @@ export const AppRoutes = {
     allContainersList: BASE_URL + "/api/allContainersList",
     getSingleContainer: BASE_URL + "/api/container",
     updateSingleContainer: BASE_URL + "/api/update-container",
-    updateSingleContainerBYID: BASE_URL + "/api/updateSingleContainer",
+    getBookingById: BASE_URL + "/api/getBookingById",
+    editBookingById: BASE_URL + "/api/editBookingById",
     
     //search data by tracking id
     tracking: BASE_URL + "/api/tracking",

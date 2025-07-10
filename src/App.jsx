@@ -16,6 +16,7 @@ import AddBooking from './pages/add-booking.jsx'
 import AdminPannel from './pages/admin-pannel.jsx'
 import UpdateContainer from './pages/update-container.jsx'
 import EditContainer from './pages/edit-container.jsx'
+import EditBooking from './pages/edit-booking.jsx'
 function App() {
   const { loading } = useAuth()
   if (loading) {
@@ -32,6 +33,7 @@ function App() {
     <Routes>
       <Route element={<ProtectedRoute/>}>
           <Route path='/add-booking' element={<AddBooking/>}/> 
+          <Route path='/edit-booking/edit/:id' element={<EditBooking/>}/> 
           <Route path='/container' element={<ContainerBooking/>}/> 
           <Route path='/all-bookings' element={<BookingList/>}/> 
           <Route path='/all-containers' element={<ContainerList/>}/> 
