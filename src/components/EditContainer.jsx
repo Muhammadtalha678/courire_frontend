@@ -10,8 +10,8 @@ const EditContainer = ({ editData }) => {
           <div className="max-w-7xl mx-auto bg-white shadow-2xl rounded-2xl p-6 space-y-6">
             <h1 className='text-5xl font-extrabold text-center text-blue-800'>Update Container</h1>
         <AddContainerNumber isEdit={true} editDestination={editData.Destination} editContainerNumber={editData.ContainerNumber} />
-              <AddContainer isEdit={true}
-                 />
+              {/* <AddContainer isEdit={true}
+                 /> */}
           </div>
         </div>
   )
