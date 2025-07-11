@@ -139,6 +139,10 @@
           if (Object.keys(newErrors).length > 0) {
             return;
         }
+        if (formData.InvoiceTotal < 0) {
+          toast.error("Calculated total cannot be negative")
+          return
+        }
         try {
           setIsSubmittedBooking(true)
           const response = await axios.post(AppRoutes.addBooking,formData)
@@ -268,8 +272,9 @@
           // Apply discount only if enabled
           const discount = parseFloat(formData.Charges.Discount?.total) || 0;
           console.log(discount);
-          subtotal -= discount;
           
+          // if(subtotal > discount) subtotal -= discount;
+          subtotal -= discount;
           // Subtract discount from subtotal (if enabled)
           // if (isDiscountEnabled) {
           // }
@@ -283,13 +288,14 @@
             return sum + total ;
           }, 0);
       
-      selectedTotal -= discount
-          
+          // if(selectedTotal > discount) selectedTotal -=discount
+          selectedTotal -=discount
           const vatPercent = parseFloat(formData.Vat) || 0;
           const vatTotal = (selectedTotal * vatPercent / 100);
         
         
           const invoiceTotal = subtotal + vatTotal ;
+       
         const amountInWords = numberToWords(invoiceTotal.toFixed(2));
         console.log(amountInWords);
         
