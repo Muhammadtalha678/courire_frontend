@@ -282,6 +282,8 @@
             const total = parseFloat(charge.total) || 0;
             return sum + total ;
           }, 0);
+      
+      selectedTotal -= discount
           
           const vatPercent = parseFloat(formData.Vat) || 0;
           const vatTotal = (selectedTotal * vatPercent / 100);
@@ -590,7 +592,7 @@
                         className="border rounded px-2 py-1 bg-gray-100"
                     />
                 </div>
-                {/* total vat */}
+                {/* total Invoice */}
                 <div className="grid grid-cols-6 gap-2 items-center mt-4 font-semibold text-gray-800">
                 <div></div>
                 <div>VAT ({formData.Vat}%) Total</div>
@@ -603,10 +605,22 @@
                     className="border rounded px-2 py-1 bg-gray-100"
                 />
                 </div>
+                <div className="grid grid-cols-6 gap-2 items-center mt-4 font-semibold text-gray-800">
+                <div></div>
+                <div>Invoice Total SAR:</div>
+                <div></div>
+                <div></div>
+                <input 
+                    type="text"
+                    value={formData.InvoiceTotal}
+                    readOnly
+                    className="border rounded px-2 py-1 bg-gray-100"
+                />
+                </div>
             </div>
             
             {/* Amount in Words */}
-            <div>
+            <div className='mt-5'>
                 <label className="block text-sm font-semibold text-gray-700 mb-1">
                 Amount In Words SAR
                 </label>
@@ -614,12 +628,12 @@
             </div>
 
             {/* Invoice Total */}
-            <div className="text-right">
+            {/* <div className="text-right">
                 <div className="inline-block text-sm font-semibold text-gray-700 mr-2">
                 Invoice Total SAR:
                 </div>
                 <input  type="text" readOnly value={formData.InvoiceTotal} className="border rounded px-2 py-1 w-48" />
-            </div>
+            </div> */}
             <div>
             {
               !isSubmitted && 
