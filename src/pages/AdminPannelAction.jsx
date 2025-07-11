@@ -82,7 +82,7 @@ const AdminPannelAction = () => {
 const handleDeleteContainer = async (id) => {
   const confirmDelete = window.confirm(
     `Are you sure you want to delete this ${actionType === 'branchAction' ? 'branch' : 'city'}?`
-  );
+  )
   if (!confirmDelete) return;
 
   try {
