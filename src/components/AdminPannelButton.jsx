@@ -6,7 +6,8 @@ const AdminPanelButton = ({ label, onClick, disabled }) => {
       <button
         disabled={disabled}
         onClick={onClick}
-        className="w-full bg-blue-600 text-white py-3 px-4 rounded font-medium hover:bg-blue-700 transition-colors mt-6"
+        className="w-full bg-blue-600 text-white py-3 px-4 rounded font-medium hover:bg-blue-700 transition-colors mt-6 cursor-pointer"
+      
       >
         {label}
       </button>
