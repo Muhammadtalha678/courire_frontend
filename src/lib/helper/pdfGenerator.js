@@ -31,8 +31,8 @@ doc.text(`Bilty #: ${safeText(formData.BiltyNo)}`, 15, 40);
 doc.setFontSize(12);
 doc.setFont("helvetica", "normal");
 
-const companyLines = doc.splitTextToSize("ABCD – CARGO SERVICES ABCD – CARGO SERVICES", 60);
-const addressLines = doc.splitTextToSize("Your Business Address Your Business Address Your Business Address", 60);
+const companyLines = doc.splitTextToSize("ABCD – CARGO SERVICES", 60);
+const addressLines = doc.splitTextToSize("Your Business Address", 60);
 
 const companyY = 15;
 companyLines.forEach((line, i) => doc.text(line, 150, companyY + i * 6));
