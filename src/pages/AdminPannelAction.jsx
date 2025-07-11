@@ -2,6 +2,8 @@ import React, { useEffect, useState } from 'react';
 import { useLocation } from 'react-router-dom';
 import axios from 'axios';
 import Header from '../components/Header';
+import { AppRoutes } from '../constants/AppRoutes';
+import { toast } from 'react-toastify';
 
 const AdminPannelAction = () => {
   const location = useLocation();
@@ -18,19 +20,27 @@ const AdminPannelAction = () => {
 
   const fetchBranches = async () => {
     try {
-      const res = await axios.get('/api/branches'); // replace with your actual route
-      setData(res.data?.branches || []);
+      const res = await axios.get(AppRoutes.allBranch) 
+      const allBranches = res.data?.data?.allBranches || [];
+      
+      setData(allBranches);
     } catch (error) {
       console.log(error);
+      const err = error?.response?.data?.errors;
+                    if (err?.general) toast.error(err.general);
+                    if (!err) toast.error('Something went wrong');
     }
   };
-
+  
   const fetchCities = async () => {
     try {
-      const res = await axios.get('/api/cities'); // replace with your actual route
-      setData(res.data?.cities || []);
+      const res = await axios.get(AppRoutes.allCity) 
+      const allCities = res.data?.data?.allCities || [];
+      setData(allCities);
     } catch (error) {
-      console.log(error);
+      const err = error?.response?.data?.errors;
+                    if (err?.general) toast.error(err.general);
+                    if (!err) toast.error('Something went wrong');
     }
   };
 
@@ -46,26 +56,26 @@ const AdminPannelAction = () => {
   <thead className="text-xl uppercase bg-gray-200 text-gray-800">
     <tr className="border-b border-gray-300">
       <th className="px-6 py-3 text-center whitespace-nowrap">S.No</th>
-      <th className="px-6 py-3 text-center whitespace-nowrap">Branch</th>
+      <th className="px-6 py-3 text-center whitespace-nowrap">{actionType === 'branchAction' ? 'Branch ' : 'City'}</th>
     
       <th className="px-6 py-3 text-center whitespace-nowrap">Actions</th>
     </tr>
   </thead>
   <tbody>
     {data.length > 0 ? (
-      data.map((container, index) => {
+      data.map((d, index) => {
         // --- Invoices parsing ---
         const invoiceNumbers = [];
         let totalShipped = 0;
 
           
         return (
-          <tr key={container._id || index} className="bg-white border-b hover:bg-gray-50">
+          <tr key={index} className="bg-white border-b hover:bg-gray-50">
             <td className="px-6 py-4 text-center">{index + 1}</td>
-            <td className="px-6 py-4 text-center">{index + 1}</td>
+            <td className="px-6 py-4 text-center">{actionType === 'branchAction' ? d.branch : d.city}</td>
             <td className="px-6 flex gap-4 py-4 text-center">
               <button
-                onClick={() => handleEditContainer(container._id)}
+                onClick={() => handleEditContainer(d._id)}
                 className="cursor-pointer text-green-600 whitespace-nowrap hover:text-blue-800"
               >
                 Edit Container
