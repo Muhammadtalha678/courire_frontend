@@ -77,7 +77,8 @@
                 const qty = Math.max(0, parseFloat(field === 'qty' ? value : updatedCharge.qty) || 0);
 
                 // Only calculate total if both unit and qty have valid positive values
-                updatedCharge.total = unit > 0 && qty > 0 ? (unit * qty).toFixed(2) : '';
+                // updatedCharge.total = unit > 0 && qty > 0 ? (unit * qty).toFixed(2) : '';
+                updatedCharge.total = unit > 0 && qty > 0 ? (unit * qty) : '';
 
         
                 return {
@@ -288,8 +289,8 @@
             return sum + total ;
           }, 0);
       
-          // if(selectedTotal > discount) selectedTotal -=discount
-          selectedTotal -=discount
+          if(selectedTotal > 0) selectedTotal -=discount
+          // selectedTotal -=discount
           const vatPercent = parseFloat(formData.Vat) || 0;
           const vatTotal = (selectedTotal * vatPercent / 100);
         

@@ -227,35 +227,54 @@
     }
   };
   
-    useEffect(() => {
-      let subtotal = 0;
-    
-      Object.entries(formData.Charges).forEach(([key, charge]) => {
-        if (charge.enabled && charge.total) {
-          const total = parseFloat(charge.total) || 0;
-    
-          // Discount is subtracted
-          if (key === "Discount") {
-            subtotal -= total;
-          } else {
-            subtotal += total;
-          }
-        }
-    });
-    
-      const vatRate = parseFloat(formData.Vat) || 0;
-      const vatTotal = (subtotal * vatRate) / 100;
-      const invoiceTotal = subtotal + vatTotal;
-    
-      setFormData((prev) => ({
-        ...prev,
-        SubTotal: subtotal.toFixed(2),
-        VatTotal: vatTotal.toFixed(2),
-        InvoiceTotal: invoiceTotal.toFixed(2),
-        AmountInWords: numberToWords(invoiceTotal), // if you're using this helper
-      }));
-    }, [formData.Charges, formData.Vat]);
-    
+
+useEffect(() => {
+  const charges = formData.Charges || {};
+  const allCharges = Object.entries(charges);
+
+  // Subtotal = sum of all charges (excluding Discount)
+  let subtotal = allCharges.reduce((sum, [key, value]) => {
+    if (key === "Discount") return sum; // skip
+    const total = parseFloat(value.total) || 0;
+    return sum + total;
+  }, 0);
+
+  // Apply discount if present
+  const discount = parseFloat(charges.Discount?.total) || 0;
+  subtotal -= discount;
+
+  // Filter enabled charges only
+  const enabledCharges = allCharges.filter(
+    ([, charge]) => charge?.enabled
+  );
+
+  // Calculate total from enabled charges
+  let selectedTotal = enabledCharges.reduce((sum, [, charge]) => {
+    const total = parseFloat(charge.total) || 0;
+    return sum + total;
+  }, 0);
+
+  if (selectedTotal > 0) selectedTotal -= discount;
+
+  // VAT on selected charges (after discount)
+  const vatRate = parseFloat(formData.Vat) || 0;
+  const vatTotal = (selectedTotal * vatRate) / 100;
+
+  // Final invoice total
+  const invoiceTotal = subtotal + vatTotal;
+
+  // Optional: Convert to words
+  const amountInWords = numberToWords(invoiceTotal.toFixed(2));
+
+  setFormData((prev) => ({
+    ...prev,
+    SubTotal: subtotal.toFixed(2),
+    VatTotal: vatTotal.toFixed(2),
+    InvoiceTotal: invoiceTotal.toFixed(2),
+    AmountInWords: amountInWords,
+  }));
+}, [formData.Charges, formData.Vat]);
+
     return (
       <div className="min-h-screen bg-gradient-to-br from-gray-100 to-gray-300 p-6">
         <div className='max-w-7xl mx-auto bg-white shadow-xl rounded-xl p-6 space-y-6'>
@@ -559,11 +578,23 @@
                     readOnly
                     className="border rounded px-2 py-1 bg-gray-100"
                 />
+              </div>
+              <div className="grid grid-cols-6 gap-2 items-center mt-4 font-semibold text-gray-800">
+                <div></div>
+                <div>Invoice Total SAR:</div>
+                <div></div>
+                <div></div>
+                <input 
+                    type="text"
+                    value={formData.InvoiceTotal}
+                    readOnly
+                    className="border rounded px-2 py-1 bg-gray-100"
+                />
                 </div>
             </div>
             
             {/* Amount in Words */}
-            <div>
+            <div className='mt-5'>
                 <label className="block text-sm font-semibold text-gray-700 mb-1">
                 Amount In Words SAR
                 </label>
@@ -571,12 +602,12 @@
             </div>
 
             {/* Invoice Total */}
-            <div className="text-right">
+            {/* <div className="text-right">
                 <div className="inline-block text-sm font-semibold text-gray-700 mr-2">
                 Invoice Total SAR:
                 </div>
                 <input  type="text" readOnly value={formData.InvoiceTotal} className="border rounded px-2 py-1 w-48" />
-            </div>
+            </div> */}
             <div>
             
             </div>
