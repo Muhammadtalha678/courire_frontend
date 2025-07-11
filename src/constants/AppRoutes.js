@@ -38,6 +38,7 @@ export const AppRoutes = {
     // Add branch route
     addBranch: BASE_URL + "/api/addBranch",
     allBranch: BASE_URL + "/api/allBranch",
+    editBranch: BASE_URL + "/api/editBranch",
     
     // Add ContainerNo route
     addContainerNo: BASE_URL + "/api/addContainerNo",
