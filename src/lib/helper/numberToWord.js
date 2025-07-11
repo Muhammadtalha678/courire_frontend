@@ -1,44 +1,41 @@
-export function numberToWords(num) {
+export function numberToWords(amount) {
   const ones = ["", "one", "two", "three", "four", "five", "six", "seven", "eight", "nine", "ten", "eleven", "twelve", "thirteen", "fourteen", "fifteen", "sixteen", "seventeen", "eighteen", "nineteen"];
   const tens = ["", "", "twenty", "thirty", "forty", "fifty", "sixty", "seventy", "eighty", "ninety"];
-  const units = ["", "thousand", "million", "billion", "trillion"]; // Extend as needed for larger numbers
-
-  if (num === 0) {
-    return "zero";
-  }
+  const units = ["", "thousand", "million", "billion"];
 
   function convertBelowThousand(n) {
-    if (n < 20) {
-      return ones[n];
-    }
-    if (n < 100) {
-      return tens[Math.floor(n / 10)] + (n % 10 !== 0 ? "-" + ones[n % 10] : "");
-    }
+    if (n < 20) return ones[n];
+    if (n < 100) return tens[Math.floor(n / 10)] + (n % 10 !== 0 ? "-" + ones[n % 10] : "");
     return ones[Math.floor(n / 100)] + " hundred" + (n % 100 !== 0 ? " and " + convertBelowThousand(n % 100) : "");
   }
 
-  let words = "";
-  let i = 0;
-
-  while (num > 0) {
-    const chunk = num % 1000;
-    if (chunk !== 0) {
-      let chunkWords = convertBelowThousand(chunk);
-      if (units[i]) {
-        chunkWords += " " + units[i];
+  function convertNumberToWords(n) {
+    if (n === 0) return "";
+    let i = 0;
+    let words = "";
+    while (n > 0) {
+      const chunk = n % 1000;
+      if (chunk !== 0) {
+        let chunkWords = convertBelowThousand(chunk);
+        if (units[i]) chunkWords += " " + units[i];
+        words = chunkWords + (words ? " " + words : "");
       }
-      words = chunkWords + (words ? " " + words : "");
+      n = Math.floor(n / 1000);
+      i++;
     }
-    num = Math.floor(num / 1000);
-    i++;
+    return words.trim();
   }
 
-  return words.trim();
-}
+  const safeAmount = parseFloat(amount || 0);
 
-// // Example usage:
-// console.log(numberToWords(123));     // Output: one hundred and twenty-three
-// console.log(numberToWords(7890));    // Output: seven thousand eight hundred and ninety
-// console.log(numberToWords(1000000)); // Output: one million
-// console.log(numberToWords(543210987)); // Output: five hundred forty-three million two hundred ten thousand nine hundred eighty-seven
-// console.log(numberToWords(0));       // Output: zero
+  if (safeAmount === 0) return ""; // ✅ Skip if 0
+
+  const [intPartStr, decimalPartStr] = safeAmount.toFixed(2).split(".");
+  const intPart = parseInt(intPartStr);
+  const decimalPart = parseInt(decimalPartStr);
+
+  const intWords = convertNumberToWords(intPart);
+  const decimalWords = decimalPart > 0 ? ` and ${decimalPart} halalah` : "";
+
+  return `${intWords} Saudi Riyal${decimalWords} only`;
+}
