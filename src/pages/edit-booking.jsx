@@ -45,13 +45,21 @@ const EditBooking = () => {
   return (
     <div>
       <Header />
-      <EditInvoiceForm
-        id={id}
-        branchList={branchList}
-        cityList={cityList}
-        bookingData={bookingData}
-        loadingList={loadingList}
-      />
+      {
+        loadingList ? 
+       (
+      <div className="flex items-center justify-center h-screen bg-gray-50 text-purple-600 text-xl">
+        Loading...
+      </div>
+    ):
+    (<EditInvoiceForm
+      id={id}
+      branchList={branchList}
+      cityList={cityList}
+      bookingData={bookingData}
+      loadingList={loadingList}
+    />)
+      }
     </div>
   );
 };
