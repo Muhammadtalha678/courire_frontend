@@ -10,45 +10,53 @@ export const handlePdfSave = (formData, buttonType) => {
     return d && m && y ? `${d}/${m}/${y}` : "";
   };
 
- // --- HEADER START ---
-// Blue box first
-doc.setFillColor(33, 91, 168);
-doc.rect(0, 0, 210, 60, "F");
-
-// "Invoice" Title
-doc.setFontSize(22);
-doc.setTextColor(255, 255, 255);
-doc.setFont("helvetica", "bold");
-doc.text("Invoice", 15, 20);
-
-// Invoice Info (tight under the title)
-doc.setFontSize(10);
-doc.text(`Invoice #: ${safeText(formData.InvoiceNo)}`, 15, 28);
-doc.text(`Booking Date: ${formatDate(formData.BookingDate)}`, 15, 34);
-doc.text(`Bilty #: ${safeText(formData.BiltyNo)}`, 15, 40);
-
-// --- Company info (right side, wrapped) ---
+// --- SETUP FOR HEADER MEASUREMENT ---
 doc.setFontSize(12);
 doc.setFont("helvetica", "normal");
 
 const companyLines = doc.splitTextToSize("ABCD – CARGO SERVICES", 60);
 const addressLines = doc.splitTextToSize("Your Business Address", 60);
 
+// Coordinates for company info (right side)
 const companyY = 15;
-companyLines.forEach((line, i) => doc.text(line, 150, companyY + i * 6));
-
 const addressY = companyY + companyLines.length * 6;
+const footerY = addressY + addressLines.length * 6;
+const rightColumnBottom = footerY + 18; // for "City", "Saudi Arabia", "75311"
+
+// Coordinates for invoice info (left side)
+const invoiceInfoY = 28;
+const leftColumnBottom = invoiceInfoY + 18;
+
+// --- DYNAMIC HEIGHT CALC ---
+const headerHeight = Math.max(50, rightColumnBottom, leftColumnBottom);
+
+// --- NOW DRAW BACKGROUND BOX BASED ON HEIGHT ---
+doc.setFillColor(33, 91, 168);
+doc.rect(0, 0, 210, headerHeight, "F");
+
+// --- HEADER CONTENT (WHITE TEXT OVER BLUE) ---
+doc.setTextColor(255, 255, 255);
+
+// 1. Invoice title
+doc.setFontSize(22);
+doc.setFont("helvetica", "bold");
+doc.text("Invoice", 15, 20);
+
+// 2. Invoice Info (left)
+doc.setFont("helvetica", "normal");
+doc.setFontSize(10);
+doc.text(`Invoice #: ${safeText(formData.InvoiceNo)}`, 15, invoiceInfoY);
+doc.text(`Booking Date: ${formatDate(formData.BookingDate)}`, 15, invoiceInfoY + 6);
+doc.text(`Bilty #: ${safeText(formData.BiltyNo)}`, 15, invoiceInfoY + 12);
+
+// 3. Company Name + Address (right)
+doc.setFontSize(12);
+companyLines.forEach((line, i) => doc.text(line, 150, companyY + i * 6));
 addressLines.forEach((line, i) => doc.text(line, 150, addressY + i * 6));
 
-doc.text("City", 150, addressY + addressLines.length * 6);
-doc.text("Saudi Arabia", 150, addressY + addressLines.length * 6 + 6);
-doc.text("75311", 150, addressY + addressLines.length * 6 + 12);
-
-// Update header height based on tallest column
-const headerHeight = Math.max(
-  50,
-  addressY + addressLines.length * 6 + 18
-);
+doc.text("City", 150, footerY);
+doc.text("Saudi Arabia", 150, footerY + 6);
+doc.text("75311", 150, footerY + 12);
 
 // ========== BODY START ==========
 const bodyStartY = headerHeight + 10;
@@ -66,7 +74,7 @@ const senderLines = [
   ...doc.splitTextToSize(`ID: ${safeText(formData.SenderIdNumber)}`, 60),
   ...doc.splitTextToSize(`Mobile: ${safeText(formData.SenderMobile)}`, 60),
   ...doc.splitTextToSize(`Address: ${safeText(formData.SenderAddress)}`, 60),
-  ...doc.splitTextToSize(`Area: ${safeText(formData.SenderArea)}`, 60),
+  ...doc.splitTextToSize(`City: ${safeText(formData.SenderArea)}`, 60),
   "Saudi Arabia"
 ];
 senderLines.forEach((line, i) => {
@@ -83,7 +91,7 @@ const receiverLines = [
   ...doc.splitTextToSize(`Mobile 1: ${safeText(formData.ReceiverMobile1)}`, 50),
   ...doc.splitTextToSize(`Mobile 2: ${safeText(formData.ReceiverMobile2)}`, 50),
   ...doc.splitTextToSize(`Address: ${safeText(formData.ReceiverAddress)}`, 50),
-  ...doc.splitTextToSize(`Area: ${safeText(formData.ReceiverArea)}`, 50),
+  ...doc.splitTextToSize(`City: ${safeText(formData.ReceiverArea)}`, 50),
   "Saudi Arabia"
 ];
 receiverLines.forEach((line, i) => {
