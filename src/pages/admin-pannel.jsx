@@ -4,11 +4,28 @@ import CreateUser from '../components/CreateUser'
 import AddCity from '../components/AddCity'
 import AddBranch from '../components/AddBranch'
 import AdminPanelButton  from '../components/AdminPannelButton'
+import {useNavigate} from 'react-router-dom'
 const AdminPannel = () => {
   const [isBranchAdd,setIsBranchAdd] = useState(false)
   const [isCityAdd,setIsCityAdd] = useState(false)
-  const [isUserAdd,setIsUserAdd] = useState(false)
-    return (
+  const [isUserAdd, setIsUserAdd] = useState(false)
+  // console.log(actionType && true)
+  const navigate = useNavigate() 
+
+   const handleBranchActions = () => {
+    setIsBranchAdd(false);
+    setIsCityAdd(false);
+    setIsUserAdd(false);
+    navigate('/admin-pannel-action', { state: { actionType: 'branchAction' } });
+  };
+
+  const handleCityActions = () => {
+    setIsBranchAdd(false);
+    setIsCityAdd(false);
+    setIsUserAdd(false);
+    navigate('/admin-pannel-action', { state: { actionType: 'cityAction' } });
+  };
+  return (
     <div className='flex flex-col h-screen'>
           
     <Header/>
@@ -18,109 +35,162 @@ const AdminPannel = () => {
         {isBranchAdd ? "Add Branch" : isCityAdd ? "Add City" : "Admin Pannel"}
       </h2>
     
-      {
-        isBranchAdd ? (
-          <>
-            <AddBranch/>
-            {/* <p className='text-red-600 text-sm'>{emailErr}</p> */}
-          </>
-        )  : isCityAdd ? (
-          <>
-            <AddCity/>
-            {/* <p className='text-red-600 text-sm'>{emailErr}</p> */}
-          </>
-                            ) : isUserAdd ? (
-        <CreateUser/>
-        ) : (null)
+      {/* --- FORMS --- */}
+      {isBranchAdd && <AddBranch />}
+          {isCityAdd && <AddCity />}
+          {isUserAdd && <CreateUser />}
+          {
+  isBranchAdd ? (
+    <>
+      <div className="flex gap-4">
+        <AdminPanelButton
+          disabled={isCityAdd}
+          onClick={() => {
+            setIsUserAdd(false);
+            setIsBranchAdd(false);
+            setIsCityAdd(true);
+          }}
+          label={"Add City"}
+        />
+        <AdminPanelButton
+  onClick={handleCityActions}
+  label={"City Actions"}
+/>
+
+      </div>
+      <div className="flex gap-4 mt-4">
+        <AdminPanelButton
+          disabled={isUserAdd}
+          onClick={() => {
+            setIsBranchAdd(false);
+            setIsCityAdd(false);
+            setIsUserAdd(true);
+          }}
+          label={"Add User"}
+        />
         
-      }
-      {
-        isBranchAdd ?
-        (<>
-         <AdminPanelButton 
-         disabled={isCityAdd} 
-         onClick={() => {
-        setIsUserAdd(false)
-        setIsBranchAdd(false)
-        setIsCityAdd(true) }}
-        label={"Add City"}
+      </div>
+    </>
+  ) : isCityAdd ? (
+    <>
+      <div className="flex gap-4">
+        <AdminPanelButton
+          disabled={isBranchAdd}
+          onClick={() => {
+            setIsCityAdd(false);
+            setIsUserAdd(false);
+            setIsBranchAdd(true);
+          }}
+          label={"Add Branch"}
         />
-         <AdminPanelButton 
-         disabled={isUserAdd} 
-         onClick={() => {
-             setIsBranchAdd(false)
-             setIsCityAdd(false)
-             setIsUserAdd(true)
-         }}
-         label={"Add User"}
+        <AdminPanelButton
+          onClick={handleBranchActions}
+          label={"Branch Actions"}
         />
-        </>) : isCityAdd ? (
-            <>
-         <AdminPanelButton 
-         disabled={isBranchAdd} 
-         onClick={() => {
-            setIsCityAdd(false); setIsUserAdd(false); setIsBranchAdd(true)
-         }}
-         label={"Add Branch"}
+      </div>
+      <div className="flex gap-4 mt-4">
+        <AdminPanelButton
+          disabled={isUserAdd}
+          onClick={() => {
+            setIsBranchAdd(false);
+            setIsCityAdd(false);
+            setIsUserAdd(true);
+          }}
+          label={"Add User"}
         />
-         <AdminPanelButton 
-         disabled={isUserAdd} 
-         onClick={() => {
-            setIsBranchAdd(false); setIsCityAdd(false); setIsUserAdd(true)
-         }}
-         label={"Add User"}
+        
+      </div>
+    </>
+  ) : isUserAdd ? (
+    <>
+      <div className="flex gap-4">
+        <AdminPanelButton
+          disabled={isBranchAdd}
+          onClick={() => {
+            setIsCityAdd(false);
+            setIsUserAdd(false);
+            setIsBranchAdd(true);
+          }}
+          label={"Add Branch"}
         />
-      
-            </>
-        ): isUserAdd ? (
-            <>
-                 <AdminPanelButton 
-         disabled={isBranchAdd} 
-         onClick={() => {
-            setIsCityAdd(false); setIsUserAdd(false); setIsBranchAdd(true)
-         }}
-         label={"Add Branch"}
+        <AdminPanelButton
+          onClick={handleBranchActions}
+          label={"Branch Actions"}
         />
-                 <AdminPanelButton 
-         disabled={isCityAdd} 
-         onClick={() => {
-            setIsCityAdd(true); setIsUserAdd(false); setIsBranchAdd(false)
-         }}
-         label={"Add City"}
+      </div>
+      <div className="flex gap-4 mt-4">
+        <AdminPanelButton
+          disabled={isCityAdd}
+          onClick={() => {
+            setIsCityAdd(true);
+            setIsUserAdd(false);
+            setIsBranchAdd(false);
+          }}
+          label={"Add City"}
         />
-            </>
-        ) : (
-            <>
-            <AdminPanelButton 
-              disabled={isBranchAdd} 
-              onClick={() => {
-                setIsCityAdd(false); setIsUserAdd(false); setIsBranchAdd(true)
-              }}
-              label={"Add Branch"}
-            />
-            <AdminPanelButton 
-              disabled={isCityAdd} 
-              onClick={() => {
-                setIsUserAdd(false); setIsBranchAdd(false); setIsCityAdd(true)
-              }}
-              label={"Add City"}
-            />
-            <AdminPanelButton 
-              disabled={isUserAdd} 
-              onClick={() => {
-                setIsBranchAdd(false); setIsCityAdd(false); setIsUserAdd(true)
-              }}
-              label={"Add User"}
-            />
-          </>
-        )
-     }
-     
+        <AdminPanelButton
+  onClick={handleCityActions}
+  label={"City Actions"}
+/>
+
+      </div>
+    </>
+  ) : (
+    <>
+      <div className="flex gap-4">
+        <AdminPanelButton
+          disabled={isBranchAdd}
+          onClick={() => {
+            setIsCityAdd(false);
+            setIsUserAdd(false);
+            setIsBranchAdd(true);
+          }}
+          label={"Add Branch"}
+        />
+        <AdminPanelButton
+          onClick={handleBranchActions}
+          label={"Branch Actions"}
+        />
+      </div>
+      <div className="flex gap-4 mt-4">
+        <AdminPanelButton
+          disabled={isCityAdd}
+          onClick={() => {
+            setIsUserAdd(false);
+            setIsBranchAdd(false);
+            setIsCityAdd(true);
+          }}
+          label={"Add City"}
+        />
+        <AdminPanelButton
+  onClick={handleCityActions}
+  label={"City Actions"}
+/>
+
+      </div>
+      <div className="flex items-center justify-center gap-4 mt-4">
+        <AdminPanelButton
+          disabled={isUserAdd}
+          onClick={() => {
+            setIsBranchAdd(false);
+            setIsCityAdd(false);
+            setIsUserAdd(true);
+          }}
+          label={"Add User"}
+        />
+        
+      </div>
+    </>
+  )
+}
+
       
      
     </div>
-  </div>
+      </div>
+
     </div>
+    
   )
 }
 
