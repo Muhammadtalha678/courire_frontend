@@ -7,72 +7,91 @@ import { toast } from 'react-toastify';
 
 const BookingList = () => {
   const [bookings, setBookings] = useState([]);
-      const navigate = useNavigate()
-      const getBookings = async () => {
-        try {
-          const response = await axios.get(AppRoutes.allBookings);
-          setBookings(response?.data?.data?.bookings || []);
-        } catch (error) {
-          const err = error?.response?.data?.errors;
-      if (err?.general) toast.error(err?.general)
+  const [searchQuery, setSearchQuery] = useState(""); // ✅ NEW
+  const navigate = useNavigate();
+
+  const getBookings = async () => {
+    try {
+      const response = await axios.get(AppRoutes.allBookings);
+      setBookings(response?.data?.data?.bookings || []);
+    } catch (error) {
+      const err = error?.response?.data?.errors;
+      if (err?.general) toast.error(err?.general);
       if (!err) toast.error('Something went wrong');
-        }
-      };
+    }
+  };
+
   useEffect(() => {
     getBookings();
   }, []);
 
-  const handleDelete = async(id,builtNo) => {
+  const handleDelete = async (id, builtNo) => {
     try {
       if (!builtNo) {
-        toast.error('Builty no is missing')
-        return
+        toast.error('Builty no is missing');
+        return;
       }
       const confirmed = window.confirm('Are you sure you want to delete this booking?');
       if (!confirmed) return;
-      const response = await axios.delete(AppRoutes.deleteBooking, { data: { BiltyNo: builtNo } })
-      const data = response.data
-      toast.success(data?.data?.message)
-      // handleNewShipment()
-      getBookings();
+
+      const response = await axios.delete(AppRoutes.deleteBooking, { data: { BiltyNo: builtNo } });
+      const data = response.data;
+      toast.success(data?.data?.message);
+      getBookings(); // ✅ Refresh bookings
     } catch (error) {
       const err = error?.response?.data?.errors;
-      if (err?.general) toast.error(err?.general)
+      if (err?.general) toast.error(err?.general);
       if (!err) toast.error('Something went wrong');
     }
-  }
+  };
+
+  // ✅ FILTERED BOOKINGS
+  const filteredBookings = bookings.filter(booking =>
+    booking.InvoiceNo?.toString().includes(searchQuery.trim())
+  );
 
   return (
     <div className="bg-gray-50 min-h-screen">
       <Header />
       <h1 className="text-center text-2xl font-bold text-blue-800 px-4 pt-6 pb-2">
-    All Bookings Details
-  </h1>
+        All Bookings Details
+      </h1>
+
+      {/* ✅ SEARCH BAR */}
+      <div className="flex justify-center mb-4">
+        <input
+          type="text"
+          placeholder="Search by Invoice No..."
+          value={searchQuery}
+          onChange={(e) => setSearchQuery(e.target.value)}
+          className="w-1/2 px-4 py-2 border border-gray-300 rounded shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
+        />
+      </div>
+
       <div className="p-4">
         <div className="relative overflow-x-auto shadow-md sm:rounded-lg">
-          {bookings.length > 0 ? (
+          {filteredBookings.length > 0 ? (
             <table className="w-full text-sm text-left text-gray-700 bg-white">
               <thead className="text-xl uppercase bg-gray-200 text-gray-800">
-  <tr className="border-b border-gray-300 text-center">
-    <th className="px-6 py-3 whitespace-nowrap">S.No</th>
-    <th className="px-6 py-3 whitespace-nowrap">Bilty No</th>
-    <th className="px-6 py-3 whitespace-nowrap">Invoice No</th>
-    <th className="px-6 py-3 whitespace-nowrap">Booking Date</th>
-    <th className="px-6 py-3 whitespace-nowrap">Sender Name</th>
-    <th className="px-6 py-3 whitespace-nowrap">Sender Mobile</th>
-    <th className="px-6 py-3 whitespace-nowrap">Sender City</th>
-    <th className="px-6 py-3 whitespace-nowrap">Receiver Name</th>
-    <th className="px-6 py-3 whitespace-nowrap">Receiver Mobile 1</th>
-    <th className="px-6 py-3 whitespace-nowrap">Receiver Mobile 2</th>
-    <th className="px-6 py-3 whitespace-nowrap">Receiver City</th>
-    <th className="px-6 py-3 whitespace-nowrap">No. of Pieces</th>
-    <th className="px-6 py-3 whitespace-nowrap">Branch</th>
-    <th className="px-6 py-3 text-center whitespace-nowrap">Actions</th>
-  </tr>
-</thead>
-
+                <tr className="border-b border-gray-300 text-center">
+                  <th className="px-6 py-3">S.No</th>
+                  <th className="px-6 py-3">Bilty No</th>
+                  <th className="px-6 py-3">Invoice No</th>
+                  <th className="px-6 py-3">Booking Date</th>
+                  <th className="px-6 py-3">Sender Name</th>
+                  <th className="px-6 py-3">Sender Mobile</th>
+                  <th className="px-6 py-3">Sender City</th>
+                  <th className="px-6 py-3">Receiver Name</th>
+                  <th className="px-6 py-3">Receiver Mobile 1</th>
+                  <th className="px-6 py-3">Receiver Mobile 2</th>
+                  <th className="px-6 py-3">Receiver City</th>
+                  <th className="px-6 py-3">No. of Pieces</th>
+                  <th className="px-6 py-3">Branch</th>
+                  <th className="px-6 py-3 text-center">Actions</th>
+                </tr>
+              </thead>
               <tbody>
-                {bookings.map((row, index) => (
+                {filteredBookings.map((row, index) => (
                   <tr key={index} className="bg-white border-b hover:bg-gray-50 text-center">
                     <td className="px-4 py-2">{index + 1}</td>
                     <td className="px-4 py-2">{row.BiltyNo || '-'}</td>
@@ -88,20 +107,19 @@ const BookingList = () => {
                     <td className="px-4 py-2">{row.NoOfPieces || '-'}</td>
                     <td className="px-4 py-2">{row.Branch || '-'}</td>
                     <td className="px-6 flex gap-4 py-4 text-center">
-              
-              <button
-                onClick={() =>  navigate(`/edit-booking/edit/${row._id}`)}
-                className="cursor-pointer text-green-600 whitespace-nowrap hover:text-blue-800"
-              >
-                Edit Booking
-              </button>
-              <button
-                onClick={() => handleDelete(row._id,row.BiltyNo)}
-                className="cursor-pointer text-red-600 whitespace-nowrap hover:text-blue-800"
-              >
-                Delete Booking
-              </button>
-            </td>
+                      <button
+                        onClick={() => navigate(`/edit-booking/edit/${row._id}`)}
+                        className="cursor-pointer text-green-600 hover:text-blue-800"
+                      >
+                        Edit Booking
+                      </button>
+                      <button
+                        onClick={() => handleDelete(row._id, row.BiltyNo)}
+                        className="cursor-pointer text-red-600 hover:text-blue-800"
+                      >
+                        Delete Booking
+                      </button>
+                    </td>
                   </tr>
                 ))}
               </tbody>
