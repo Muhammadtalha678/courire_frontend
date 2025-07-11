@@ -60,7 +60,7 @@ const AdminPannelAction = () => {
         toast.success('Branch updated');
         fetchBranches();
       } else {
-        await axios.post(`${AppRoutes.updateCity}/${editItem._id}`, {
+        await axios.post(`${AppRoutes.editCity}/${editItem._id}`, {
           city: { CityName: formValue },
         });
         toast.success('City updated');
@@ -72,10 +72,36 @@ const AdminPannelAction = () => {
       
       const err = error?.response?.data?.errors;
       if (err?.BranchName) toast.error(err.BranchName);
+      if (err?.CityName) toast.error(err.CityName);
       if (err?.general) toast.error(err.general);
       if(!err) toast.error('Update failed');
     }
   };
+
+  // Inside the component
+const handleDeleteContainer = async (id) => {
+  const confirmDelete = window.confirm(
+    `Are you sure you want to delete this ${actionType === 'branchAction' ? 'branch' : 'city'}?`
+  );
+  if (!confirmDelete) return;
+
+  try {
+    if (actionType === 'branchAction') {
+      await axios.delete(`${AppRoutes.deleteBranch}/${id}`);
+      toast.success('Branch deleted successfully');
+      fetchBranches();
+    } else {
+      await axios.delete(`${AppRoutes.deleteCity}/${id}`);
+      toast.success('City deleted successfully');
+      fetchCities();
+    }
+  } catch (error) {
+    const err = error?.response?.data?.errors;
+    if (err?.general) toast.error(err.general);
+    else toast.error('Failed to delete');
+  }
+};
+
 
   return (
     <div className="bg-gray-50 min-h-screen">
@@ -111,7 +137,7 @@ const AdminPannelAction = () => {
                       >
                         Edit
                       </button>
-                      <button className="cursor-pointer text-red-600 hover:text-blue-800">
+                      <button className="cursor-pointer text-red-600 hover:text-blue-800" onClick={() => handleDeleteContainer(d._id)}>
                         Delete
                       </button>
                     </td>
