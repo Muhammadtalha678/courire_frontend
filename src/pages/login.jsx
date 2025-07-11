@@ -1,11 +1,12 @@
 import axios from 'axios';
 import React,{useState,useEffect} from 'react'
-import { useNavigate  } from 'react-router-dom';
+import { useNavigate,useLocation  } from 'react-router-dom';
 import { AppRoutes } from '../constants/AppRoutes';
 import {useAuth} from '../context/AuthContext'
 import { toast } from 'react-toastify';
 const Login = () => {
     const {setUser} = useAuth()
+    const location = useLocation()
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
     const [emailErr,setEmailErr] = useState('')
@@ -57,18 +58,19 @@ const Login = () => {
   
 }
       
-    };
-    useEffect(() => {
-        const user = localStorage.getItem('user');
-        if (user) {
-          navigate('/services');
-        }
-      }, [navigate]);
+  };
+  const pathName = location.pathname
+    // useEffect(() => {
+    //     const user = localStorage.getItem('user');
+    //     if (user) {
+    //       navigate('/services');
+    //     }
+    //   }, [navigate]);
   return (
     <div className="flex justify-center items-center min-h-96">
           <div className="bg-white/20 backdrop-blur-sm p-8 rounded-lg shadow-lg">
             <h2 className="text-2xl font-bold text-gray-800 mb-6 text-center">
-              User Login
+          { pathName === '/login' ? 'Admin Login' : 'User Login'}
             </h2>
             
             <div className="space-y-4 w-96">

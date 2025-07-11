@@ -17,6 +17,7 @@ import AdminPannel from './pages/admin-pannel.jsx'
 import UpdateContainer from './pages/update-container.jsx'
 import EditContainer from './pages/edit-container.jsx'
 import EditBooking from './pages/edit-booking.jsx'
+import UserLogin from './pages/user-login.jsx'
 function App() {
   const { loading } = useAuth()
   if (loading) {
@@ -46,6 +47,7 @@ function App() {
       <Route element={<Layout/>}>
           <Route element={<PublicRoute/>}>
             <Route path={'/login'} element={<Login/>}/>        
+            <Route path={'/user-login'} element={<UserLogin/>}/>        
          </Route>
         
           <Route path='/' element={<CargoServicesLanding/>}/> 

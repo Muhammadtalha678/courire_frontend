@@ -42,9 +42,12 @@ const Header = () => {
                 {/* <Link to="/" className="text-gray-800 font-medium hover:cursor-pointer underline hover:text-gray-600">
             Home
           </Link> */}
-          <button className="text-gray-800 font-medium underline cursor-pointer hover:text-gray-600">
+          {/* <button className="text-gray-800 font-medium underline cursor-pointer hover:text-gray-600 ">
             User Login
-          </button>
+          </button> */}
+          <Link to="/user-login" className="text-gray-800 font-medium hover:cursor-pointer underline hover:text-gray-600">
+            User Login
+          </Link> 
           <Link to="/login" className="text-gray-800 font-medium hover:cursor-pointer underline hover:text-gray-600">
             Admin Login
           </Link> 
@@ -75,6 +78,13 @@ const Header = () => {
                   </>
                   ) :
                   !user && location.pathname === '/login' ? (
+                    <>
+                    <Link  to={'/'} className="text-gray-800 font-medium underline hover:text-gray-600">
+                      Home
+                    </Link>
+                    </>
+                  ):
+                  !user && location.pathname === '/user-login' ? (
                     <>
                     <Link  to={'/'} className="text-gray-800 font-medium underline hover:text-gray-600">
                       Home
