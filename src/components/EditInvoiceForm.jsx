@@ -44,8 +44,8 @@ import { handlePdfSave } from '../lib/helper/pdfGenerator'
     ReceiverAddress: bookingData.ReceiverAddress || '',
     ReceiverArea: bookingData.ReceiverArea || '',
 
-    ItemDetails: bookingData.ItemDetail || '',
-    OtherDetails: bookingData.OtherDetail || '',
+    ItemDetails: bookingData.ItemDetails || '',
+    OtherDetails: bookingData.OtherDetails || '',
 
     NoOfPieces: bookingData.NoOfPieces || '',
     Branch: bookingData.Branch || '',
@@ -127,7 +127,7 @@ import { handlePdfSave } from '../lib/helper/pdfGenerator'
           parseFloat(field === 'qty' ? value : updatedCharge.qty) || 0
         );
 
-        updatedCharge.total = unit > 0 && qty > 0 ? (unit * qty) : '';
+        updatedCharge.total = unit > 0 && qty > 0 ? (unit * qty).toFixed(2) : '';
 
         return {
           ...prev,
