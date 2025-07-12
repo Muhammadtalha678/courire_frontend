@@ -131,7 +131,7 @@ autoTable(doc, {
     safeText(key),
     `${safeText(value.unitRate)}`,
     value.qty > 0 ? `${value.qty}` : "",
-    value.qty > 0 ? `${safeText(value.total)}` : "",
+    value.qty > 0 ? `SAR ${safeText(value.total)}` : "",
   ]),
   startY: tableStartY,
   theme: "grid",
