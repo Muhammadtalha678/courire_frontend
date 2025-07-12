@@ -9,7 +9,7 @@ const Services = () => {
     { label: 'Bookings Lists',path:'/all-bookings' },
     { label: 'Containers Lists',path:'/all-containers' },
     { label: 'Track Your Deliveries',path:'/' },
-    { label: 'Whatsapp-Media',path:'/whatsapp-marketing' },
+    { label: 'Whatsapp-Media',path:'/whatsapp-marketing' }
   ]
   return (
     // <div className="relative flex flex-col items-center justify-center  from-slate-200 to-slate-400 h-[87vh] p-6 rounded-r-xl shadow-inner">
