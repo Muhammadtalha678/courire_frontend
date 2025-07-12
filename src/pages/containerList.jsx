@@ -3,9 +3,12 @@ import React, { useState, useEffect } from 'react';
 import Header from '../components/Header';
 import { AppRoutes } from '../constants/AppRoutes';
 import { useNavigate } from 'react-router-dom';
+import { toast } from 'react-toastify';
 
 const ContainerList = () => {
-    const [containerList, setContainerList] = useState([]);
+  const [deletingId, setDeletingId] = useState(null);
+
+  const [containerList, setContainerList] = useState([]);
     const [containerLoading, setcontainerLoading] = useState(false);
     const navigate = useNavigate()
     useEffect(() => {
@@ -33,25 +36,49 @@ const ContainerList = () => {
 
     };
     // --- Action Handlers (Edit/Delete ke liye) ---
-    const handleEditContainer = (id) => {
-        console.log("Edit Container with ID:", id);
-        // Yahan aap edit page pe navigate kar sakte hain
-         navigate(`/edit-container/edit/${id}`);
+  const handleEditContainer = (id, containerStatus) => {
+       if (containerStatus === 'Shipment in Container') {
+         console.log("Edit Container with ID:", id);
+         // Yahan aap edit page pe navigate kar sakte hain
+          navigate(`/edit-container/edit/${id}`);
+        
+    }else{
+      toast.error(`This Container is no more editable, Status: ${containerStatus}`)
+    }
+    
 
     };
 
-    const handleDelete = (id) => {
-        console.log("Delete Container with ID:", id);
-        // Yahan aap delete API call kar sakte hain
-    };
+  const handleDelete = async (id) => {
+    if (containerStatus === 'Shipment in Container') {
+      if (!window.confirm("Are you sure you want to delete this container?")) return;
+      
+  try {
+    setDeletingId(id); // Set current deleting container ID
+    await axios.delete(`${AppRoutes.deleteSingleContainer}/${id}`);
+    
+    // Filter out deleted container from list
+    toast.success("Container Deleted Successfully");
+    setContainerList((prevList) => prevList.filter(c => c._id !== id));
+  } catch (error) {
+     console.log(error);
+        const err = error?.response?.data?.errors;
+        // if (err?.email) setEmailErr(err.email);
+        if (err?.general) toast.error(err.general);
+        if (!err) toast.error('Something went wrong');
+    // alert("Failed to delete container. Try again.");
+  } finally {
+    setDeletingId(null); // Reset after done
+  }
+    }
+    else {
+       toast.error(`This Container is no more editable, Status: ${containerStatus}`)
+    }
 
-    // Columns ke liye keys hasil karna, internal keys ko filter karte hue
-    // const allKeys = containerList.length > 0
-    //     ? Object.keys(containerList[0]).filter(
-    //           (key) => key !== '_id' && key !== '__v' && key !== 'createdAt' && key !== 'updatedAt'
-    //       )
-    //     : [];
+};
 
+
+ 
     return (
         <div className="bg-gray-50 min-h-screen">
             <Header />
@@ -64,6 +91,15 @@ const ContainerList = () => {
     All Container Details
   </h1>
             <div className="p-4">
+                {/* ✅ Back Button */}
+      <div className="px-4 mb-4 flex justify-end">
+        <button
+          onClick={() => navigate('/all-container-bulk-status')}
+          className="bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-400 cursor-pointer"
+        >
+           Bulk Status
+        </button>
+      </div>
                 <div className="relative overflow-x-auto shadow-md sm:rounded-lg">
                 <table className="w-full text-sm text-left text-gray-700 bg-white">
   <thead className="text-xl uppercase bg-gray-200 text-gray-800">
@@ -122,17 +158,19 @@ const ContainerList = () => {
                 Update Status
               </button>
               <button
-                onClick={() => handleEditContainer(container._id)}
+                onClick={() => handleEditContainer(container._id,container.Status)}
                 className="cursor-pointer text-green-600 whitespace-nowrap hover:text-blue-800"
               >
                 Edit Container
               </button>
               <button
-                // onClick={() => handleEdit(container._id)}
-                className="cursor-pointer text-red-600 whitespace-nowrap hover:text-blue-800"
-              >
-                Delete Container
-              </button>
+  onClick={() => handleDelete(container._id,container.Status)}
+  className={`cursor-pointer text-red-600 whitespace-nowrap hover:text-blue-800 ${deletingId === container._id ? 'opacity-50 cursor-not-allowed' : ''}`}
+  disabled={deletingId === container._id}
+>
+  {deletingId === container._id ? "Deleting..." : "Delete Container"}
+</button>
+
             </td>
           </tr>
         );
