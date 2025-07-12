@@ -36,9 +36,61 @@ const AdminPannel = () => {
       </h2>
     
       {/* --- FORMS --- */}
-      {isBranchAdd && <AddBranch />}
-          {isCityAdd && <AddCity />}
-          {isUserAdd && <CreateUser />}
+          {isBranchAdd &&
+            <>
+              {/* ✅ Back Button */}
+      <div className="px-4 mb-4">
+        <button
+          onClick={() =>{
+            setIsUserAdd(false);
+            setIsBranchAdd(false);
+            setIsCityAdd(false);
+          }}
+          className="bg-gray-300 text-gray-800 px-4 py-2 rounded hover:bg-gray-400 cursor-pointer"
+        >
+          ← Back
+        </button>
+      </div>
+            < AddBranch />
+      </>
+            }
+      
+          {isCityAdd &&
+            <>
+              <div className="px-4 mb-4">
+        <button
+          onClick={() =>{
+            setIsUserAdd(false);
+            setIsBranchAdd(false);
+            setIsCityAdd(false);
+          }}
+          className="bg-gray-300 text-gray-800 px-4 py-2 rounded hover:bg-gray-400 cursor-pointer"
+        >
+          ← Back
+        </button>
+      </div>
+              <AddCity />
+            
+            </>
+          }
+          {isUserAdd &&
+            <>
+            <div className="px-4 mb-4">
+        <button
+          onClick={() =>{
+            setIsUserAdd(false);
+            setIsBranchAdd(false);
+            setIsCityAdd(false);
+          }}
+          className="bg-gray-300 text-gray-800 px-4 py-2 rounded hover:bg-gray-400 cursor-pointer"
+        >
+          ← Back
+        </button>
+      </div>
+            <CreateUser />
+            
+            </>
+          }
           {
   isBranchAdd ? (
     <>

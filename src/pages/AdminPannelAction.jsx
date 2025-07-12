@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { useLocation } from 'react-router-dom';
+import { useLocation, useNavigate } from 'react-router-dom'; // ✅ Added useNavigate
 import axios from 'axios';
 import Header from '../components/Header';
 import { AppRoutes } from '../constants/AppRoutes';
@@ -7,6 +7,7 @@ import { toast } from 'react-toastify';
 
 const AdminPannelAction = () => {
   const location = useLocation();
+  const navigate = useNavigate(); // ✅ Initialize navigate
   const actionType = location.state?.actionType;
   const [data, setData] = useState([]);
   const [editItem, setEditItem] = useState(null);
@@ -52,8 +53,6 @@ const AdminPannelAction = () => {
   const handleUpdate = async () => {
     try {
       if (actionType === 'branchAction') {
-        console.log(editItem._id);
-        
         await axios.post(`${AppRoutes.editBranch}/${editItem._id}`, {
           branch: { BranchName: formValue },
         });
@@ -68,40 +67,36 @@ const AdminPannelAction = () => {
       }
       setIsModalOpen(false);
     } catch (error) {
-      console.log(error);
-      
       const err = error?.response?.data?.errors;
       if (err?.BranchName) toast.error(err.BranchName);
       if (err?.CityName) toast.error(err.CityName);
       if (err?.general) toast.error(err.general);
-      if(!err) toast.error('Update failed');
+      if (!err) toast.error('Update failed');
     }
   };
 
-  // Inside the component
-const handleDeleteContainer = async (id) => {
-  const confirmDelete = window.confirm(
-    `Are you sure you want to delete this ${actionType === 'branchAction' ? 'branch' : 'city'}?`
-  )
-  if (!confirmDelete) return;
+  const handleDeleteContainer = async (id) => {
+    const confirmDelete = window.confirm(
+      `Are you sure you want to delete this ${actionType === 'branchAction' ? 'branch' : 'city'}?`
+    );
+    if (!confirmDelete) return;
 
-  try {
-    if (actionType === 'branchAction') {
-      await axios.delete(`${AppRoutes.deleteBranch}/${id}`);
-      toast.success('Branch deleted successfully');
-      fetchBranches();
-    } else {
-      await axios.delete(`${AppRoutes.deleteCity}/${id}`);
-      toast.success('City deleted successfully');
-      fetchCities();
+    try {
+      if (actionType === 'branchAction') {
+        await axios.delete(`${AppRoutes.deleteBranch}/${id}`);
+        toast.success('Branch deleted successfully');
+        fetchBranches();
+      } else {
+        await axios.delete(`${AppRoutes.deleteCity}/${id}`);
+        toast.success('City deleted successfully');
+        fetchCities();
+      }
+    } catch (error) {
+      const err = error?.response?.data?.errors;
+      if (err?.general) toast.error(err.general);
+      else toast.error('Failed to delete');
     }
-  } catch (error) {
-    const err = error?.response?.data?.errors;
-    if (err?.general) toast.error(err.general);
-    else toast.error('Failed to delete');
-  }
-};
-
+  };
 
   return (
     <div className="bg-gray-50 min-h-screen">
@@ -109,6 +104,16 @@ const handleDeleteContainer = async (id) => {
       <h1 className="text-center text-2xl font-bold text-blue-800 px-4 pt-6 pb-2">
         {actionType === 'branchAction' ? 'All Branches' : 'All Cities'}
       </h1>
+
+      {/* ✅ Back Button */}
+      <div className="px-4 mb-4">
+        <button
+          onClick={() => navigate('/admin-pannel')}
+          className="bg-gray-300 text-gray-800 px-4 py-2 rounded hover:bg-gray-400"
+        >
+          ← Back
+        </button>
+      </div>
 
       <div className="p-4">
         <div className="relative overflow-x-auto shadow-md sm:rounded-lg">
@@ -137,7 +142,10 @@ const handleDeleteContainer = async (id) => {
                       >
                         Edit
                       </button>
-                      <button className="cursor-pointer text-red-600 hover:text-blue-800" onClick={() => handleDeleteContainer(d._id)}>
+                      <button
+                        onClick={() => handleDeleteContainer(d._id)}
+                        className="cursor-pointer text-red-600 hover:text-blue-800"
+                      >
                         Delete
                       </button>
                     </td>
@@ -145,7 +153,7 @@ const handleDeleteContainer = async (id) => {
                 ))
               ) : (
                 <tr>
-                  <td colSpan={7} className="text-center py-8 text-red-600 font-semibold text-lg">
+                  <td colSpan={3} className="text-center py-8 text-red-600 font-semibold text-lg">
                     {actionType === 'branchAction' ? 'No Branches Found' : 'No Cities Found'}
                   </td>
                 </tr>
