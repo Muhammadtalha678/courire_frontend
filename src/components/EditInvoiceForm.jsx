@@ -3,7 +3,8 @@
   import { toast } from 'react-toastify';
   import axios from 'axios';
   import { AppRoutes } from '../constants/AppRoutes';
-  import {handlePdfSave} from '../lib/helper/pdfGenerator'
+import { handlePdfSave } from '../lib/helper/pdfGenerator'
+  import {useNavigate} from 'react-router-dom'
   const EditInvoiceForm = ({ id,
     branchList,
     cityList,
@@ -17,6 +18,7 @@
        console.log(bookingData.ReceiverArea);
 
   const [errors, setErrors] = useState({});
+  const navigate = useNavigate();
   const [isSubmitted, setIsSubmitted] = useState(false);
   const [isSubmittedBooking, setIsSubmittedBooking] = useState(false);
   const [isEditingBooking, setIsEditingBooking] = useState(false);
@@ -614,7 +616,20 @@ useEffect(() => {
           </form>
 
           {/* Action Buttons */}
-
+           {
+            !readonlyMode && 
+          <div>
+              <button
+                type="button"
+                onClick={() => navigate('/add-booking')}
+                className="bg-green-600 text-white py-2 px-4 rounded hover:bg-green-700 transition w-full mt-4 cursor-pointer"
+              >
+                New Shipment
+              </button>
+            
+            </div>
+            
+          }
           <div>
               <button
               type="button"
