@@ -17,40 +17,39 @@ doc.setFont("helvetica", "normal");
 const companyLines = doc.splitTextToSize("ABCD – CARGO SERVICES", 60);
 const addressLines = doc.splitTextToSize("Your Business Address", 60);
 
-// Coordinates for company info (right side)
 const companyY = 15;
 const addressY = companyY + companyLines.length * 6;
 const footerY = addressY + addressLines.length * 6;
-const rightColumnBottom = footerY + 18; // for "City", "Saudi Arabia", "75311"
+const rightColumnBottom = footerY + 18;
 
-// Coordinates for invoice info (left side)
+// Coordinates for invoice info (left)
 const invoiceInfoY = 28;
 const leftColumnBottom = invoiceInfoY + 18;
 
-// --- DYNAMIC HEIGHT CALC ---
+// --- HEADER HEIGHT ---
 const headerHeight = Math.max(50, rightColumnBottom, leftColumnBottom);
 
-// --- NOW DRAW BACKGROUND BOX BASED ON HEIGHT ---
+// --- Draw background box ---
 doc.setFillColor(33, 91, 168);
 doc.rect(0, 0, 210, headerHeight, "F");
 
-// --- HEADER CONTENT (WHITE TEXT OVER BLUE) ---
+// --- TEXT STYLES ---
 doc.setTextColor(255, 255, 255);
 
-// 1. Invoice title
+// ✅ 1. Align Invoice title with companyY
 doc.setFontSize(22);
 doc.setFont("helvetica", "bold");
-doc.text("Invoice", 15, 20);
+doc.text("Invoice", 15, companyY); // 🔁 changed from static 20 to companyY
 
 // 2. Invoice Info (left)
 doc.setFont("helvetica", "normal");
 doc.setFontSize(10);
-doc.text(`Invoice #: ${safeText(formData.InvoiceNo)}`, 15, invoiceInfoY);
-doc.text(`Booking Date: ${formatDate(formData.BookingDate)}`, 15, invoiceInfoY + 6);
-doc.text(`Tracking Id: ${safeText(formData.BiltyNo)}`, 15, invoiceInfoY + 12);
-doc.text(`Status: ${safeText("Shipment in Container")}`, 15, invoiceInfoY + 18);
+doc.text(`Invoice #: ${safeText(formData.InvoiceNo)}`, 15, companyY+6);
+doc.text(`Booking Date: ${formatDate(formData.BookingDate)}`, 15, companyY + 12);
+doc.text(`Tracking Id: ${safeText(formData.BiltyNo)}`, 15, companyY + 18);
+doc.text(`Status: ${safeText("Shipment in Container")}`, 15, companyY + 24);
 
-// 3. Company Name + Address (right)
+// 3. Company Name & Address (right)
 doc.setFontSize(12);
 companyLines.forEach((line, i) => doc.text(line, 150, companyY + i * 6));
 addressLines.forEach((line, i) => doc.text(line, 150, addressY + i * 6));
