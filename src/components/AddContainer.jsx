@@ -39,7 +39,8 @@ const AddContainer = ({
     setInvoices(updatedInvoices);
     setTotalInvoices(invoiceList.length);
   }, [invoiceList]);
-
+  
+  
   const handleSelect = (index, checked) => {
     setInvoices((prev) => {
       const updated = prev.map((inv, i) =>
@@ -180,7 +181,7 @@ console.log(bookedContainerList);
           ))}
         </select>
 
-        <div className="flex gap-2 w-full">
+        {/* <div className="flex gap-2 w-full">
           <button
             className="w-full bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded shadow cursor-pointer"
             onClick={handleSave}
@@ -190,7 +191,7 @@ console.log(bookedContainerList);
           </button>
           <button className="w-full bg-yellow-500 hover:bg-yellow-600 text-white px-4 py-2 rounded shadow cursor-pointer">Edit</button>
           <button className="w-full bg-red-600 hover:bg-red-700 text-white px-4 py-2 rounded shadow cursor-pointer">Del</button>
-        </div>
+        </div> */}
       </div>
 
       <div className="flex gap-4">
@@ -290,28 +291,23 @@ console.log(bookedContainerList);
                   <th className="border px-2 py-1">Container No</th>
                   <th className="border px-2 py-1">Inv No</th>
                   <th className="border px-2 py-1">Shipped Pieces</th>
-                  <th className="border px-2 py-1">Total</th>
+                  {/* <th className="border px-2 py-1">Total</th> */}
                 </tr>
               </thead>
               <tbody>
-              {selectedBilty.map((b, i) => {
-                const invoiceNumbers = [];
-                let totalShipped = 0;
+              {selectedBilty.sort().flatMap((b, i) => {
+  return b.Invoices.map((item, j) => {
+    const [inv, qty] = item.split('/');
+    return (
+      <tr key={`${b.ContainerNumber}-${inv}`} className="text-center text-sm">
+        <td className="border px-2 py-1">{b.ContainerNumber}</td>
+        <td className="border px-2 py-1">{inv}</td>
+        <td className="border px-2 py-1">{qty}</td>
+      </tr>
+    );
+  });
+})}
 
-                b.Invoices.forEach((item) => {
-                    const [inv, qty] = item.split('/');
-                    invoiceNumbers.push(inv);
-                    totalShipped += parseInt(qty || 0);
-                });
-                return (
-                    <tr key={i} className="text-center text-sm">
-                    <td className="border px-2 py-1">{b.ContainerNumber}</td>
-                    <td className="border px-2 py-1">{invoiceNumbers.join(', ')}</td>
-                    <td className="border px-2 py-1">{totalShipped}</td>
-                    <td className="border px-2 py-1">{totalShipped}</td>
-                    </tr>
-                );
-                })}
 
               </tbody>
             </table>
