@@ -22,7 +22,10 @@ const [statusMap, setStatusMap] = useState({}); // key: containerId, value: sele
     const [containerLoading, setcontainerLoading] = useState(false);
     const navigate = useNavigate()
     useEffect(() => {
-        const getContainerList = async () => {
+       
+        getContainerList();
+    }, []);
+   const getContainerList = async () => {
             try {
               setcontainerLoading(true)
               const response = await axios.get(AppRoutes.allContainersList);
@@ -35,8 +38,6 @@ const [statusMap, setStatusMap] = useState({}); // key: containerId, value: sele
 
               }
         };
-        getContainerList();
-    }, []);
 
    const handleBulkUpdate = async () => {
   const containersToUpdate = Object.entries(statusMap).map(([id, status]) => ({
@@ -56,9 +57,11 @@ const [statusMap, setStatusMap] = useState({}); // key: containerId, value: sele
     });
 
     if (response.data?.data?.results) {
-      toast.success("Statuses updated successfully");
-      window.location.reload();
-    }
+  toast.success("Statuses updated successfully");
+  setStatusMap({}); // optional: clear the selected statuses
+  getContainerList(); // fetch updated list
+}
+
   } catch (error) {
      console.log(error);
         const err = error?.response?.data?.errors;
@@ -119,20 +122,25 @@ const [statusMap, setStatusMap] = useState({}); // key: containerId, value: sele
             {/* <td className="px-6 py-4 text-center">{totalShipped}</td> */}
             <td className="px-6 py-4 text-center">{container.Status || '-'}</td>
             <td className="px-6 flex gap-4 py-4 text-center">
- <select
+<select
   className="border p-2 text-center"
-  value={statusMap[container._id] || ''}
+  value={statusMap[container._id] || container.Status || ''}
   onChange={(e) => {
     const value = e.target.value;
     setStatusMap((prev) => ({ ...prev, [container._id]: value }));
   }}
 >
-  <option value=""> Select Status </option>
-  {steps.map((step, index) => (
-    <option key={index} value={step}>
-      {step}
-    </option>
-  ))}
+  <option value="">Select Status</option>
+  {steps.map((step, index) => {
+    const currentIndex = steps.indexOf(container.Status);
+    const isDisabled = index < currentIndex;
+
+    return (
+      <option key={index} value={step} disabled={isDisabled}>
+        {step}
+      </option>
+    );
+  })}
 </select>
 
 </td>
