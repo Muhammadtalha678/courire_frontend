@@ -1,7 +1,7 @@
 import { jsPDF } from 'jspdf';
 import autoTable from 'jspdf-autotable';
 
-export const handlePdfSave = (formData, buttonType,status) => {
+export const handlePdfSave = (formData, buttonType,status,AmountInWords) => {
   const doc = new jsPDF();
   const safeText = (val) => String(val ?? "");
   const shipmentStatus = status ?  'Shipment in Godown' : status
@@ -110,6 +110,8 @@ receiverFieldLines.forEach((fieldText) => {
 const senderHeight = senderLines.length * 6;
 const receiverHeight = receiverFieldLines.length * 6;
 const detailStartY = bodyStartY + Math.max(senderHeight, receiverHeight) + 12;
+// const detailStartY = bodyStartY + Math.max(senderHeight, receiverY - bodyStartY) + 20;
+
 
 // --- PIECES / ITEM / OTHER DETAILS ---
 doc.setFont("helvetica", "bold");
@@ -133,13 +135,13 @@ doc.text(otherLines, 150, detailStartY + 6);
 
   // ========== CHARGES TABLE ==========
 autoTable(doc, {
-  head: [["#", "CHARGES", "UNIT/RATE", "QUANTITY", "TOTAL"]],
+  head: [["#", "CHARGES", "UNIT/RATE", "QUANTITY", "SAR TOTAL"]],
   body: Object.entries(formData.Charges || {}).map(([key, value], index) => [
     index + 1,
     safeText(key),
     `${safeText(value.unitRate)}`,
     value.qty > 0 ? `${value.qty}` : "",
-    value.qty > 0 ? `SAR ${safeText(value.total)}` : "",
+    value.qty > 0 ? `${safeText(value.total)}` : "",
   ]),
   startY: tableStartY,
   theme: "grid",
@@ -207,6 +209,27 @@ summaryItems.forEach((item, i) => {
   doc.text(item.value, 205, y + 7, { align: "right" });
 });
 
+// ========== AMOUNT IN WORDS ==========
+const amountWords = "Two Thousand One Hundred And Eighty-Seven Saudi Riyal and 12 halalah only";
+
+// Position: below last total line
+const amountWordsY = finalY + 10 + summaryItems.length * 10 + 15;
+
+doc.setFontSize(12);
+doc.setTextColor(0, 0, 0);
+doc.setFont("helvetica", "bold");
+doc.text("Amount in Words:", 15, amountWordsY);
+
+doc.setFont("helvetica", "normal");
+doc.setFontSize(11);
+
+// Break into lines if long
+const amountLines = doc.splitTextToSize(amountWords, 180); // wrap at 180mm
+amountLines.forEach((line, i) => {
+  doc.text(line, 15, amountWordsY + 6 + i * 6);
+});
+
+  
   // ========== FILE EXPORT ==========
   const fileName = `booking_${safeText(formData.BiltyNo || "record")}`;
 
