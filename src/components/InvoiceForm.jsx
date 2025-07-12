@@ -508,7 +508,8 @@
               />
               
             ) : (
-              <input 
+              
+                <input 
                 disabled={isSubmitted && !isEditClicked}
                 type="checkbox"
                 checked={chargeData.enabled}
@@ -521,26 +522,29 @@
             ) } 
           </div>
           <div className="text-sm font-medium text-gray-700">{chargeKey}</div>
+          
           <input 
-            readOnly={isSubmitted && !isEditClicked}
-            type="number"
-            min="0"
-            value={chargeData.unitRate}
-            onChange={handleChange}
-            data-charge={chargeKey}
-            data-field="unitRate"
-            className="border rounded px-2 py-1"
-          />
-          <input 
-            readOnly={isSubmitted && !isEditClicked}
-            type="number"
-            min="0"
-            value={chargeData.qty}
-            onChange={handleChange}
-            data-charge={chargeKey}
-            data-field="qty"
-            className="border rounded px-2 py-1"
-          />
+  type="number"
+  step="0.01"      // ✅ allows decimals
+  min="0"
+  value={chargeData.unitRate}
+  onChange={handleChange}
+  data-charge={chargeKey}
+  data-field="unitRate"
+  className="border rounded px-2 py-1"
+/>
+
+         <input 
+  type="number"
+  step="0.01"      // ✅ allows decimal quantities too
+  min="0"
+  value={chargeData.qty}
+  onChange={handleChange}
+  data-charge={chargeKey}
+  data-field="qty"
+  className="border rounded px-2 py-1"
+/>
+
           <input 
             
             type="text"
