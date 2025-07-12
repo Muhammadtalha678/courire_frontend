@@ -6,16 +6,21 @@ import { useNavigate } from 'react-router-dom';
 
 const ContainerList = () => {
     const [containerList, setContainerList] = useState([]);
+    const [containerLoading, setcontainerLoading] = useState(false);
     const navigate = useNavigate()
     useEffect(() => {
         const getContainerList = async () => {
             try {
-                const response = await axios.get(AppRoutes.allContainersList);
+              setcontainerLoading(true)
+              const response = await axios.get(AppRoutes.allContainersList);
                 setContainerList(response?.data?.data?.containersList || []);
-            } catch (error) {
+              } catch (error) {
                 console.log(error);
                 // Error message dikhana behtar hoga
-            }
+              }finally{
+                setcontainerLoading(false)
+
+              }
         };
         getContainerList();
     }, []);
@@ -50,8 +55,13 @@ const ContainerList = () => {
     return (
         <div className="bg-gray-50 min-h-screen">
             <Header />
-            <h1 className="text-center text-2xl font-bold text-blue-800 px-4 pt-6 pb-2">
-    All Bookings Details
+            {
+              containerLoading ? ( <div className="flex items-center justify-center h-screen bg-gray-50 text-purple-600 text-xl">
+        Loading...
+          </div>) : (
+              <>
+                  <h1 className="text-center text-2xl font-bold text-blue-800 px-4 pt-6 pb-2">
+    All Container Details
   </h1>
             <div className="p-4">
                 <div className="relative overflow-x-auto shadow-md sm:rounded-lg">
@@ -139,6 +149,10 @@ const ContainerList = () => {
 
                 </div>
             </div>
+              </>
+      )
+            }
+          
         </div>
     );
 };

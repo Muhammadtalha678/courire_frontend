@@ -7,6 +7,8 @@ import { toast } from 'react-toastify';
 
 const BookingList = () => {
   const [bookings, setBookings] = useState([]);
+  const [bookingLoading, setbookingLoading] = useState(false);
+      
   const [searchQuery, setSearchQuery] = useState(""); // ✅ NEW
   const navigate = useNavigate();
 
@@ -27,6 +29,7 @@ const BookingList = () => {
 
   const handleDelete = async (id, builtNo) => {
     try {
+      setbookingLoading(true)
       if (!builtNo) {
         toast.error('Builty no is missing');
         return;
@@ -42,6 +45,8 @@ const BookingList = () => {
       const err = error?.response?.data?.errors;
       if (err?.general) toast.error(err?.general);
       if (!err) toast.error('Something went wrong');
+    } finally {
+            setbookingLoading(false)
     }
   };
 
@@ -53,7 +58,14 @@ const BookingList = () => {
   return (
     <div className="bg-gray-50 min-h-screen">
       <Header />
-      <h1 className="text-center text-2xl font-bold text-blue-800 px-4 pt-6 pb-2">
+      {
+        bookingLoading ? (
+        <div className="flex items-center justify-center h-screen bg-gray-50 text-purple-600 text-xl">
+        Loading...
+          </div>
+        ): (
+          <>
+              <h1 className="text-center text-2xl font-bold text-blue-800 px-4 pt-6 pb-2">
         All Bookings Details
       </h1>
 
@@ -131,6 +143,10 @@ const BookingList = () => {
           )}
         </div>
       </div>
+          </>
+        )
+      }
+    
     </div>
   );
 };
