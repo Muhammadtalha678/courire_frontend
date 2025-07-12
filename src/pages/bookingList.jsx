@@ -32,12 +32,24 @@ const BookingList = () => {
   }, []);
   console.log(bookings);
   
-  const handleDelete = async (id, builtNo) => {
+  const handleDelete = async (id, builtNo,statusInput) => {
     try {
+      const statusList = Array.isArray(statusInput)
+      ? statusInput
+      : typeof statusInput === "string"
+      ? [statusInput]
+      : [];
+      console.log(statusList);
+      const notAllowed = statusList.some(status => status !== "Shipment in Godown");
+      if (notAllowed) {
+      toast.error("Cannot delete. Shipment is already processed.");
+      return;
+    }
       if (!builtNo) {
         toast.error('Builty no is missing');
         return;
       }
+      
       const confirmed = window.confirm('Are you sure you want to delete this booking?');
       if (!confirmed) return;
         setDeleteLoadingId(id); 
@@ -46,6 +58,8 @@ const BookingList = () => {
       toast.success(data?.data?.message);
       getBookings(); // ✅ Refresh bookings
     } catch (error) {
+    console.log(error);
+    
       const err = error?.response?.data?.errors;
       if (err?.general) toast.error(err?.general);
       if (!err) toast.error('Something went wrong');
@@ -110,7 +124,7 @@ const BookingList = () => {
               </thead>
               <tbody>
                         {filteredBookings.map((row, index) => {
-                          console.log(row);
+                          // console.log(row);
                           
                   return  <tr key={index} className="bg-white border-b hover:bg-gray-50 text-center">
                     <td className="px-4 py-2">{index + 1}</td>
@@ -139,7 +153,7 @@ const BookingList = () => {
                       </button>
                       
                         <button
-  onClick={() => handleDelete(row._id, row.BiltyNo)}
+  onClick={() => handleDelete(row._id, row.BiltyNo, row.status)}
   className="cursor-pointer text-red-600 hover:text-blue-800"
 >
   {deleteLoadingId === row._id ? 'Deleting...' : 'Delete Booking'}
