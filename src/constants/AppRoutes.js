@@ -25,6 +25,15 @@ export const AppRoutes = {
     getBookingById: BASE_URL + "/api/getBookingById",
     editBookingById: BASE_URL + "/api/editBookingById",
     
+    updateBulkContainerStatus: BASE_URL + "/api/updateBulkContainerStatus",
+    
+    
+    updateSingleContainerBYID: BASE_URL + "/api/updateSingleContainer",
+    
+    deleteSingleContainer: BASE_URL + "/api/deleteSingleContainer",
+    
+
+    
     //search data by tracking id
     tracking: BASE_URL + "/api/tracking",
     
