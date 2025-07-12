@@ -8,35 +8,39 @@ import { toast } from 'react-toastify';
 const BookingList = () => {
   const [bookings, setBookings] = useState([]);
   const [bookingLoading, setbookingLoading] = useState(false);
-      
+  const [deleteLoadingId, setDeleteLoadingId] = useState(null);
+    
   const [searchQuery, setSearchQuery] = useState(""); // ✅ NEW
   const navigate = useNavigate();
 
   const getBookings = async () => {
     try {
+      setbookingLoading(true)
       const response = await axios.get(AppRoutes.allBookings);
       setBookings(response?.data?.data?.bookings || []);
     } catch (error) {
       const err = error?.response?.data?.errors;
       if (err?.general) toast.error(err?.general);
       if (!err) toast.error('Something went wrong');
+    } finally {
+            setbookingLoading(false)
     }
   };
 
   useEffect(() => {
     getBookings();
   }, []);
-
+  console.log(bookings);
+  
   const handleDelete = async (id, builtNo) => {
     try {
-      setbookingLoading(true)
       if (!builtNo) {
         toast.error('Builty no is missing');
         return;
       }
       const confirmed = window.confirm('Are you sure you want to delete this booking?');
       if (!confirmed) return;
-
+        setDeleteLoadingId(id); 
       const response = await axios.delete(AppRoutes.deleteBooking, { data: { BiltyNo: builtNo } });
       const data = response.data;
       toast.success(data?.data?.message);
@@ -46,7 +50,8 @@ const BookingList = () => {
       if (err?.general) toast.error(err?.general);
       if (!err) toast.error('Something went wrong');
     } finally {
-            setbookingLoading(false)
+        setDeleteLoadingId(null); 
+      
     }
   };
 
@@ -90,6 +95,7 @@ const BookingList = () => {
                   <th className="px-6 py-3">Bilty No</th>
                   <th className="px-6 py-3">Invoice No</th>
                   <th className="px-6 py-3">Booking Date</th>
+                  <th className="px-6 py-3">Status</th>
                   <th className="px-6 py-3">Sender Name</th>
                   <th className="px-6 py-3">Sender Mobile</th>
                   <th className="px-6 py-3">Sender City</th>
@@ -103,12 +109,18 @@ const BookingList = () => {
                 </tr>
               </thead>
               <tbody>
-                {filteredBookings.map((row, index) => (
-                  <tr key={index} className="bg-white border-b hover:bg-gray-50 text-center">
+                        {filteredBookings.map((row, index) => {
+                          console.log(row);
+                          
+                  return  <tr key={index} className="bg-white border-b hover:bg-gray-50 text-center">
                     <td className="px-4 py-2">{index + 1}</td>
                     <td className="px-4 py-2">{row.BiltyNo || '-'}</td>
                     <td className="px-4 py-2">{row.InvoiceNo || '-'}</td>
                     <td className="px-4 py-2">{row.BookingDate || '-'}</td>
+                    <td className="px-4 py-2">
+  {row.status}
+</td>
+
                     <td className="px-4 py-2">{row.SenderName || '-'}</td>
                     <td className="px-4 py-2">{row.SenderMobile || '-'}</td>
                     <td className="px-4 py-2">{row.SenderArea || '-'}</td>
@@ -125,15 +137,18 @@ const BookingList = () => {
                       >
                         Edit Booking
                       </button>
-                      <button
-                        onClick={() => handleDelete(row._id, row.BiltyNo)}
-                        className="cursor-pointer text-red-600 hover:text-blue-800"
-                      >
-                        Delete Booking
+                      
+                        <button
+  onClick={() => handleDelete(row._id, row.BiltyNo)}
+  className="cursor-pointer text-red-600 hover:text-blue-800"
+>
+  {deleteLoadingId === row._id ? 'Deleting...' : 'Delete Booking'}
+
+
                       </button>
                     </td>
                   </tr>
-                ))}
+                })}
               </tbody>
             </table>
           ) : (
