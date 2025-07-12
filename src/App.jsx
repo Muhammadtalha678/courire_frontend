@@ -19,6 +19,7 @@ import EditContainer from './pages/edit-container.jsx'
 import EditBooking from './pages/edit-booking.jsx'
 import UserLogin from './pages/user-login.jsx'
 import AdminPannelAction from './pages/AdminPannelAction.jsx'
+import ContainerBulkStatus from './pages/container-bulk-status.jsx'
 function App() {
   const { loading } = useAuth()
   if (loading) {
@@ -39,6 +40,7 @@ function App() {
           <Route path='/container' element={<ContainerBooking/>}/> 
           <Route path='/all-bookings' element={<BookingList/>}/> 
           <Route path='/all-containers' element={<ContainerList/>}/> 
+          <Route path='/all-container-bulk-status' element={<ContainerBulkStatus/>}/> 
           <Route path={'/admin-pannel'} element={<AdminPannel/>}/>        
           <Route path={'/admin-pannel-action'} element={<AdminPannelAction/>}/>        
           <Route path="/update-container/edit/:id" element={<UpdateContainer />} />
