@@ -4,7 +4,7 @@ import autoTable from 'jspdf-autotable';
 export const handlePdfSave = (formData, buttonType,status) => {
   const doc = new jsPDF();
   const safeText = (val) => String(val ?? "");
-  // const shipmentStatus = status === 'Shipment in Godown' ? 'Shipment in Godown' : status
+  const shipmentStatus = status ?  'Shipment in Godown' : status
   const formatDate = (dateStr) => {
     const [y, m, d] = (dateStr || "").split("-");
     return d && m && y ? `${d}/${m}/${y}` : "";
@@ -47,7 +47,7 @@ doc.setFontSize(10);
 doc.text(`Invoice #: ${safeText(formData.InvoiceNo)}`, 15, companyY+6);
 doc.text(`Booking Date: ${formatDate(formData.BookingDate)}`, 15, companyY + 12);
 doc.text(`Tracking Id: ${safeText(formData.BiltyNo)}`, 15, companyY + 18);
-doc.text(`Status: ${safeText("Shipment in Container")}`, 15, companyY + 24);
+doc.text(`Status: ${safeText(status)}`, 15, companyY + 24);
 
 // 3. Company Name & Address (right)
 doc.setFontSize(12);

@@ -712,7 +712,7 @@
                     label: "Save & Print",
                       onClick: () => {
                         if (formData.BiltyNo) {
-                          handlePdfSave(formData, 'Save&PRINT')
+                          handlePdfSave(formData, 'Save&PRINT','Shipment in Godown')
                         }
                         else {
                           toast.error("Cannot create PDF without Bilty and Invoice No")
@@ -723,7 +723,7 @@
                     label: "Save PDF",
                     onClick: () =>  {
                       if (formData.BiltyNo) {
-                        handlePdfSave(formData, 'SavePDF')
+                        handlePdfSave(formData, 'SavePDF','Shipment in Godown')
                       }
                       else {
                         toast.error("Cannot create PDF without Bilty and Invoice No")
@@ -749,7 +749,7 @@
                   },
                   {
                     label: "PDF To Whatsapp",
-                    onClick: () => handlePdfSave(formData,"SendToWhatsapp"),
+                    onClick: () => handlePdfSave(formData,"SendToWhatsapp",'Shipment in Godown'),
                   },
                   ].map(({label,onClick,isLoading},index) => (
                   <button

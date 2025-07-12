@@ -84,7 +84,7 @@ export default function CargoServicesLanding() {
  {shipmentContainerDetails.length > 0 &&
   shipmentContainerDetails.map((detail, index) => {
     const containerStatus = detail?.container?.Status || detail?.status || "Status not available";
-    const containerNumber = detail?.container?.ContainerNumber || "N/A";
+    const containerNumber = detail?.container?.ContainerNumber;
     return (
       <TrackingStatus
         key={index}
