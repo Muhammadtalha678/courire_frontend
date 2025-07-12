@@ -82,25 +82,33 @@ senderLines.forEach((line, i) => {
 });
 
 // --- RECEIVER DETAILS ---
+// --- RECEIVER DETAILS ---
 doc.setFont("helvetica", "bold");
 doc.text("RECEIVER DETAILS:", 140, bodyStartY);
 doc.setFont("helvetica", "normal");
 
-const receiverLines = [
-  ...doc.splitTextToSize(`Name: ${safeText(formData.ReceiverName)}`, 60),
-  ...doc.splitTextToSize(`Mobile 1: ${safeText(formData.ReceiverMobile1)}`, 60),
-  ...doc.splitTextToSize(`Mobile 2: ${safeText(formData.ReceiverMobile2)}`, 60),
-  ...doc.splitTextToSize(`Address: ${safeText(formData.ReceiverAddress)}`, 60),
-  ...doc.splitTextToSize(`City: ${safeText(formData.ReceiverArea)}`, 60),
-  "Saudi Arabia"
+// Use 60mm width, wrap long lines
+const receiverFieldLines = [
+  `Name: ${safeText(formData.ReceiverName)}`,
+  `Mobile 1: ${safeText(formData.ReceiverMobile1)}`,
+  `Mobile 2: ${safeText(formData.ReceiverMobile2)}`,
+  `Address: ${safeText(formData.ReceiverAddress)}`,
+  `City: ${safeText(formData.ReceiverArea)}`,
+  `Saudi Arabia`,
 ];
-receiverLines.forEach((line, i) => {
-  doc.text(line, 140, bodyStartY + 6 + i * 6);
+
+let receiverY = bodyStartY + 6;
+receiverFieldLines.forEach((fieldText) => {
+  const lines = doc.splitTextToSize(fieldText, 50); // wrap at 50mm
+  lines.forEach((line) => {
+    doc.text(line, 140, receiverY);
+    receiverY += 6;
+  });
 });
 
 // Compute max height
 const senderHeight = senderLines.length * 6;
-const receiverHeight = receiverLines.length * 6;
+const receiverHeight = receiverFieldLines.length * 6;
 const detailStartY = bodyStartY + Math.max(senderHeight, receiverHeight) + 12;
 
 // --- PIECES / ITEM / OTHER DETAILS ---
