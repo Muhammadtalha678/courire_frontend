@@ -99,7 +99,7 @@ const receiverFieldLines = [
 
 let receiverY = bodyStartY + 6;
 receiverFieldLines.forEach((fieldText) => {
-  const lines = doc.splitTextToSize(fieldText, 50); // wrap at 50mm
+  const lines = doc.splitTextToSize(fieldText, 60); // wrap at 50mm
   lines.forEach((line) => {
     doc.text(line, 140, receiverY);
     receiverY += 6;
@@ -149,7 +149,7 @@ autoTable(doc, {
   // ✅ Center align body columns
   columnStyles: {
     0: { halign: 'center' },
-    1: { halign: 'center' },
+    1: { halign: 'left' },
     2: { halign: 'center' },
     3: { halign: 'center' },
     4: { halign: 'center' },
