@@ -35,7 +35,6 @@ export default function TrackingStatus({ status,BuiltNo,BookingDate,InvoiceId,Co
   ];
 
   const currentStepIndex = steps.indexOf(status);
-  console.log(currentStepIndex);
 
 // If manual, render just one step:
   const isManualStatus = !steps.includes(status);
