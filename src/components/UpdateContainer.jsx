@@ -97,7 +97,7 @@ const ContainerStatusUpdate = ({ container, onSave,loadingSave }) => {
         <div className="bg-blue-600 text-white font-bold px-4 py-2">Change Status Manually</div>
         <button
           onClick={handleSave}
-          className={`px-4 py-2 text-white ${isSaveDisabled ? 'bg-gray-400 cursor-not-allowed' : 'bg-blue-600'}`}
+          className={`px-4 py-2 text-white ${isSaveDisabled ? 'bg-gray-400 cursor-not-allowed' : 'bg-blue-600 cursor-pointer'}`}
           disabled={isSaveDisabled}
         >
           {loadingSave?(
