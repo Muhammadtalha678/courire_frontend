@@ -121,29 +121,45 @@ const [statusMap, setStatusMap] = useState({}); // key: containerId, value: sele
             {/* <td className="px-6 py-4 text-center">{invoiceNumbers.join(', ') || '-'}</td> */}
             {/* <td className="px-6 py-4 text-center">{totalShipped}</td> */}
             <td className="px-6 py-4 text-center">{container.Status || '-'}</td>
-            <td className="px-6 flex gap-4 py-4 text-center">
-<select
-  className="border p-2 text-center"
-  value={statusMap[container._id] || container.Status || ''}
-  onChange={(e) => {
-    const value = e.target.value;
-    setStatusMap((prev) => ({ ...prev, [container._id]: value }));
+           <td className="px-6 py-4 text-center">
+  <div className="flex justify-center">
+    <select
+      className="border p-2 text-center"
+      value={statusMap[container._id] || container.Status || ''}
+      onChange={(e) => {
+        const value = e.target.value;
+        setStatusMap((prev) => ({ ...prev, [container._id]: value }));
+      }}
+    >
+      <option value="">Select Status</option>
+      {steps.map((step, index) => {
+        const currentIndex = steps.indexOf(container.Status);
+        const isDisabled = index < currentIndex;
+
+        return (
+          <option
+            className={`${isDisabled ? 'cursor-not-allowed':'cursor-pointer'} `}
+  key={index}
+  value={step}
+  disabled={isDisabled}
+  style={{
+    color: isDisabled ? '#9ca3af' : '#111827', // Tailwind gray-400 and gray-900
+    backgroundColor: isDisabled ? '#f3f4f0' : 'white', // gray-100
+    fontStyle: isDisabled ? 'italic' : 'normal',
+    cursor: isDisabled ? 'not-allowed' : 'pointer', // does not apply in most browsers but added for clarity
   }}
+  title={isDisabled ? 'Already passed. Cannot go back.' : ''}
 >
-  <option value="">Select Status</option>
-  {steps.map((step, index) => {
-    const currentIndex = steps.indexOf(container.Status);
-    const isDisabled = index < currentIndex;
+  {isDisabled ? `⛔ ${step}` : step}
+  
+</option>
 
-    return (
-      <option key={index} value={step} disabled={isDisabled}>
-        {step}
-      </option>
-    );
-  })}
-</select>
-
+        );
+      })}
+    </select>
+  </div>
 </td>
+
           </tr>
         );
       })
