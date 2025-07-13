@@ -30,17 +30,20 @@ const handleSubmit = async () => {
             setFromCityErr('')
             setToCityErr('')
             if (!formdata.ContainerNumber.trim()) {
-                setContainerErr('Container Number are required!');
+                // setContainerErr('Container Number are required!');
+                toast.error('Container Number are required!');
                 return;
                 
             }
             if (!formdata.From.trim()) {
-                setFromCityErr('From City are required!');
+                // setFromCityErr('From City are required!');
+                toast.error('From City are required!');
                 return;
                 
             }
             if (!formdata.To.trim()) {
-                setToCityErr('To City are required!');
+                // setToCityErr('To City are required!');
+                toast.error('To City are required!');
                 return;
                 
             }
@@ -64,7 +67,8 @@ const handleSubmit = async () => {
             const err = error?.response?.data?.errors;
             console.log(error);
             
-            if (err?.container) setContainerErr(err.container);
+            // if (err?.container) setContainerErr(err.container);
+            if (err?.container) toast.error(err.container);
             if (err?.general) toast.error(err.general);
             if (!err) toast.error('Something went wrong');
             
