@@ -20,6 +20,7 @@ import EditBooking from './pages/edit-booking.jsx'
 import UserLogin from './pages/user-login.jsx'
 import AdminPannelAction from './pages/AdminPannelAction.jsx'
 import ContainerBulkStatus from './pages/container-bulk-status.jsx'
+import WhatsAppMarketing from './pages/whatsapp-marketing.jsx'
 function App() {
   const { loading } = useAuth()
   if (loading) {
@@ -45,6 +46,7 @@ function App() {
           <Route path={'/admin-pannel-action'} element={<AdminPannelAction/>}/>        
           <Route path="/update-container/edit/:id" element={<UpdateContainer />} />
           <Route path="/edit-container/edit/:id" element={<EditContainer />} />
+          <Route path="/whatsapp-marketing" element={<WhatsAppMarketing />} />
        
           
       </Route>
