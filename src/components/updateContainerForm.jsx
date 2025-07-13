@@ -25,7 +25,7 @@ const UpdateContainerForm = ({
       _id
       
   } = editData
-  console.log(editData);
+  // console.log(editData);
   
  
 useEffect(() => {
@@ -74,7 +74,6 @@ useEffect(() => {
   setSelectedContainer(ContainerNumber);
 }, [editData, Invoices, remainingInvoices]);
 
-// console.log(invoices);
 
 
   const handleSelect = (index, checked) => {
@@ -94,20 +93,38 @@ useEffect(() => {
     });
   };
 
+  // const handleSelectAll = (checked) => {
+  //   setSelectAll(checked);
+  //   setInvoices((prev) => {
+  //     const updated = prev.map((inv) => ({
+  //       ...inv,
+  //       selected: checked,
+  //       shipped: checked ? inv.pcs : null,
+  //       balance: checked ? 0 : null,
+  //     }));
+  //     const fullyShipped = updated.filter((inv) => inv.selected && inv.balance === 0).length;
+  //     setTotalInvoices(Invoices.length - fullyShipped);
+  //     return updated;
+  //   });
+  // };
   const handleSelectAll = (checked) => {
-    setSelectAll(checked);
-    setInvoices((prev) => {
-      const updated = prev.map((inv) => ({
-        ...inv,
-        selected: checked,
-        shipped: checked ? inv.pcs : null,
-        balance: checked ? 0 : null,
-      }));
-      const fullyShipped = updated.filter((inv) => inv.selected && inv.balance === 0).length;
-      setTotalInvoices(Invoices.length - fullyShipped);
-      return updated;
-    });
-  };
+  setSelectAll(checked);
+  setInvoices((prev) => {
+    const updated = prev.map((inv) => ({
+      ...inv,
+      selected: checked,
+      shipped: checked ? inv.pcs : null,
+      balance: checked ? 0 : null,
+    }));
+    
+    // Fix here: Use updated.length instead of Invoices.length
+    const fullyShipped = updated.filter((inv) => inv.selected && inv.balance === 0).length;
+    setTotalInvoices(updated.length - fullyShipped);
+    
+    return updated;
+  });
+};
+
 
   const handleShippedChange = (index, value) => {
     setInvoices((prev) => {
@@ -135,12 +152,20 @@ useEffect(() => {
     });
   };
 
+  // const recalculateTotalInvoices = (invoices) => {
+  //   const fullyShipped = invoices.filter(
+  //     (inv) => inv.selected && inv.shipped === inv.pcs
+  //   ).length;
+  //   setTotalInvoices(Invoices.length - fullyShipped);
+  // };
   const recalculateTotalInvoices = (invoices) => {
-    const fullyShipped = invoices.filter(
-      (inv) => inv.selected && inv.shipped === inv.pcs
-    ).length;
-    setTotalInvoices(Invoices.length - fullyShipped);
-  };
+  const fullyShipped = invoices.filter(
+    (inv) => inv.selected && inv.shipped === inv.pcs
+  ).length;
+
+  setTotalInvoices(invoices.length - fullyShipped);
+};
+
 
   const handleSave = async () => {
     if (!selectedContainer) {
@@ -188,6 +213,7 @@ useEffect(() => {
     }
   };
 
+// console.log(totalInvoices);
 
   return (
     <>
