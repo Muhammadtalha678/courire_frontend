@@ -10,7 +10,9 @@ const ContainerList = () => {
 
   const [containerList, setContainerList] = useState([]);
     const [containerLoading, setcontainerLoading] = useState(false);
-    const navigate = useNavigate()
+
+   const [searchQuery, setSearchQuery] = useState("");
+  const navigate = useNavigate()
     useEffect(() => {
         const getContainerList = async () => {
             try {
@@ -75,7 +77,10 @@ const ContainerList = () => {
 
 };
 
-
+// ✅ FILTERED Containers
+  const filteredBookings = containerList.filter(container =>
+    container.ContainerNumber?.toLowerCase().toString().includes(searchQuery.toLowerCase().trim())
+  );
  
     return (
         <div className="bg-gray-50 min-h-screen">
@@ -88,9 +93,17 @@ const ContainerList = () => {
                   <h1 className="text-center text-2xl font-bold text-blue-800 px-4 pt-6 pb-2">
     All Container Details
   </h1>
+  
             <div className="p-4">
-                {/* ✅ Back Button */}
-      <div className="px-4 mb-4 flex justify-end">
+                {/* ✅ Update all Button */}
+      <div className="px-4 mb-4 flex justify-between">
+        <input
+          type="text"
+          placeholder="Search by Invoice No..."
+          value={searchQuery}
+          onChange={(e) => setSearchQuery(e.target.value)}
+          className="w-1/2 px-4 py-2 border border-gray-300 rounded shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
+        />
         <button
           onClick={() => navigate('/all-container-bulk-status')}
           className="bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-400 cursor-pointer"
@@ -112,8 +125,8 @@ const ContainerList = () => {
     </tr>
   </thead>
   <tbody>
-    {containerList.length > 0 ? (
-      containerList.map((container, index) => {
+    {filteredBookings.length > 0 ? (
+      filteredBookings.map((container, index) => {
         // --- Invoices parsing ---
         const invoiceNumbers = [];
         let totalShipped = 0;
