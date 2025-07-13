@@ -257,7 +257,7 @@ console.log(bookedContainerList);
           <div className="mt-2">
             <button
               onClick={handleSave}
-              className="bg-green-700 text-white px-3 py-1 rounded"
+              className="bg-green-700 text-white px-3 py-1 rounded cursor-pointer"
               disabled={loadingSave}
             >
               {loadingSave ?   <div className="flex justify-center">

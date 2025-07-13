@@ -128,7 +128,7 @@ const handleSubmit = async () => {
         <button
    disabled ={isEdit ? isEdit : loading}
     onClick={!isEdit ? handleSubmit: undefined}
-    className="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded shadow"
+    className="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded shadow cursor-pointer"
   >
     {!isEdit && loading ? (
               <svg className="animate-spin h-5 w-5 mx-auto text-white" viewBox="0 0 24 24">
