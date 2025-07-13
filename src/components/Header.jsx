@@ -155,7 +155,7 @@ const Header = () => {
                       {m.label}
                     </Link>
                   ))}
-                  <button onClick={handleLogout} className="text-gray-800 font-medium underline hover:text-gray-600">
+                  <button onClick={handleLogout} className="text-gray-800 font-medium underline hover:text-gray-600 cursor-pointer">
                     Logout
                   </button>
                   </>
