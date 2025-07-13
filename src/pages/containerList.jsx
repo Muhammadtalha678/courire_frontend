@@ -30,15 +30,15 @@ const ContainerList = () => {
 
     // --- Action Handlers (Edit/Delete ke liye) ---
     const handleEdit = (id) => {
-        console.log("Edit Container with ID:", id);
+        // console.log("Edit Container with ID:", id);
         // Yahan aap edit page pe navigate kar sakte hain
          navigate(`/update-container/edit/${id}`);
 
     };
     // --- Action Handlers (Edit/Delete ke liye) ---
   const handleEditContainer = (id, containerStatus) => {
-       if (containerStatus === 'Shipment in Container') {
-         console.log("Edit Container with ID:", id);
+       if (containerStatus === 'Shipment In Container') {
+        //  console.log("Edit Container with ID:", id);
          // Yahan aap edit page pe navigate kar sakte hain
           navigate(`/edit-container/edit/${id}`);
         
@@ -49,8 +49,10 @@ const ContainerList = () => {
 
     };
 
-  const handleDelete = async (id) => {
-    if (containerStatus === 'Shipment in Container') {
+  const handleDelete = async (id, containerStatus) => {
+    // console.log(containerStatus);
+    
+    if (containerStatus === 'Shipment In Container') {
       if (!window.confirm("Are you sure you want to delete this container?")) return;
       
   try {
@@ -131,7 +133,7 @@ const ContainerList = () => {
         if (container.Destination) {
               Destination =` From: ${container.Destination.From} → To: ${container.Destination.To}`
           }
-          console.log(Destination);
+          // console.log(Destination);
           
           if (container.Invoices) {
               container.Invoices.forEach((item) => {
