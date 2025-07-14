@@ -1,138 +1,107 @@
+
 import { jsPDF } from 'jspdf';
 import autoTable from 'jspdf-autotable';
 
-export const handlePdfSave = (formData, buttonType,status,AmountInWords) => {
+export const handlePdfSave = (formData, buttonType, status) => {
   const doc = new jsPDF();
   const safeText = (val) => String(val ?? "");
-  const shipmentStatus = status ?  'Shipment in Godown' : status
+  const shipmentStatus = status || 'Shipment in Godown';
+
   const formatDate = (dateStr) => {
-    const [y, m, d] = (dateStr || "").split("-");
-    return d && m && y ? `${d}/${m}/${y}` : "";
+    const [y, m, d] = (dateStr || '').split('-');
+    return d && m && y ? `${d}/${m}/${y}` : '';
   };
 
-// --- SETUP FOR HEADER MEASUREMENT ---
-doc.setFontSize(12);
-doc.setFont("helvetica", "normal");
+  // ==== HEADER ====
+  doc.setFontSize(12);
+  doc.setFont("helvetica", "normal");
 
-const companyLines = doc.splitTextToSize("ABCD – CARGO SERVICES", 60);
-const addressLines = doc.splitTextToSize("Your Business Address", 60);
+  const companyLines = doc.splitTextToSize("ABCD – CARGO SERVICES", 60);
+  const addressLines = doc.splitTextToSize("Your Business Address", 60);
 
-const companyY = 15;
-const addressY = companyY + companyLines.length * 6;
-const footerY = addressY + addressLines.length * 6;
-const rightColumnBottom = footerY + 18;
+  const companyY = 15;
+  const addressY = companyY + companyLines.length * 6;
+  const footerY = addressY + addressLines.length * 6;
+  const rightColumnBottom = footerY + 18;
 
-// Coordinates for invoice info (left)
-const invoiceInfoY = 28;
-const leftColumnBottom = invoiceInfoY + 18;
+  const invoiceInfoY = 28;
+  const leftColumnBottom = invoiceInfoY + 24;
 
-// --- HEADER HEIGHT ---
-const headerHeight = Math.max(50, rightColumnBottom, leftColumnBottom);
+  const headerHeight = Math.max(50, rightColumnBottom, leftColumnBottom);
 
-// --- Draw background box ---
-doc.setFillColor(33, 91, 168);
-doc.rect(0, 0, 210, headerHeight, "F");
+  doc.setFillColor(33, 91, 168);
+  doc.rect(0, 0, 210, headerHeight, "F");
 
-// --- TEXT STYLES ---
-doc.setTextColor(255, 255, 255);
+  doc.setTextColor(255, 255, 255);
+  doc.setFontSize(22);
+  doc.setFont("helvetica", "bold");
+  doc.text("Invoice", 15, companyY);
 
-// ✅ 1. Align Invoice title with companyY
-doc.setFontSize(22);
-doc.setFont("helvetica", "bold");
-doc.text("Invoice", 15, companyY); // 🔁 changed from static 20 to companyY
+  doc.setFont("helvetica", "normal");
+  doc.setFontSize(10);
+  doc.text(`Invoice #: ${safeText(formData.InvoiceNo)}`, 15, companyY + 6);
+  doc.text(`Booking Date: ${formatDate(formData.BookingDate)}`, 15, companyY + 12);
+  doc.text(`Tracking Id: ${safeText(formData.BiltyNo)}`, 15, companyY + 18);
+  doc.text(`Status: ${status}`, 15, companyY + 24);
+  doc.text(`Branch: ${formData.Branch}`, 15, companyY + 30);
 
-// 2. Invoice Info (left)
-doc.setFont("helvetica", "normal");
-doc.setFontSize(10);
-doc.text(`Invoice #: ${safeText(formData.InvoiceNo)}`, 15, companyY+6);
-doc.text(`Booking Date: ${formatDate(formData.BookingDate)}`, 15, companyY + 12);
-doc.text(`Tracking Id: ${safeText(formData.BiltyNo)}`, 15, companyY + 18);
-doc.text(`Status: ${safeText(status)}`, 15, companyY + 24);
+  doc.setFontSize(12);
+  companyLines.forEach((line, i) => doc.text(line, 150, companyY + i * 6));
+  addressLines.forEach((line, i) => doc.text(line, 150, addressY + i * 6));
 
-// 3. Company Name & Address (right)
-doc.setFontSize(12);
-companyLines.forEach((line, i) => doc.text(line, 150, companyY + i * 6));
-addressLines.forEach((line, i) => doc.text(line, 150, addressY + i * 6));
+  doc.text("City", 150, footerY);
+  doc.text("Saudi Arabia", 150, footerY + 6);
+  doc.text("75311", 150, footerY + 12);
 
-doc.text("City", 150, footerY);
-doc.text("Saudi Arabia", 150, footerY + 6);
-doc.text("75311", 150, footerY + 12);
+  // ==== BODY START ====
+  const bodyStartY = headerHeight + 10;
 
-// ========== BODY START ==========
-const bodyStartY = headerHeight + 10;
+  // Sender and Receiver
+  doc.setTextColor(0, 0, 0);
+  doc.setFontSize(12);
+  doc.setFont("helvetica", "bold");
+  doc.text("SENDER DETAILS:", 15, bodyStartY);
+  doc.setFont("helvetica", "normal");
+  const senderLines = [
+    `Name: ${safeText(formData.SenderName)}`,
+    `ID: ${safeText(formData.SenderIdNumber)}`,
+    `Mobile: ${safeText(formData.SenderMobile)}`,
+    `Address: ${safeText(formData.SenderAddress)}`,
+    `City: ${safeText(formData.SenderArea)}`,
+    "Saudi Arabia"
+  ];
+  senderLines.forEach((line, i) => doc.text(line, 15, bodyStartY + 6 + i * 6));
 
-doc.setTextColor(0, 0, 0);
-doc.setFontSize(12);
+  doc.setFont("helvetica", "bold");
+  doc.text("RECEIVER DETAILS:", 140, bodyStartY);
+  doc.setFont("helvetica", "normal");
+  const receiverLines = [
+    `Name: ${safeText(formData.ReceiverName)}`,
+    `Mobile 1: ${safeText(formData.ReceiverMobile1)}`,
+    `Mobile 2: ${safeText(formData.ReceiverMobile2)}`,
+    `Address: ${safeText(formData.ReceiverAddress)}`,
+    `City: ${safeText(formData.ReceiverArea)}`,
+    "Saudi Arabia"
+  ];
+  receiverLines.forEach((line, i) => doc.text(line, 140, bodyStartY + 6 + i * 6));
 
-// --- SENDER DETAILS ---
-doc.setFont("helvetica", "bold");
-doc.text("SENDER DETAILS:", 15, bodyStartY);
-doc.setFont("helvetica", "normal");
+  const detailStartY = bodyStartY + Math.max(senderLines.length, receiverLines.length) * 6 + 10;
 
-const senderLines = [
-  ...doc.splitTextToSize(`Name: ${safeText(formData.SenderName)}`, 60),
-  ...doc.splitTextToSize(`ID: ${safeText(formData.SenderIdNumber)}`, 60),
-  ...doc.splitTextToSize(`Mobile: ${safeText(formData.SenderMobile)}`, 60),
-  ...doc.splitTextToSize(`Address: ${safeText(formData.SenderAddress)}`, 60),
-  ...doc.splitTextToSize(`City: ${safeText(formData.SenderArea)}`, 60),
-  "Saudi Arabia"
-];
-senderLines.forEach((line, i) => {
-  doc.text(line, 15, bodyStartY + 6 + i * 6);
-});
+  doc.setFont("helvetica", "bold");
+  doc.text(`Pieces: ${safeText(formData.NoOfPieces)}`, 15, detailStartY);
+  doc.text("Item Details:", 15, detailStartY + 10);
+  const itemLines = doc.splitTextToSize(safeText(formData.ItemDetails), 200);
+  doc.setFont("helvetica", "normal");
+  doc.text(itemLines, 15, detailStartY + 16);
 
-// --- RECEIVER DETAILS ---
-// --- RECEIVER DETAILS ---
-doc.setFont("helvetica", "bold");
-doc.text("RECEIVER DETAILS:", 140, bodyStartY);
-doc.setFont("helvetica", "normal");
+  const otherDetailsY = detailStartY + 16 + itemLines.length * 6 + 6;
+  doc.setFont("helvetica", "bold");
+  doc.text("Other Details:", 15, otherDetailsY);
+  const otherLines = doc.splitTextToSize(safeText(formData.OtherDetails), 200);
+  doc.setFont("helvetica", "normal");
+  doc.text(otherLines, 15, otherDetailsY + 6);
 
-// Use 60mm width, wrap long lines
-const receiverFieldLines = [
-  `Name: ${safeText(formData.ReceiverName)}`,
-  `Mobile 1: ${safeText(formData.ReceiverMobile1)}`,
-  `Mobile 2: ${safeText(formData.ReceiverMobile2)}`,
-  `Address: ${safeText(formData.ReceiverAddress)}`,
-  `City: ${safeText(formData.ReceiverArea)}`,
-  `Saudi Arabia`,
-];
-
-let receiverY = bodyStartY + 6;
-receiverFieldLines.forEach((fieldText) => {
-  const lines = doc.splitTextToSize(fieldText, 60); // wrap at 50mm
-  lines.forEach((line) => {
-    doc.text(line, 140, receiverY);
-    receiverY += 6;
-  });
-});
-
-// Compute max height
-const senderHeight = senderLines.length * 6;
-const receiverHeight = receiverFieldLines.length * 6;
-const detailStartY = bodyStartY + Math.max(senderHeight, receiverHeight) + 12;
-// const detailStartY = bodyStartY + Math.max(senderHeight, receiverY - bodyStartY) + 20;
-
-
-// --- PIECES / ITEM / OTHER DETAILS ---
-doc.setFont("helvetica", "bold");
-doc.text("PIECES # :", 15, detailStartY);
-doc.text("ITEM DETAILS :", 80, detailStartY);
-doc.text("OTHER DETAILS :", 150, detailStartY);
-
-doc.setFont("helvetica", "normal");
-doc.text(safeText(formData.NoOfPieces), 15, detailStartY + 6);
-
-const itemLines = doc.splitTextToSize(safeText(formData.ItemDetails), 50);
-const otherLines = doc.splitTextToSize(safeText(formData.OtherDetails), 50);
-
-doc.text(itemLines, 80, detailStartY + 6);
-doc.text(otherLines, 150, detailStartY + 6);
-
-// Don't forget to adjust rest of layout (charges table etc.)
-
-  const detailBlockHeight = Math.max(itemLines.length, otherLines.length) * 6;
-  const tableStartY = detailStartY + 20 + detailBlockHeight;
-
+  const tableStartY = otherDetailsY + 6 + otherLines.length * 6 + 10;
   // ========== CHARGES TABLE ==========
 autoTable(doc, {
   head: [["#", "CHARGES", "UNIT/RATE", "QUANTITY", "SAR TOTAL"]],
@@ -210,34 +179,34 @@ summaryItems.forEach((item, i) => {
 });
 
 // ========== AMOUNT IN WORDS ==========
-const amountWords = "Two Thousand One Hundred And Eighty-Seven Saudi Riyal and 12 halalah only";
+const totalsY = finalY + 10;
+  const amountHeading = "Amount in Words:";
+  const amountText = safeText(formData.AmountInWords);
+  const amountLines = doc.splitTextToSize(amountText, 180);
+  const amountHeight = 6 + amountLines.length * 6 + 6;
 
-// Position: below last total line
-const amountWordsY = finalY + 10 + summaryItems.length * 10 + 15;
+  let amountWordsY = totalsY + summaryItems.length * 10 + 15;
 
-doc.setFontSize(12);
-doc.setTextColor(0, 0, 0);
-doc.setFont("helvetica", "bold");
-doc.text("Amount in Words:", 15, amountWordsY);
+  if (amountWordsY + amountHeight > doc.internal.pageSize.getHeight()) {
+    doc.addPage();
+    amountWordsY = 20;
+  }
 
-doc.setFont("helvetica", "normal");
-doc.setFontSize(11);
+  doc.setFont("helvetica", "bold");
+  doc.setFontSize(12);
+  doc.setTextColor(0, 0, 0);
+  doc.text(amountHeading, 15, amountWordsY);
 
-// Break into lines if long
-const amountLines = doc.splitTextToSize(amountWords, 180); // wrap at 180mm
-amountLines.forEach((line, i) => {
-  doc.text(line, 15, amountWordsY + 6 + i * 6);
-});
-
-  
-  // ========== FILE EXPORT ==========
+  doc.setFont("helvetica", "normal");
+  doc.setFontSize(11);
+  amountLines.forEach((line, i) => {
+    doc.text(line, 15, amountWordsY + 6 + i * 6);
+  });
   const fileName = `booking_${safeText(formData.BiltyNo || "record")}`;
 
   if (buttonType === "SavePDF") {
     doc.save(`${fileName}.pdf`);
-  }
-
-  if (buttonType === "Save&PRINT") {
+  } else if (buttonType === "Save&PRINT") {
     const blob = doc.output("blob");
     const blobURL = URL.createObjectURL(blob);
     const iframe = document.createElement("iframe");
@@ -249,11 +218,11 @@ amountLines.forEach((line, i) => {
       iframe.contentWindow.print();
       URL.revokeObjectURL(blobURL);
     };
-  }
-
-  if (buttonType === "SendToWhatsapp") {
+  } else if (buttonType === "SendToWhatsapp") {
     const blob = doc.output("blob");
     const file = new File([blob], fileName, { type: "application/pdf" });
     alert("Send to WhatsApp coming soon 🚀");
   }
 };
+
+
