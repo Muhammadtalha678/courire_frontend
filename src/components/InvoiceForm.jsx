@@ -102,44 +102,52 @@
     
       const handleSubmit = async(e) => {
           e.preventDefault();
-          // console.log(formData);
-          
-          const newErrors = {};
-          // Required Fields
           const requiredFields = [
-              "SenderName",
-              "SenderMobile",
-              "SenderIdNumber",
-              "SenderAddress",
-              "SenderArea",
-              "ReceiverName",
-              "ReceiverMobile1",
-              "ReceiverMobile2",
-              "ReceiverArea",
-              "ReceiverAddress",
-              "NoOfPieces",
-            "Branch",
-              "BookingDate"
-          ];
-          requiredFields.forEach((field) => {
-              if (!formData[field]) {
-                newErrors[field] = "This field is required";
-              }
-          });
-          // Mobile & Numeric Validation
-          const numberFields = ["SenderMobile", "ReceiverMobile1", "ReceiverMobile2", "NoOfPieces"];
-          numberFields.forEach((field) => {
-              if (formData[field] && !/^\d+$/.test(formData[field])) {
-              newErrors[field] = "Only numbers allowed";
-              }
-          });
-          setErrors(newErrors);
-          // If errors exist, return and prevent submit
-          console.log(Object.keys(newErrors));
-          
-          if (Object.keys(newErrors).length > 0) {
-            return;
-        }
+            'Branch',
+  'SenderName',
+  'SenderMobile',
+  'SenderIdNumber',
+  'SenderAddress',
+  'SenderArea',
+  'ReceiverName',
+  'ReceiverMobile1',
+  'ReceiverMobile2',
+  'ReceiverArea',
+  'ReceiverAddress',
+  'NoOfPieces',
+  'BookingDate',
+];
+
+const numberFields = ['SenderMobile', 'ReceiverMobile1', 'ReceiverMobile2', 'NoOfPieces'];
+
+const newErrors = {};
+
+// 🔍 Check required fields first
+for (let field of requiredFields) {
+  if (!formData[field]) {
+    newErrors[field] = 'This field is required';
+    toast.error(`${field.replace(/([A-Z])/g, ' $1')} is required`);
+    setErrors(newErrors);
+    return; // ✅ Stop at first error
+  }
+}
+
+// 🔍 Check number fields
+for (let field of numberFields) {
+  if (formData[field] && !/^\d+$/.test(formData[field])) {
+    newErrors[field] = 'Only numbers allowed';
+    toast.error(`${field.replace(/([A-Z])/g, ' $1')} must contain only numbers`);
+    setErrors(newErrors);
+    return; // ✅ Stop at first error
+  }
+}
+
+setErrors({});
+// ✅ Proceed with submit here
+
+        //   if (Object.keys(newErrors).length > 0) {
+        //     return;
+        // }
         if (formData.InvoiceTotal < 0) {
           toast.error("Calculated total cannot be negative")
           return

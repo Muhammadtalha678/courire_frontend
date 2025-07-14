@@ -147,40 +147,47 @@ import { handlePdfSave } from '../lib/helper/pdfGenerator'
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+const requiredFields = [
+            'Branch',
+  'SenderName',
+  'SenderMobile',
+  'SenderIdNumber',
+  'SenderAddress',
+  'SenderArea',
+  'ReceiverName',
+  'ReceiverMobile1',
+  'ReceiverMobile2',
+  'ReceiverArea',
+  'ReceiverAddress',
+  'NoOfPieces',
+  'BookingDate',
+];
 
-    const newErrors = {};
-    const requiredFields = [
-      'SenderName',
-      'SenderMobile',
-      'SenderIdNumber',
-      'SenderAddress',
-      'SenderArea',
-      'ReceiverName',
-      'ReceiverMobile1',
-      'ReceiverMobile2',
-      'ReceiverArea',
-      'ReceiverAddress',
-      'NoOfPieces',
-      'Branch',
-      'BookingDate',
-    ];
+const numberFields = ['SenderMobile', 'ReceiverMobile1', 'ReceiverMobile2', 'NoOfPieces'];
 
-    requiredFields.forEach((field) => {
-      if (!formData[field]) {
-        newErrors[field] = 'This field is required';
-      }
-    });
+const newErrors = {};
 
-    const numberFields = ['SenderMobile', 'ReceiverMobile1', 'ReceiverMobile2', 'NoOfPieces'];
-    numberFields.forEach((field) => {
-      if (formData[field] && !/^\d+$/.test(formData[field])) {
-        newErrors[field] = 'Only numbers allowed';
-      }
-    });
-
+// 🔍 Check required fields first
+for (let field of requiredFields) {
+  if (!formData[field]) {
+    newErrors[field] = 'This field is required';
+    toast.error(`${field.replace(/([A-Z])/g, ' $1')} is required`);
     setErrors(newErrors);
-    if (Object.keys(newErrors).length > 0) return;
+    return; // ✅ Stop at first error
+  }
+}
 
+// 🔍 Check number fields
+for (let field of numberFields) {
+  if (formData[field] && !/^\d+$/.test(formData[field])) {
+    newErrors[field] = 'Only numbers allowed';
+    toast.error(`${field.replace(/([A-Z])/g, ' $1')} must contain only numbers`);
+    setErrors(newErrors);
+    return; // ✅ Stop at first error
+  }
+}
+
+setErrors({});
     try {
       setIsSubmittedBooking(true);
       const response = await axios.post(AppRoutes.addBooking, formData);
