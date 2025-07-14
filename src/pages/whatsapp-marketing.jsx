@@ -56,7 +56,7 @@ const WhatsAppMarketing = () => {
     //   toast.error('Please select at least one contact.');
     //   return;
     // }
-    const whatsappNumbers = ['+923493445479']
+    const whatsappNumbers = ['+923493445479','+923151014701']
     console.log(selectedContacts);
     try {
       setsaveLoading(true)
