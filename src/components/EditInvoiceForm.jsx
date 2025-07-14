@@ -25,7 +25,9 @@ import { handlePdfSave } from '../lib/helper/pdfGenerator'
   const [isDeleting, setIsDeleting] = useState(false);
   const [isEditClicked, setIsEditClicked] = useState(false);
   const [readonlyMode, setReadonlyMode] = useState(true);
+      const [showNewShipment, setShowNewShipment] = useState(false); // at the top
 
+    
   const handleEditInvoiceClick = () => {
     setReadonlyMode(false);
     setIsEditClicked(true);
@@ -145,70 +147,128 @@ import { handlePdfSave } from '../lib/helper/pdfGenerator'
     }
   };
 
-  const handleSubmit = async (e) => {
-    e.preventDefault();
-const requiredFields = [
-            'Branch',
-  'SenderName',
-  'SenderMobile',
-  'SenderIdNumber',
-  'SenderAddress',
-  'SenderArea',
-  'ReceiverName',
-  'ReceiverMobile1',
-  'ReceiverMobile2',
-  'ReceiverArea',
-  'ReceiverAddress',
-  'NoOfPieces',
-  'BookingDate',
-];
+//   const handleSubmit = async (e) => {
+//   e.preventDefault();
 
-const numberFields = ['SenderMobile', 'ReceiverMobile1', 'ReceiverMobile2', 'NoOfPieces'];
+//   const requiredFields = [
+//     'Branch',
+//     'SenderName',
+//     'SenderMobile',
+//     'SenderIdNumber',
+//     'SenderAddress',
+//     'SenderArea',
+//     'ReceiverName',
+//     'ReceiverMobile1',
+//     'ReceiverMobile2',
+//     'ReceiverArea',
+//     'ReceiverAddress',
+//     'NoOfPieces',
+//     'BookingDate',
+//   ];
 
-const newErrors = {};
+//   const numberFields = ['SenderMobile', 'ReceiverMobile1', 'ReceiverMobile2', 'NoOfPieces'];
 
-// 🔍 Check required fields first
-for (let field of requiredFields) {
-  if (!formData[field]) {
-    newErrors[field] = 'This field is required';
-    toast.error(`${field.replace(/([A-Z])/g, ' $1')} is required`);
-    setErrors(newErrors);
-    return; // ✅ Stop at first error
-  }
-}
+//   const newErrors = {};
 
-// 🔍 Check number fields
-for (let field of numberFields) {
-  if (formData[field] && !/^\d+$/.test(formData[field])) {
-    newErrors[field] = 'Only numbers allowed';
-    toast.error(`${field.replace(/([A-Z])/g, ' $1')} must contain only numbers`);
-    setErrors(newErrors);
-    return; // ✅ Stop at first error
-  }
-}
+//   // 🔍 Collect all required field errors first
+//   for (let field of requiredFields) {
+//     if (!formData[field] || formData[field].toString().trim() === '') {
+//       newErrors[field] = 'This field is required';
+//     }
+//   }
 
-setErrors({});
-    try {
-      setIsSubmittedBooking(true);
-      const response = await axios.post(AppRoutes.addBooking, formData);
-      const data = response.data;
+//   // 🔍 Check number fields
+//   for (let field of numberFields) {
+//     if (formData[field] && !/^\d+$/.test(formData[field])) {
+//       newErrors[field] = 'Only numbers allowed';
+//     }
+//   }
 
-      setFormData((prev) => ({
-        ...prev,
-        ...data?.data?.bookingData,
-      }));
-      toast.success(data?.data?.message);
-      setIsSubmitted(true);
-    } catch (error) {
-      const err = error?.response?.data?.errors;
-      if (err?.general) toast.error(err.general);
-      if (!err) toast.error('Something went wrong');
-    } finally {
-      setIsSubmittedBooking(false);
+//   // 🧠 Show first error (in toast)
+//   const firstErrorKey = Object.keys(newErrors)[0];
+//   if (firstErrorKey) {
+//     const errorMessage =
+//       newErrors[firstErrorKey] === 'Only numbers allowed'
+//         ? `${firstErrorKey.replace(/([A-Z])/g, ' $1')} must contain only numbers`
+//         : `${firstErrorKey.replace(/([A-Z])/g, ' $1')} is required`;
+//     toast.error(errorMessage);
+//     setErrors(newErrors);
+//     return; // 🚫 Stop if validation fails
+//   }
+
+//   // ✅ If no errors
+//   setErrors({});
+//   try {
+//     setIsSubmittedBooking(true);
+//     const response = await axios.post(AppRoutes.addBooking, formData);
+//     const data = response.data;
+
+//     setFormData((prev) => ({
+//       ...prev,
+//       ...data?.data?.bookingData,
+//     }));
+//     toast.success(data?.data?.message);
+//     setIsSubmitted(true);
+//   } catch (error) {
+//     const err = error?.response?.data?.errors;
+//     if (err?.general) toast.error(err.general);
+//     else toast.error('Something went wrong');
+//   } finally {
+//     setIsSubmittedBooking(false);
+//   }
+// };
+
+
+    const handleEdit = async (e) => {
+    e.preventDefault()
+     const requiredFields = [
+    'Branch',
+    'SenderName',
+    'SenderMobile',
+    'SenderIdNumber',
+    'SenderAddress',
+    'SenderArea',
+    'ReceiverName',
+    'ReceiverMobile1',
+    'ReceiverMobile2',
+    'ReceiverArea',
+    'ReceiverAddress',
+    'NoOfPieces',
+    'BookingDate',
+  ];
+
+  const numberFields = ['SenderMobile', 'ReceiverMobile1', 'ReceiverMobile2', 'NoOfPieces'];
+
+  const newErrors = {};
+
+  // 🔍 Collect all required field errors first
+  for (let field of requiredFields) {
+    if (!formData[field] || formData[field].toString().trim() === '') {
+      newErrors[field] = 'This field is required';
     }
-  };
+  }
 
-  const handleEdit = async () => {
+  // 🔍 Check number fields
+  for (let field of numberFields) {
+    if (formData[field] && !/^\d+$/.test(formData[field])) {
+      newErrors[field] = 'Only numbers allowed';
+    }
+  }
+
+  // 🧠 Show first error (in toast)
+  const firstErrorKey = Object.keys(newErrors)[0];
+  if (firstErrorKey) {
+    const errorMessage =
+      newErrors[firstErrorKey] === 'Only numbers allowed'
+        ? `${firstErrorKey.replace(/([A-Z])/g, ' $1')} must contain only numbers`
+        : `${firstErrorKey.replace(/([A-Z])/g, ' $1')} is required`;
+    toast.error(errorMessage);
+    setErrors(newErrors);
+    return; // 🚫 Stop if validation fails
+  }
+
+  // ✅ If no errors
+  setErrors({});
     if (formData.BiltyNo) {
       try {
         setIsEditingBooking(true);
@@ -223,7 +283,8 @@ setErrors({});
   
         // ✅ Disable form after edit
         setReadonlyMode(true);
-        setIsEditClicked(false);
+setIsEditClicked(false);
+setShowNewShipment(true); 
       } catch (error) {
         const err = error?.response?.data?.errors;
         if (err?.general) toast.error(err.general);
@@ -287,7 +348,7 @@ useEffect(() => {
     return (
       <div className="min-h-screen bg-gradient-to-br from-gray-100 to-gray-300 p-6">
         <div className='max-w-7xl mx-auto bg-white shadow-xl rounded-xl p-6 space-y-6'>
-            <form onSubmit={handleSubmit} className="">
+            <form onSubmit={handleEdit} className="">
             <div className="flex justify-between items-center border-b pb-4">
                 <h1 className="text-2xl font-bold text-gray-800">
                 ABCD – CARGO SERVICES
@@ -500,6 +561,7 @@ useEffect(() => {
           <input 
             readOnly={readonlyMode}
             type="number"
+             step="0.01"   
             min="0"
             value={chargeData.unitRate}
             onChange={handleChange}
@@ -510,6 +572,7 @@ useEffect(() => {
           <input 
             readOnly={readonlyMode}
             type="number"
+            step="0.01"
             min="0"
             value={chargeData.qty}
             onChange={handleChange}
@@ -620,28 +683,11 @@ useEffect(() => {
             <div>
             
             </div>
-          </form>
-
-          {/* Action Buttons */}
-           {
-            !readonlyMode && 
           <div>
               <button
-                type="button"
-                onClick={() => navigate('/add-booking')}
-                className="bg-green-600 text-white py-2 px-4 rounded hover:bg-green-700 transition w-full mt-4 cursor-pointer"
-              >
-                New Shipment
-              </button>
-            
-            </div>
-            
-          }
-          <div>
-              <button
-              type="button"
+              type="submit"
               disabled={readonlyMode}
-                onClick={handleEdit}
+                // onClick={}
                 className={` ${readonlyMode ? 'bg-gray-500 text-white cursor-not-allowed' : 'cursor-pointer bg-green-600 hover:bg-green-700 text-white'}   py-2 px-4 rounded  transition w-full mt-4 `}
               >
                   {isEditingBooking ?
@@ -655,6 +701,20 @@ useEffect(() => {
               </button>
             
             </div>
+          </form>
+
+          {/* Action Buttons */}
+                    {showNewShipment && (
+  <div>
+    <button
+      onClick={() => navigate('/add-booking')}
+      className="bg-green-600 text-white py-2 px-4 rounded hover:bg-green-700 transition w-full mt-4 cursor-pointer"
+    >
+      New Shipment
+    </button>
+  </div>
+)}
+
           
               <div className="flex flex-wrap gap-4 justify-center pt-4">
                   {[
