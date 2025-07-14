@@ -30,7 +30,7 @@ const BookingList = () => {
   useEffect(() => {
     getBookings();
   }, []);
-  console.log(bookings);
+  // console.log(bookings);
   
   const handleDelete = async (id, builtNo,statusInput) => {
     try {
@@ -40,9 +40,9 @@ const BookingList = () => {
       ? [statusInput]
       : [];
       console.log(statusList);
-      const notAllowed = statusList.some(status => status !== "Shipment in Godown");
+      const notAllowed = statusList.some(status => status.toLowerCase() !== "shipment in godown" && status.toLowerCase() !== "delivered");
       if (notAllowed) {
-      toast.error("Cannot delete. Shipment is already processed.");
+      toast.error("This Booking is no more deletable already in process.");
       return;
     }
       if (!builtNo) {
