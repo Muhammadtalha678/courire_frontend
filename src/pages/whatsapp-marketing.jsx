@@ -1,35 +1,21 @@
 import axios from 'axios';
-import React, { useState,useEffect } from 'react';
-import {AppRoutes} from '../constants/AppRoutes.js'
+import React, { useState, useEffect } from 'react';
+import { AppRoutes } from '../constants/AppRoutes.js';
 import { toast } from 'react-toastify';
+import { useNavigate } from 'react-router-dom';
 
 const WhatsAppMarketing = () => {
   const [file, setFile] = useState(null);
   const [contactInput, setContactInput] = useState('');
-  // const [contactsByCity, setContactsByCity] = useState({
-    //   dammam: ['+9663210000001', '+9663210000002'],
-    //   khoober: ['+9663110000003', '+9663110000004'],
-    //   jubail: ['+9663010000005', '+9663010000006'],
-    // });
-    const [contacts, setContacts] = useState([
-        '0321******', '0311******', '0301******', '0966******', '0331******'
-      ]);
-    const [contactsByCity, setContactsByCity] = useState({});
+  const [contactsByCity, setContactsByCity] = useState({});
   const [city, setCity] = useState('');
   const [numberLoading, setNumberLoading] = useState(false);
-const [cityOptions, setCityOptions] = useState([]);
-  
+  const [cityOptions, setCityOptions] = useState([]);
+  const [selectedContacts, setSelectedContacts] = useState([]);
+  const navigate = useNavigate();
+
   const handleFileChange = (e) => {
     setFile(e.target.files[0]);
-  };
-
-  const handleSend = () => {
-    if (!file || !city) {
-      alert('Please upload a file and select a city.');
-      return;
-    }
-    const cityContacts = contactsByCity[city.toLowerCase()] || [];
-    alert(`Message sent to ${cityContacts.length} contacts in ${city}!`);
   };
 
   const handleAddContact = () => {
@@ -40,65 +26,94 @@ const [cityOptions, setCityOptions] = useState([]);
     }));
     setContactInput('');
   };
-const getNumbers = async () => {
-  try {
-    setNumberLoading(true);
-    const response = await axios.get(AppRoutes.allWhatsappNumber);
 
-    const numbers = response?.data?.data?.result || [];
-    const groupedContacts = {};
-    const citySet = new Set(); // For dropdown options
+  const handleSelectContact = (number) => {
+    setSelectedContacts((prev) =>
+      prev.includes(number)
+        ? prev.filter((n) => n !== number)
+        : [...prev, number]
+    );
+  };
 
-    numbers.forEach(number => {
-      // Sender
-      if (number?.sender?.area && number?.sender?.number) {
-        const area = number.sender.area.toLowerCase();
-        citySet.add(area); // Add to dropdown list
-        if (!groupedContacts[area]) groupedContacts[area] = [];
-        if (!groupedContacts[area].includes(number.sender.number)) {
-          groupedContacts[area].push(number.sender.number);
-        }
-      }
+  const handleSelectAll = () => {
+    const allNumbers = city
+      ? contactsByCity[city] || []
+      : Object.values(contactsByCity).flat();
+    if (allNumbers.every((num) => selectedContacts.includes(num))) {
+      setSelectedContacts([]);
+    } else {
+      setSelectedContacts(allNumbers);
+    }
+  };
 
-      // Receiver
-      if (number?.receiver?.area) {
-        const area = number.receiver.area.toLowerCase();
-        citySet.add(area); // Add to dropdown list
-        if (!groupedContacts[area]) groupedContacts[area] = [];
+  const handleSend = () => {
+    if (!file) {
+      toast.error('Please upload a file.');
+      return;
+    }
+    if (selectedContacts.length === 0) {
+      toast.error('Please select at least one contact.');
+      return;
+    }
+    console.log(selectedContacts);
+    
+    alert(`Message sent to ${selectedContacts.length} selected contacts.`);
+  };
 
-        [number.receiver.number1, number.receiver.number2].forEach(num => {
-          if (num && !groupedContacts[area].includes(num)) {
-            groupedContacts[area].push(num);
+  const getNumbers = async () => {
+    try {
+      setNumberLoading(true);
+      const response = await axios.get(AppRoutes.allWhatsappNumber);
+      const numbers = response?.data?.data?.result || [];
+      const groupedContacts = {};
+      const citySet = new Set();
+
+      numbers.forEach(number => {
+        if (number?.sender?.area && number?.sender?.number) {
+          const area = number.sender.area.toLowerCase();
+          citySet.add(area);
+          if (!groupedContacts[area]) groupedContacts[area] = [];
+          if (!groupedContacts[area].includes(number.sender.number)) {
+            groupedContacts[area].push(number.sender.number);
           }
-        });
-      }
-    });
+        }
 
-    setContactsByCity(groupedContacts);
-    setCityOptions([...citySet]); // Convert Set to array
+        if (number?.receiver?.area) {
+          const area = number.receiver.area.toLowerCase();
+          citySet.add(area);
+          if (!groupedContacts[area]) groupedContacts[area] = [];
 
-  } catch (error) {
-    console.log(error);
-    const err = error?.response?.data?.errors;
-    if (err?.general) toast.error(err.general);
-    else toast.error('Something went wrong while fetching contacts');
-  } finally {
-    setNumberLoading(false);
-  }
-};
+          [number.receiver.number1, number.receiver.number2].forEach(num => {
+            if (num && !groupedContacts[area].includes(num)) {
+              groupedContacts[area].push(num);
+            }
+          });
+        }
+      });
+
+      setContactsByCity(groupedContacts);
+      setCityOptions([...citySet]);
+
+    } catch (error) {
+      console.log(error);
+      const err = error?.response?.data?.errors;
+      if (err?.general) toast.error(err.general);
+      else toast.error('Something went wrong while fetching contacts');
+    } finally {
+      setNumberLoading(false);
+    }
+  };
 
   useEffect(() => {
     getNumbers();
   }, []);
-  console.log(contactsByCity);
-  
-  return (
-    numberLoading ?((
-        <div className="flex items-center justify-center h-screen bg-gray-50 text-purple-600 text-xl">
-        Loading...
-          </div>
-        )):
-  (  <div
+
+  return numberLoading ? (
+    <div className="flex items-center justify-center h-screen bg-gray-50 text-purple-600 text-xl">
+      Loading...
+    </div>
+  ) : (
+    <div
       className="relative min-h-screen bg-cover bg-center text-white"
       style={{ backgroundImage: "url('/w5.webp')" }}
     >
@@ -106,6 +121,13 @@ const getNumbers = async () => {
 
       <div className="relative z-10 flex items-center justify-center min-h-screen px-4">
         <div className="bg-white bg-opacity-95 p-8 rounded-xl shadow-2xl w-full max-w-3xl text-black">
+          <button
+  onClick={() => navigate(-1)}
+  className="mb-4 text-blue-600 hover:underline font-semibold cursor-pointer"
+>
+  ← Back
+</button>
+
           <h2 className="text-3xl font-bold text-center mb-6 flex items-center justify-center gap-2">
             <img
               src="https://upload.wikimedia.org/wikipedia/commons/6/6b/WhatsApp.svg"
@@ -128,20 +150,19 @@ const getNumbers = async () => {
 
               <label className="block mt-4 font-semibold">Select City</label>
               <select
-  className="mt-1 p-2 w-full rounded border"
-  onChange={(e) => setCity(e.target.value)}
-  value={city}
->
-  <option value="">-- SELECT CITY --</option>
-  {cityOptions.map((cityName, idx) => (
-    <option key={idx} value={cityName}>
-      {cityName.charAt(0).toUpperCase() + cityName.slice(1)}
-    </option>
-  ))}
-</select>
+                className="mt-1 p-2 w-full rounded border"
+                onChange={(e) => setCity(e.target.value)}
+                value={city}
+              >
+                <option value="">-- SELECT CITY --</option>
+                {cityOptions.map((cityName, idx) => (
+                  <option key={idx} value={cityName}>
+                    {cityName.charAt(0).toUpperCase() + cityName.slice(1)}
+                  </option>
+                ))}
+              </select>
 
-
-              <div className="mt-4">
+              {/* <div className="mt-4">
                 <label className="block mb-1 font-semibold">Add Contact Number</label>
                 <div className="flex gap-2">
                   <input
@@ -158,20 +179,75 @@ const getNumbers = async () => {
                     Add
                   </button>
                 </div>
-              </div>
+              </div> */}
             </div>
 
             <div className="w-full">
-              <h3 className="font-semibold mb-2">Contact List ({city || 'No City Selected'})</h3>
+              <h3 className="font-semibold mb-2">Contact List ({city || 'All Cities'})</h3>
+
+              <div className="flex justify-between items-center mb-2">
+                <span className="text-sm text-gray-700 font-medium">
+                  {selectedContacts.length} selected
+                </span>
+                <label className="text-sm flex items-center gap-1">
+                  <input
+                    type="checkbox"
+                    onChange={handleSelectAll}
+                    checked={
+                      (city
+                        ? (contactsByCity[city] || []).every((n) =>
+                            selectedContacts.includes(n)
+                          )
+                        : Object.values(contactsByCity)
+                            .flat()
+                            .every((n) => selectedContacts.includes(n))) &&
+                      selectedContacts.length > 0
+                    }
+                    className="accent-blue-600 cursor-pointer"
+                  />
+                  Select All
+                </label>
+              </div>
+
               <div className="max-h-48 overflow-y-auto pr-2 border border-gray-300 rounded p-3 bg-gray-50">
-                {(contactsByCity[city] || []).map((contact, index) => (
-                  <div key={index} className="flex justify-between mb-1 text-sm">
-                    <span>{contact}</span>
-                    <span className="text-green-600 font-bold">✔</span>
-                  </div>
-                ))}
-                {(!contactsByCity[city] || contactsByCity[city].length === 0) && (
-                  <p className="text-gray-500 italic">No contacts available.</p>
+                {city === '' ? (
+                  Object.keys(contactsByCity).length === 0 ? (
+                    <p className="text-gray-500 italic">No contacts available.</p>
+                  ) : (
+                    Object.entries(contactsByCity).map(([cityName, contacts]) => (
+                      <div key={cityName} className="mb-4">
+                        <h4 className="font-semibold text-gray-700 mb-1 capitalize">{cityName}</h4>
+                        {contacts.map((contact, idx) => (
+                          <div key={idx} className="flex justify-between mb-1 text-sm">
+                            <span>{contact}</span>
+                            <input
+                              type="checkbox"
+                              checked={selectedContacts.includes(contact)}
+                              onChange={() => handleSelectContact(contact)}
+                              className="accent-green-600 cursor-pointer"
+                            />
+                          </div>
+                        ))}
+                      </div>
+                    ))
+                  )
+                ) : (
+                  <>
+                    {(contactsByCity[city] || []).map((contact, index) => (
+                      <div key={index} className="flex justify-between mb-1 text-sm">
+                        <span>{contact}</span>
+                        <input
+                          type="checkbox"
+                          checked={selectedContacts.includes(contact)}
+                          onChange={() => handleSelectContact(contact)}
+                          className="accent-green-600"
+                        />
+                      </div>
+                    ))}
+                    {(!contactsByCity[city] || contactsByCity[city].length === 0) && (
+                      <p className="text-gray-500 italic">No contacts available.</p>
+                    )}
+                  </>
                 )}
               </div>
             </div>
@@ -179,13 +255,13 @@ const getNumbers = async () => {
 
           <button
             onClick={handleSend}
-            className="mt-6 bg-green-600 hover:bg-green-700 text-white font-bold py-2 px-6 w-full rounded"
+            className="mt-6 bg-green-600 hover:bg-green-700 text-white font-bold py-2 px-6 w-full rounded cursor-pointer"
           >
             📤 Send WhatsApp Message
           </button>
         </div>
       </div>
-    </div>)
+    </div>
   );
 };
 
