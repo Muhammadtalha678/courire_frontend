@@ -57,4 +57,9 @@ export const AppRoutes = {
     editContainerNo: BASE_URL + "/api/editContainerNo",
     deleteContainerNo: BASE_URL + "/api/deleteContainerNo",
     allContainerNoList: BASE_URL + "/api/allContainerNoList",
+    
+    // get all whatsapp numbers
+    allWhatsappNumber: BASE_URL + "/api/all-whatsapp",
+
 }
+
