@@ -13,7 +13,8 @@ const WhatsAppMarketing = () => {
   const [cityOptions, setCityOptions] = useState([]);
   const [selectedContacts, setSelectedContacts] = useState([]);
   const navigate = useNavigate();
-
+  
+  const [saveLoading, setsaveLoading] = useState(false);
   const handleFileChange = (e) => {
     setFile(e.target.files[0]);
   };
@@ -46,18 +47,48 @@ const WhatsAppMarketing = () => {
     }
   };
 
-  const handleSend = () => {
+  const handleSend = async() => {
     if (!file) {
       toast.error('Please upload a file.');
       return;
     }
-    if (selectedContacts.length === 0) {
-      toast.error('Please select at least one contact.');
-      return;
-    }
+    // if (selectedContacts.length === 0) {
+    //   toast.error('Please select at least one contact.');
+    //   return;
+    // }
+    const whatsappNumbers = ['+923493445479']
     console.log(selectedContacts);
-    
-    alert(`Message sent to ${selectedContacts.length} selected contacts.`);
+    try {
+      setsaveLoading(true)
+       const formData = new FormData();
+
+    // 📎 Add the file (ensure correct field name!)
+    formData.append(
+      file.type.startsWith("image/")
+        ? "marketingImage"
+        : "marketingFile",
+      file
+    );
+
+    // 📲 Add WhatsApp numbers
+    whatsappNumbers.forEach(num => formData.append('whatsappNumbers', num));
+      const response = await axios.post(AppRoutes.sendMediaTwhatsapp, formData, {
+      headers: {
+        'Content-Type': 'multipart/form-data',
+      },
+    });
+
+    toast.success(response.data?.data?.message);
+    } catch (error) {
+      console.log(error);
+          const err = error?.response?.data?.errors;
+          // if (err?.email) setEmailErr(err.email);
+          if (err?.general) toast.error(err.general);
+          if (!err) toast.error('Something went wrong');
+    } finally {
+      setsaveLoading(false)
+    }
+    // alert(`Message sent to ${selectedContacts.length} selected contacts.`);
   };
 
   const getNumbers = async () => {
@@ -142,7 +173,7 @@ const WhatsAppMarketing = () => {
               <label className="block mb-1 font-semibold">Upload File</label>
               <input
                 type="file"
-                accept=".png,.jpeg,.jpg,.mp4,.mkv"
+  accept=".png,.jpeg,.jpg,.pdf,.doc,.docx,.ppt,.pptx,.xls,.xlsx"
                 onChange={handleFileChange}
                 className="block w-full mb-2 p-2 border rounded"
               />
@@ -255,9 +286,10 @@ const WhatsAppMarketing = () => {
 
           <button
             onClick={handleSend}
+            disable={saveLoading}
             className="mt-6 bg-green-600 hover:bg-green-700 text-white font-bold py-2 px-6 w-full rounded cursor-pointer"
           >
-            📤 Send WhatsApp Message
+            {saveLoading ? 'Sending....':'📤 Send WhatsApp Message'}
           </button>
         </div>
       </div>
