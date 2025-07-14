@@ -15,7 +15,7 @@ const EditContainerPage = () => {
     const [loadingSaveContainer,setloadingSaveContainer] = useState
     (false); 
     const [remainiginvoices, SetRemainigInvoices] = useState([])
-      
+      const [citiesList,SetCitiesList] = useState([])
     const handleSave = async(update) => {
         console.log(update);
         try {
@@ -42,15 +42,17 @@ const EditContainerPage = () => {
       const fetchContainer = async () => {
         try {
           setloadingContainer(true)
-          const [response, allRemainigInvoices] = await Promise.all([
+          const [cityRes, response, allRemainigInvoices] = await Promise.all([
+            axios.get(AppRoutes.allCity),
             axios.get(`${AppRoutes.getSingleContainer}/${id}`),
             axios.get(AppRoutes.allBookingInvoiceNo),
           ])
+          const allCities = cityRes.data?.data?.allCities || [];
           const data = response.data;
           const invoicesRes = allRemainigInvoices.data
           console.log("data",data.data.foundContainer);
           // setContainer(data?.data.foundContainer)
-                
+            SetCitiesList(allCities);
             setContainer(data?.data?.foundContainer)
             SetRemainigInvoices(invoicesRes?.data?.bookingInvoices || [])
             } catch (error) {
@@ -80,7 +82,7 @@ const EditContainerPage = () => {
   return (
     <div>
       <Header/>
-      <EditContainer editData={container} remainingInvoices={remainiginvoices} />
+      <EditContainer editData={container} remainingInvoices={remainiginvoices} citiesList={citiesList} />
           {/* <ContainerStatusUpdate container={container}  onSave={handleSave} loadingSave={loadingSaveContainer}/> */}
     </div>
   )

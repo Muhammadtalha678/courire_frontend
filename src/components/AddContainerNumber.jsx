@@ -6,11 +6,12 @@ import axios from 'axios'
 const AddContainerNumber = ({ cities, onContainerAdded,isEdit = false,editDestination, editContainerNumber }) => {
 // console.log(editDestination);
 
-  const [formdata, setFormData] = useState({
-    ContainerNumber:"",
-    From:"",
-    To:"",
-})
+ const [formdata, setFormData] = useState({
+  ContainerNumber: isEdit ? editContainerNumber : '',
+  From: isEdit ? editDestination?.From : '',
+  To: isEdit ? editDestination?.To : '',
+});
+
 const [fromCityErr,setFromCityErr] = useState('')
 const [toCityErr,setToCityErr] = useState('')
 const [containerErr,setContainerErr] = useState('')
@@ -76,7 +77,45 @@ const handleSubmit = async () => {
             setLoading(false)
             
         }
+  }
+const handleEdit = async () => {
+  try {
+    setLoading(true);
+    if (!formdata.From.trim()) {
+      toast.error('From City is required!');
+      return;
     }
+    if (!formdata.To.trim()) {
+      toast.error('To City is required!');
+      return;
+    }
+    if (formdata.From === formdata.To) {
+      toast.error('Cannot select the same location for both From and To!');
+      return;
+    }
+
+    const response = await axios.post(AppRoutes.editContainerNo, {
+      ContainerNumber: formdata.ContainerNumber,
+      From: formdata.From,
+      To: formdata.To,
+    });
+
+    const data = response.data;
+    toast.success(data?.data?.message);
+
+    if (onContainerAdded) {
+      await onContainerAdded(); // Refresh parent list
+    }
+  } catch (error) {
+    const err = error?.response?.data?.errors;
+    if (err?.general) toast.error(err.general);
+    if (err?.container) toast.error(err.container);
+    else toast.error('Something went wrong');
+  } finally {
+    setLoading(false);
+  }
+};
+
   return (
     <>
      <h2 className="text-xl font-semibold text-gray-700">Container Entry</h2>
@@ -94,53 +133,54 @@ const handleSubmit = async () => {
   <h1 className="bg-blue-700 text-white px-4 py-2 rounded-t-md font-semibold">
     Location
   </h1>
-        <select
-          disabled={isEdit}
-            name="From"
-            value={!isEdit ? formdata.From:editDestination.From}
-            onChange={!isEdit ? handleChange:undefined}
-            className="border p-2"
-          >
-            <option value="">Select From</option>
-            {!isEdit &&  cities.map((city, index) => (
-              <option key={index} value={city.city}>{city.city}</option>
-            ))}
-            {isEdit &&  
-              <option  value={editDestination.From}>{editDestination.From}</option>
-            }
-          </select>
+       <select
+  name="From"
+  value={formdata.From}
+  onChange={handleChange}
+  className="border p-2"
+>
+  <option value="">Select From</option>
+  {cities.map((city, index) => (
+    <option key={index} value={city.city}>
+      {city.city}
+    </option>
+  ))}
+</select>
+
           {!isEdit && fromCityErr && <span className="text-red-500 text-sm">{fromCityErr}</span>}
           <select
-          value={!isEdit ? formdata.To : editDestination.To}
-          name="To"
-          onChange={!isEdit ? handleChange:undefined}
-          className="border p-2"
-          disabled={isEdit}
-          >
-            <option value="">Select To</option>
-            {!isEdit && cities.map((city, index) => (
-              <option key={index} value={city.city}>{city.city}</option>
-            ))}
-            {isEdit &&  
-              <option  value={editDestination.To}>{editDestination.To}</option>
-            }
-          </select>
+  name="To"
+  value={formdata.To}
+  onChange={handleChange}
+  className="border p-2"
+>
+  <option value="">Select From</option>
+  {cities.map((city, index) => (
+    <option key={index} value={city.city}>
+      {city.city}
+    </option>
+  ))}
+</select>
+
           {!isEdit && toCityErr && <span className="text-red-500 text-sm">{toCityErr}</span>}
   {
-          !isEdit &&
+          
           <>
         <button
-   disabled ={isEdit ? isEdit : loading}
-    onClick={!isEdit ? handleSubmit: undefined}
-    className="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded shadow cursor-pointer"
-  >
-    {!isEdit && loading ? (
-              <svg className="animate-spin h-5 w-5 mx-auto text-white" viewBox="0 0 24 24">
-                <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4"></circle>
-                <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4z" />
-              </svg>
-            ) : 'Save'}
-  </button>
+  onClick={isEdit ? handleEdit : handleSubmit}
+  disabled={loading}
+  className="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded shadow cursor-pointer"
+>
+  {loading ? (
+    <svg className="animate-spin h-5 w-5 mx-auto text-white" viewBox="0 0 24 24">
+      <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4"></circle>
+      <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4z" />
+    </svg>
+  ) : (
+    isEdit ? 'Update' : 'Save'
+  )}
+</button>
+
   {/* <button className="bg-yellow-500 hover:bg-yellow-600 text-white px-4 py-2 rounded shadow">
     Edit
   </button>
