@@ -13,6 +13,9 @@ const WhatsAppMarketing = () => {
   const [cityOptions, setCityOptions] = useState([]);
   const [selectedContacts, setSelectedContacts] = useState([]);
   const navigate = useNavigate();
+
+  const [manualContacts, setManualContacts] = useState([]);
+
   
   const [saveLoading, setsaveLoading] = useState(false);
   const handleFileChange = (e) => {
@@ -20,11 +23,14 @@ const WhatsAppMarketing = () => {
   };
 
   const handleAddContact = () => {
-    if (!contactInput || !city) return;
+  //   console.log(contactInput);
+  // console.log(city);
+    if (!contactInput) { toast.error("add contact euired"); return};
     setContactsByCity((prev) => ({
       ...prev,
       [city]: [...(prev[city] || []), contactInput],
     }));
+    setManualContacts((prev) => [...prev, contactInput]);
     setContactInput('');
   };
 
@@ -52,12 +58,17 @@ const WhatsAppMarketing = () => {
       toast.error('Please upload a file.');
       return;
     }
-    // if (selectedContacts.length === 0) {
-    //   toast.error('Please select at least one contact.');
+    if (selectedContacts.length === 0) {
+      toast.error('Please select at least one contact.');
+      return;
+    }
+    // console.log(manualContacts);
+    // if (manualContacts.length === 0) {
+    //   toast.error('Please add at least one contact.');
     //   return;
     // }
-    const whatsappNumbers = ['+923493445479','+923151014701']
-    console.log(selectedContacts);
+    // const whatsappNumbers = ['+923493445479','+923151014701']
+    // console.log(selectedContacts);
     try {
       setsaveLoading(true)
        const formData = new FormData();
@@ -71,7 +82,8 @@ const WhatsAppMarketing = () => {
     );
 
     // 📲 Add WhatsApp numbers
-    whatsappNumbers.forEach(num => formData.append('whatsappNumbers', num));
+    // whatsappNumbers.forEach(num => formData.append('whatsappNumbers', num));
+     selectedContacts.forEach(num => formData.append('whatsappNumbers', num))
       const response = await axios.post(AppRoutes.sendMediaTwhatsapp, formData, {
       headers: {
         'Content-Type': 'multipart/form-data',
@@ -193,7 +205,7 @@ const WhatsAppMarketing = () => {
                 ))}
               </select>
 
-              {/* <div className="mt-4">
+              <div className="mt-4">
                 <label className="block mb-1 font-semibold">Add Contact Number</label>
                 <div className="flex gap-2">
                   <input
@@ -210,7 +222,7 @@ const WhatsAppMarketing = () => {
                     Add
                   </button>
                 </div>
-              </div> */}
+              </div>
             </div>
 
             <div className="w-full">
