@@ -9,25 +9,27 @@ export function numberToWords(amount) {
   ];
   const units = ["", "thousand", "million", "billion"];
 
-  function convertBelowThousand(n) {
+  function convertBelowThousand(n, useAnd) {
     if (n < 20) return ones[n];
     if (n < 100)
       return tens[Math.floor(n / 10)] + (n % 10 !== 0 ? "-" + ones[n % 10] : "");
     return (
       ones[Math.floor(n / 100)] +
       " hundred" +
-      (n % 100 !== 0 ? " and " + convertBelowThousand(n % 100) : "")
+      (n % 100 !== 0
+        ? (useAnd ? " and " : " ") + convertBelowThousand(n % 100, useAnd)
+        : "")
     );
   }
 
-  function convertNumberToWords(n) {
+  function convertNumberToWords(n, useAnd) {
     if (n === 0) return "";
     let i = 0;
     let words = "";
     while (n > 0) {
       const chunk = n % 1000;
       if (chunk !== 0) {
-        let chunkWords = convertBelowThousand(chunk);
+        let chunkWords = convertBelowThousand(chunk, useAnd);
         if (units[i]) chunkWords += " " + units[i];
         words = chunkWords + (words ? " " + words : "");
       }
@@ -57,9 +59,11 @@ export function numberToWords(amount) {
   const [intPartStr, decimalPartStr] = safeAmount.toFixed(2).split(".");
   const intPart = parseInt(intPartStr);
   const decimalPart = parseInt(decimalPartStr);
+  const hasHalalah = decimalPart > 0;
 
-  const intWords = toTitleCase(convertNumberToWords(intPart));
-  const decimalWords = decimalPart > 0 ? ` and ${decimalPart} halalah` : "";
+  const intWords = toTitleCase(convertNumberToWords(intPart, !hasHalalah));
+  const halalahWords = hasHalalah ? ` and ${decimalPart} Halalah` : "";
+  const onlyWord = " only";
 
-  return `${intWords} Saudi Riyal${decimalWords} only`;
+  return `${intWords} Saudi Riyal${halalahWords}${onlyWord}`;
 }
