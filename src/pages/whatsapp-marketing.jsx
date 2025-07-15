@@ -53,6 +53,7 @@ const WhatsAppMarketing = () => {
     }
   };
 
+  
   const handleSend = async() => {
     if (!file) {
       toast.error('Please upload a file.');
@@ -183,9 +184,13 @@ const WhatsAppMarketing = () => {
           <div className="flex flex-col md:flex-row gap-6">
             <div className="w-full">
               <label className="block mb-1 font-semibold">Upload File</label>
+              <p className="text-sm text-gray-600">
+  Allowed: .mp4,.png,.jpg,.jpeg,.pdf (Max 10MB)
+</p>
+
               <input
                 type="file"
-  accept=".png,.jpeg,.jpg,.pdf,.doc,.docx,.ppt,.pptx,.xls,.xlsx"
+   accept=".mp4,.png,.jpg,.jpeg,.pdf"
                 onChange={handleFileChange}
                 className="block w-full mb-2 p-2 border rounded"
               />
