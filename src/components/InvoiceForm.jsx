@@ -4,6 +4,7 @@
   import axios from 'axios';
   import { AppRoutes } from '../constants/AppRoutes';
   import {handlePdfSave} from '../lib/helper/pdfGenerator'
+import { handleSend } from '../lib/helper/sendPdf';
   const InvoiceForm = ({cityList,branchList,loadingList}) => {
       
       const [errors, setErrors] = useState({});
@@ -11,6 +12,7 @@
       const  [isSubmittedBooking,setIsSubmittedBooking] = useState(false)
       const  [isEditingBooking,setIsEditingBooking] = useState(false)
       const  [isDeleting,setIsDeleting] = useState(false)
+      const  [whatsappLoading,setwhatsappLoading] = useState(false)
       
       const  [isEditClicked,setIsEditClicked] = useState(false)
       
@@ -317,7 +319,8 @@ setErrors({});
           }));
         }, [formData.Charges, formData.Vat]);
       
-
+    
+    
     return (
       <div className="min-h-screen bg-gradient-to-br from-gray-100 to-gray-300 p-6">
         <div className='max-w-7xl mx-auto bg-white shadow-xl rounded-xl p-6 space-y-6'>
@@ -748,22 +751,22 @@ setErrors({});
                   {
                     label: "Save & Print",
                       onClick: () => {
-                        if (formData.BiltyNo) {
+                        if (formData.BiltyNo && formData.SenderArea && formData.ReceiverArea && formData.Branch) {
                           handlePdfSave(formData, 'Save&PRINT','Shipment in Godown',formData.AmountInWords)
                         }
                         else {
-                          toast.error("Cannot create PDF without Bilty and Invoice No")
+                          toast.error("Cannot Print PDF without Tracking Id,Invoice No,Branch,Reciever and Sender City")
                         }
                       },
                   },
                   {
                     label: "Save PDF",
                     onClick: () =>  {
-                      if (formData.BiltyNo) {
+                       if (formData.BiltyNo && formData.SenderArea && formData.ReceiverArea && formData.Branch) {
                         handlePdfSave(formData, 'SavePDF','Shipment in Godown',formData.AmountInWords)
                       }
                       else {
-                        toast.error("Cannot create PDF without Bilty and Invoice No")
+                        toast.error("Cannot create PDF without Tracking Id,Invoice No,Branch,Reciever and Sender City")
                       }
                     },
                   },
@@ -786,10 +789,46 @@ setErrors({});
                   },
                   {
                     label: "PDF To Whatsapp",
-                    onClick: () => handlePdfSave(formData,"SendToWhatsapp",'Shipment in Godown',formData.AmountInWords),
+                    
+                    isLoading:whatsappLoading
                   },
-                  ].map(({label,onClick,isLoading},index) => (
-                  <button
+            ].map(({ label, onClick, isLoading }, index) => {
+                    {
+                    if (label === 'PDF To Whatsapp') {
+                      
+                    return    <button
+                      key={index}
+                      onClick={() => {
+                          if (formData.BiltyNo && formData.SenderArea && formData.ReceiverArea && formData.Branch) {
+                        const file = handlePdfSave(formData, "SendToWhatsapp", 'Shipment in Godown', formData.AmountInWords);
+                      if(file) handleSend(formData,file,setwhatsappLoading)
+                      }
+                      else {
+                        toast.error("Cannot send PDF without Tracking Id,Invoice No,Branch,Reciever and Sender City")
+                      }
+                      
+                    }}
+                      disabled={isLoading}
+                      className="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded shadow-md cursor-pointer"
+                  >
+                      {isLoading ? (
+            <div className="flex justify-center">
+              <svg className="animate-spin h-5 w-5 text-white" viewBox="0 0 24 24">
+                <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4" />
+                <path
+                  className="opacity-75"
+                  fill="currentColor"
+                  d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4z"
+                />
+              </svg>
+            </div>
+          ) : (
+            label
+          )}
+                  </button>
+                    }
+                  }
+                    return <button
                       key={index}
                       onClick={onClick}
                       disabled={isLoading}
@@ -810,7 +849,7 @@ setErrors({});
             label
           )}
                   </button>
-                  ))}
+                  })}
               </div>
         </div>
         

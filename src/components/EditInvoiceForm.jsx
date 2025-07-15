@@ -5,6 +5,7 @@
   import { AppRoutes } from '../constants/AppRoutes';
 import { handlePdfSave } from '../lib/helper/pdfGenerator'
   import {useNavigate} from 'react-router-dom'
+import { handleSend } from '../lib/helper/sendPdf';
   const EditInvoiceForm = ({ id,
     branchList,
     cityList,
@@ -26,6 +27,7 @@ import { handlePdfSave } from '../lib/helper/pdfGenerator'
   const [isEditClicked, setIsEditClicked] = useState(false);
   const [readonlyMode, setReadonlyMode] = useState(true);
       const [showNewShipment, setShowNewShipment] = useState(false); // at the top
+      const  [whatsappLoading,setwhatsappLoading] = useState(false)
 
     
   const handleEditInvoiceClick = () => {
@@ -751,22 +753,22 @@ useEffect(() => {
                   {
                     label: "Save & Print",
                       onClick: () => {
-                        if (formData.BiltyNo) {
+                        if (formData.BiltyNo && formData.SenderArea && formData.ReceiverArea && formData.Branch) {
                           handlePdfSave(formData, 'Save&PRINT',bookingData.status,formData.AmountInWords)
                         }
                         else {
-                          toast.error("Cannot create PDF without Bilty and Invoice No")
+                          toast.error("Cannot Print PDF without Tracking Id,Invoice No,Branch,Reciever and Sender City")
                         }
                       },
                   },
                   {
                     label: "Save PDF",
                     onClick: () =>  {
-                      if (formData.BiltyNo) {
+                      if (formData.BiltyNo && formData.SenderArea && formData.ReceiverArea && formData.Branch) {
                         handlePdfSave(formData, 'SavePDF',bookingData.status,formData.AmountInWords)
                       }
                       else {
-                        toast.error("Cannot create PDF without Bilty and Invoice No")
+                        toast.error("Cannot create PDF without Tracking Id,Invoice No,Branch,Reciever and Sender City")
                       }
                     },
                   },
@@ -787,7 +789,7 @@ useEffect(() => {
                   },
                   {
                     label: "PDF To Whatsapp",
-                    onClick: () => handlePdfSave(formData,"SendToWhatsapp",bookingData.status,formData.AmountInWords),
+                    isLoading:whatsappLoading
                   },
             ].map(({ label, onClick, isLoading }, index) => {
               if (label === 'Edit Invoice') {
@@ -813,6 +815,39 @@ useEffect(() => {
           )}
                   </button>
               }
+              if (label === 'PDF To Whatsapp') {
+                                    
+                                  return    <button
+                                    key={index}
+                                    onClick={() => {
+                                       if (formData.BiltyNo && formData.SenderArea && formData.ReceiverArea && formData.Branch) {
+                                      const file = handlePdfSave(formData, "SendToWhatsapp", 'Shipment in Godown', formData.AmountInWords);
+                                    if(file) handleSend(formData,file,setwhatsappLoading)
+                                    }
+                                    else {
+                                      toast.error("Cannot send PDF without Tracking Id,Invoice No,Branch,Reciever and Sender City")
+                                    }
+                                    
+                                  }}
+                                    disabled={isLoading}
+                                    className="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded shadow-md cursor-pointer"
+                                >
+                                    {isLoading ? (
+                          <div className="flex justify-center">
+                            <svg className="animate-spin h-5 w-5 text-white" viewBox="0 0 24 24">
+                              <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4" />
+                              <path
+                                className="opacity-75"
+                                fill="currentColor"
+                                d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4z"
+                              />
+                            </svg>
+                          </div>
+                        ) : (
+                          label
+                        )}
+                                </button>
+                                  }
                     return  <button
                       key={index}
                       onClick={onClick}
