@@ -53,7 +53,6 @@ const WhatsAppMarketing = () => {
     }
   };
 
-  
   const handleSend = async() => {
     if (!file) {
       toast.error('Please upload a file.');
