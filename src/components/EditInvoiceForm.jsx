@@ -298,7 +298,23 @@ setShowNewShipment(true);
       toast.error('Cannot edit fields without Bilty and Invoice No');
     }
   };
-  
+   const handleDelete = async(builtNo) => {
+      try {
+        if (!builtNo) {
+          toast.error('Builty no is missing')
+          return
+        }
+        const response = await axios.delete(AppRoutes.deleteBooking, { data: { BiltyNo: builtNo } })
+        const data = response.data
+        toast.success(data?.data?.message)
+        navigate(-1)
+        
+      } catch (error) {
+        const err = error?.response?.data?.errors;
+        if (err?.general) toast.error(err?.general)
+        if (!err) toast.error('Something went wrong');
+      }
+    }
 
 useEffect(() => {
   const charges = formData.Charges || {};
@@ -784,7 +800,8 @@ useEffect(() => {
                   },
                   {
                     label: "Del. Invoice",
-                    onClick: () => handleDelete(formData.BiltyNo),
+                    // onClick: () => handleDelete(formData.BiltyNo),
+                    onClick: () => {},
                     isLoading: isDeleting
                   },
                   {
