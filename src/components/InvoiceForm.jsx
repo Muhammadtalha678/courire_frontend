@@ -416,7 +416,32 @@ setErrors({});
                             ))}
                           </select>
                         ) 
-                        :(<input 
+                            : sender.key === "ItemDetails" ? (
+                        <textarea
+  name={sender.key}
+  value={formData[sender.key] || ""}
+  onChange={handleChange} // add this if you're using controlled components
+  cols="48"
+  rows="2"
+  className="w-full border rounded px-2 py-1"
+/>
+
+                            
+                        ):
+                             sender.key === "OtherDetails" ? (
+                        <textarea
+  name={sender.key}
+  value={formData[sender.key] || ""}
+  onChange={handleChange} // add this if you're using controlled components
+  cols="48"
+  rows="2"
+  className="w-full border rounded px-2 py-1"
+/>
+
+                            
+                        ):
+                        
+                            (<input 
                           readOnly={isSubmitted && !isEditClicked}
                             name={sender.key}
                             type="text"
