@@ -1,8 +1,11 @@
 
+import axios from 'axios';
 import { jsPDF } from 'jspdf';
 import autoTable from 'jspdf-autotable';
+import { AppRoutes } from '../../constants/AppRoutes';
+import { toast } from 'react-toastify';
 
-export const handlePdfSave = (formData, buttonType, status) => {
+export const handlePdfSave = (formData, buttonType, status,setwhatsappLoading) => {
   const doc = new jsPDF();
   const safeText = (val) => String(val ?? "");
   const shipmentStatus = status || 'Ship?ment in Godown';
@@ -220,8 +223,10 @@ const totalsY = finalY + 10;
     };
   } else if (buttonType === "SendToWhatsapp") {
     const blob = doc.output("blob");
-    const file = new File([blob], fileName, { type: "application/pdf" });
-    alert("Send to WhatsApp coming soon 🚀");
+const file = new File([blob], fileName, { type: "application/pdf" });
+    // console.log(file);
+    
+   return file
   }
 };
 
