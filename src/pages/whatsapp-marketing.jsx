@@ -22,17 +22,31 @@ const WhatsAppMarketing = () => {
     setFile(e.target.files[0]);
   };
 
-  const handleAddContact = () => {
-  //   console.log(contactInput);
-  // console.log(city);
-    if (!contactInput) { toast.error("add contact euired"); return};
-    setContactsByCity((prev) => ({
-      ...prev,
-      [city]: [...(prev[city] || []), contactInput],
-    }));
-    setManualContacts((prev) => [...prev, contactInput]);
-    setContactInput('');
-  };
+ const handleAddContact = () => {
+  if (!contactInput) {
+    toast.error("Contact number is required");
+    return;
+  }
+
+  const trimmedContact = contactInput.trim();
+
+  // 🔍 Check globally if number already exists
+  const allNumbers = Object.values(contactsByCity).flat();
+  if (allNumbers.includes(trimmedContact)) {
+    toast.error("This number already exists");
+    return;
+  }
+
+  // ✅ Add to 'unsorted' city or general group
+  setContactsByCity((prev) => ({
+    ...prev,
+    "unsorted": [...(prev["unsorted"] || []), trimmedContact],
+  }));
+
+  setManualContacts((prev) => [...prev, trimmedContact]);
+  setContactInput('');
+};
+
 
   const handleSelectContact = (number) => {
     setSelectedContacts((prev) =>
