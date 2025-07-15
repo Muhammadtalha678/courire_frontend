@@ -447,6 +447,7 @@ useEffect(() => {
                         ):sender.key === "ItemDetails" ? (
                         <textarea
   name={sender.key}
+  readOnly={readonlyMode}
   value={formData[sender.key] || ""}
   onChange={handleChange} // add this if you're using controlled components
   cols="48"
@@ -459,6 +460,7 @@ useEffect(() => {
                              sender.key === "OtherDetails" ? (
                         <textarea
   name={sender.key}
+  readOnly={readonlyMode}
   value={formData[sender.key] || ""}
   onChange={handleChange} // add this if you're using controlled components
   cols="48"
