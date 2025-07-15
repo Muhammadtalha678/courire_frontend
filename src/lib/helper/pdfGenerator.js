@@ -182,7 +182,7 @@ summaryItems.forEach((item, i) => {
 const totalsY = finalY + 10;
   const amountHeading = "Amount in Words:";
   const amountText = safeText(formData.AmountInWords);
-  const amountLines = doc.splitTextToSize(amountText, 180);
+  const amountLines = doc.splitTextToSize(amountText, 210);
   const amountHeight = 6 + amountLines.length * 6 + 6;
 
   let amountWordsY = totalsY + summaryItems.length * 10 + 15;
