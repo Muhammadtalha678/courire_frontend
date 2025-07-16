@@ -13,13 +13,19 @@ export const handleSend = async (formData,file,setwhatsappLoading) => {
         return;
       }
     
-      const allContacts = [];
+      // const allContacts = [];
     
-      // Push the available numbers safely
-      if (formData.SenderMobile) allContacts.push(formData.SenderMobile);
-      if (formData.ReceiverMobile1) allContacts.push(formData.ReceiverMobile1);
-      if (formData.ReceiverMobile2) allContacts.push(formData.ReceiverMobile2);
+      // // Push the available numbers safely
+      // if (formData.SenderMobile) allContacts.push(formData.SenderMobile);
+      // if (formData.ReceiverMobile1) allContacts.push(formData.ReceiverMobile1);
+      // if (formData.ReceiverMobile2) allContacts.push(formData.ReceiverMobile2);
     
+  const allContacts = Array.from(new Set([
+  formData.SenderMobile,
+  formData.ReceiverMobile1,
+  formData.ReceiverMobile2
+].filter(Boolean))); // removes undefined / empty
+
       if (allContacts.length === 0) {
         toast.error("Please add at least one contact number.");
         return;
