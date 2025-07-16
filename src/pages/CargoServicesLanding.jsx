@@ -71,7 +71,7 @@ export default function CargoServicesLanding() {
     <button
       disabled={loading}
       onClick={handleSearch}
-      className="bg-blue-600 text-white px-5 rounded-r-lg hover:bg-blue-700 transition"
+      className={`bg-blue-600 text-white px-5 rounded-r-lg hover:bg-blue-700 transition ${loading ? 'cursor-not-allowed' : 'cursor-pointer'}`}
     >
       {loading ? (<div className="flex justify-center">
     <svg className="animate-spin h-5 w-5 text-white" viewBox="0 0 24 24">
