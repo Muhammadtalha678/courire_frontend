@@ -223,7 +223,7 @@ const totalsY = finalY + 10;
     };
   } else if (buttonType === "SendToWhatsapp") {
     const blob = doc.output("blob");
-const file = new File([blob], fileName, { type: "application/pdf" });
+const file = new File([blob], `${fileName}.pdf`, { type: "application/pdf" });
     // console.log(file);
     
    return file
