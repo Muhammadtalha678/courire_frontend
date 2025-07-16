@@ -432,9 +432,9 @@ setErrors({});
   name={sender.key}
   value={formData[sender.key] || ""}
   onChange={handleChange} // add this if you're using controlled components
-  cols="100"
-  rows="3"
-  className="w-[100%] border rounded px-2 py-1"
+  // cols="100"
+  rows="6"
+ className="sm:w-full md:w-[400px] lg:w-[700px] xl:w-[900px] border rounded px-2 py-1"
 />
 
                             
@@ -444,9 +444,10 @@ setErrors({});
   name={sender.key}
   value={formData[sender.key] || ""}
   onChange={handleChange} // add this if you're using controlled components
-  cols="60"
-  rows="3"
-  className="w-full border rounded px-2 py-1"
+  // cols="60"
+  rows="4"
+  // className="w-full border rounded px-2 py-1"
+   className="sm:w-full md:w-[400px] lg:w-[700px] xl:w-[900px] border rounded px-2 py-1"
 />
 
                             
@@ -482,10 +483,15 @@ setErrors({});
                     { label: "City", key: "ReceiverArea" },
                     { label: "No Of Pieces", key: "NoOfPieces" },
                 ].map((reciever,index) => (
-                    <div key={index} className="mb-2">
-                    <label className="block text-sm font-medium text-gray-700">
+                  <div key={index} className="mb-2">
+                    {
+                      reciever.key !== "NoOfPieces" &&
+                        
+                    (<label className="block text-sm font-medium text-gray-700">
                         {reciever.label}
-                    </label>
+                    </label>)
+                        
+                    }
                     {
                       reciever.key === "ReceiverArea" ? (
                         <select
@@ -511,7 +517,26 @@ setErrors({});
                          reciever.key === "ReceiverMobile2" ? (
                         
                             <PhoneNumberInput value={formData[reciever.key]} handleChange={handleChange} name={reciever.key} disable={isSubmitted && !isEditClicked}/>
-                        ) 
+                        )  : reciever.key === "NoOfPieces" ? (
+                              <div className=" w-[200px] ml-auto">
+                                <label className="not-even: text-sm font-medium text-gray-700">
+                        {reciever.label}
+                        </label>
+                                <input 
+                                readOnly={isSubmitted && !isEditClicked}
+                                name={reciever.key}
+                                    type="text"
+                                    className="w-full border rounded px-2 py-1"
+                                    value={formData[reciever.key]}
+                                    onChange={handleChange}
+                                    inputMode="numeric"
+                            
+                                    
+                                />
+                                </div>
+                            )
+                             
+                            
                             : 
                     (<input 
                     readOnly={isSubmitted && !isEditClicked}
