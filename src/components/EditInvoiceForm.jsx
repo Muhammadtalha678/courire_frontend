@@ -307,6 +307,7 @@ setShowNewShipment(true);
           return
        }
      try {
+       setIsDeleting(true)
         const response = await axios.delete(AppRoutes.deleteBooking, { data: { BiltyNo: builtNo } })
         const data = response.data
         toast.success(data?.data?.message)
@@ -316,6 +317,8 @@ setShowNewShipment(true);
         const err = error?.response?.data?.errors;
         if (err?.general) toast.error(err?.general)
         if (!err) toast.error('Something went wrong');
+     } finally {
+       setIsDeleting(false)
      }
     //  console.log(typeof status);
      
