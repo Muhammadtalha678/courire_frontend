@@ -34,17 +34,17 @@ const BookingList = () => {
   
   const handleDelete = async (id, builtNo,statusInput) => {
     try {
-      const statusList = Array.isArray(statusInput)
-      ? statusInput
-      : typeof statusInput === "string"
-      ? [statusInput]
-      : [];
-      console.log(statusList);
-      const notAllowed = statusList.some(status => status.toLowerCase() !== "shipment in godown" && status.toLowerCase() !== "delivered");
-      if (notAllowed) {
-      toast.error("This Booking is no more deletable already in process.");
-      return;
-    }
+      // const statusList = Array.isArray(statusInput)
+      // ? statusInput
+      // : typeof statusInput === "string"
+      // ? [statusInput]
+      // : [];
+      // console.log(statusList);
+      // const notAllowed = statusList.some(status => status.toLowerCase() !== "shipment in godown" && status.toLowerCase() !== "delivered");
+    //   if (notAllowed) {
+    //   toast.error("This Booking is no more deletable already in process.");
+    //   return;
+    // }
       if (!builtNo) {
         toast.error('Builty no is missing');
         return;
