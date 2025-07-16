@@ -300,12 +300,13 @@ setShowNewShipment(true);
       toast.error('Cannot edit fields without Bilty and Invoice No');
     }
   };
-   const handleDelete = async(builtNo) => {
-      try {
+   const handleDelete = async(builtNo,status) => {
+      // {
         if (!builtNo) {
           toast.error('Builty no is missing')
           return
-        }
+       }
+     try {
         const response = await axios.delete(AppRoutes.deleteBooking, { data: { BiltyNo: builtNo } })
         const data = response.data
         toast.success(data?.data?.message)
@@ -315,7 +316,9 @@ setShowNewShipment(true);
         const err = error?.response?.data?.errors;
         if (err?.general) toast.error(err?.general)
         if (!err) toast.error('Something went wrong');
-      }
+     }
+    //  console.log(typeof status);
+     
     }
 
 useEffect(() => {
@@ -841,8 +844,8 @@ useEffect(() => {
                   },
                   {
                     label: "Del. Invoice",
-                    // onClick: () => handleDelete(formData.BiltyNo),
-                    onClick: () => {},
+                    onClick: () => handleDelete(formData.BiltyNo,bookingData),
+                    // onClick: () => {},
                     isLoading: isDeleting
                   },
                   {
