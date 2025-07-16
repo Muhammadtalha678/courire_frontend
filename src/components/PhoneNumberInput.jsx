@@ -2,7 +2,7 @@ import React from 'react'
 import { PhoneInput } from 'react-international-phone';
 import 'react-international-phone/style.css';
 
-const PhoneNumberInput = ({value,handleChange,name,disable}) => {
+const PhoneNumberInput = ({value,handleChange,name,disable=false}) => {
   return (
     <PhoneInput
       disabled={disable}
