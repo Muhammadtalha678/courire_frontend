@@ -3,6 +3,7 @@ import React, { useState, useEffect } from 'react';
 import { AppRoutes } from '../constants/AppRoutes.js';
 import { toast } from 'react-toastify';
 import { useNavigate } from 'react-router-dom';
+import PhoneNumberInput from '../components/PhoneNumberInput.jsx';
 
 const WhatsAppMarketing = () => {
   const [file, setFile] = useState(null);
@@ -36,15 +37,16 @@ const WhatsAppMarketing = () => {
     toast.error("This number already exists");
     return;
   }
-
+  
   // ✅ Add to 'unsorted' city or general group
   setContactsByCity((prev) => ({
     ...prev,
-    "unsorted": [...(prev["unsorted"] || []), trimmedContact],
+    "New Contact": [...(prev["New Contact"] || []), trimmedContact],
   }));
-
+  
   setManualContacts((prev) => [...prev, trimmedContact]);
   setContactInput('');
+  toast.success("Number Added to New Contact Successfully");
 };
 
 
@@ -117,49 +119,102 @@ const WhatsAppMarketing = () => {
     // alert(`Message sent to ${selectedContacts.length} selected contacts.`);
   };
 
+  // const getNumbers = async () => {
+  //   try {
+  //     setNumberLoading(true);
+  //     const response = await axios.get(AppRoutes.allWhatsappNumber);
+  //     const numbers = response?.data?.data?.result || [];
+  //     const groupedContacts = {};
+  //     const citySet = new Set();
+
+  //     numbers.forEach(number => {
+  //       if (number?.sender?.area && number?.sender?.number) {
+  //         const area = number.sender.area.toLowerCase();
+  //         citySet.add(area);
+  //         if (!groupedContacts[area]) groupedContacts[area] = [];
+  //         if (!groupedContacts[area].includes(number.sender.number)) {
+  //           groupedContacts[area].push(number.sender.number);
+  //         }
+  //       }
+
+  //       if (number?.receiver?.area) {
+  //         const area = number.receiver.area.toLowerCase();
+  //         citySet.add(area);
+  //         if (!groupedContacts[area]) groupedContacts[area] = [];
+
+  //         [number.receiver.number1, number.receiver.number2].forEach(num => {
+  //           if (num && !groupedContacts[area].includes(num)) {
+  //             groupedContacts[area].push(num);
+  //           }
+  //         });
+  //       }
+  //     });
+
+  //     setContactsByCity(groupedContacts);
+  //     setCityOptions([...citySet]);
+
+  //   } catch (error) {
+  //     console.log(error);
+  //     const err = error?.response?.data?.errors;
+  //     if (err?.general) toast.error(err.general);
+  //     else toast.error('Something went wrong while fetching contacts');
+  //   } finally {
+  //     setNumberLoading(false);
+  //   }
+  // };
+
   const getNumbers = async () => {
-    try {
-      setNumberLoading(true);
-      const response = await axios.get(AppRoutes.allWhatsappNumber);
-      const numbers = response?.data?.data?.result || [];
-      const groupedContacts = {};
-      const citySet = new Set();
+  try {
+    setNumberLoading(true);
+    const response = await axios.get(AppRoutes.allWhatsappNumber);
+    const numbers = response?.data?.data?.result || [];
+    const groupedContacts = {};
+    const citySet = new Set();
+    const globalSet = new Set(); // ✅ To track unique numbers
 
-      numbers.forEach(number => {
-        if (number?.sender?.area && number?.sender?.number) {
-          const area = number.sender.area.toLowerCase();
-          citySet.add(area);
-          if (!groupedContacts[area]) groupedContacts[area] = [];
-          if (!groupedContacts[area].includes(number.sender.number)) {
-            groupedContacts[area].push(number.sender.number);
-          }
+    numbers.forEach(number => {
+      // Sender
+      if (number?.sender?.area && number?.sender?.number) {
+        const area = number.sender.area.toLowerCase();
+        citySet.add(area);
+        if (!groupedContacts[area]) groupedContacts[area] = [];
+
+        const contact = number.sender.number.trim();
+        if (!globalSet.has(contact)) {
+          groupedContacts[area].push(contact);
+          globalSet.add(contact); // ✅ Mark as used
         }
+      }
 
-        if (number?.receiver?.area) {
-          const area = number.receiver.area.toLowerCase();
-          citySet.add(area);
-          if (!groupedContacts[area]) groupedContacts[area] = [];
+      // Receiver
+      if (number?.receiver?.area) {
+        const area = number.receiver.area.toLowerCase();
+        citySet.add(area);
+        if (!groupedContacts[area]) groupedContacts[area] = [];
 
-          [number.receiver.number1, number.receiver.number2].forEach(num => {
-            if (num && !groupedContacts[area].includes(num)) {
-              groupedContacts[area].push(num);
+        [number.receiver.number1, number.receiver.number2].forEach(num => {
+          if (num) {
+            const contact = num.trim();
+            if (!globalSet.has(contact)) {
+              groupedContacts[area].push(contact);
+              globalSet.add(contact); // ✅ Mark as used
             }
-          });
-        }
-      });
+          }
+        });
+      }
+    });
 
-      setContactsByCity(groupedContacts);
-      setCityOptions([...citySet]);
-
-    } catch (error) {
-      console.log(error);
-      const err = error?.response?.data?.errors;
-      if (err?.general) toast.error(err.general);
-      else toast.error('Something went wrong while fetching contacts');
-    } finally {
-      setNumberLoading(false);
-    }
-  };
+    setContactsByCity(groupedContacts);
+    setCityOptions([...citySet]);
+  } catch (error) {
+    console.log(error);
+    const err = error?.response?.data?.errors;
+    if (err?.general) toast.error(err.general);
+    else toast.error('Something went wrong while fetching contacts');
+  } finally {
+    setNumberLoading(false);
+  }
+};
 
   useEffect(() => {
     getNumbers();
@@ -226,16 +281,15 @@ const WhatsAppMarketing = () => {
               <div className="mt-4">
                 <label className="block mb-1 font-semibold">Add Contact Number</label>
                 <div className="flex gap-2">
-                  <input
-                    type="text"
+                  <PhoneNumberInput
+                    name="manualContact"
                     value={contactInput}
-                    onChange={(e) => setContactInput(e.target.value)}
-                    placeholder="+9663xxxxxxxx"
-                    className="flex-1 p-2 border rounded"
+                    handleChange={(e) => setContactInput(e.target.value)}
                   />
+
                   <button
                     onClick={handleAddContact}
-                    className="bg-blue-600 hover:bg-blue-700 text-white px-4 rounded"
+                    className="bg-blue-600 hover:bg-blue-700 text-white px-4 rounded cursor-pointer"
                   >
                     Add
                   </button>
@@ -317,7 +371,7 @@ const WhatsAppMarketing = () => {
           <button
             onClick={handleSend}
             disable={saveLoading}
-            className="mt-6 bg-green-600 hover:bg-green-700 text-white font-bold py-2 px-6 w-full rounded cursor-pointer"
+            className={`mt-6 bg-green-600 hover:bg-green-700 text-white font-bold py-2 px-6 w-full rounded ${saveLoading ? 'cursor-not-allowed' : 'cursor-pointer'}`}
           >
             {saveLoading ? 'Sending....':'📤 Send WhatsApp Message'}
           </button>
