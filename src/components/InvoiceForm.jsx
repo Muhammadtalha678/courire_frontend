@@ -160,6 +160,7 @@ setErrors({});
         }
         try {
           setIsSubmittedBooking(true)
+          
           const response = await axios.post(AppRoutes.addBooking,formData)
         const data = response.data
         // set response data into form
@@ -177,6 +178,7 @@ setErrors({});
           if (!err) toast.error('Something went wrong');
         } finally {
           setIsSubmittedBooking(false)
+          
         }
 
     }
@@ -263,6 +265,7 @@ setErrors({});
           toast.error('Builty no is missing')
           return
         }
+        setIsDeleting(true)
         const response = await axios.delete(AppRoutes.deleteBooking, { data: { BiltyNo: builtNo } })
         const data = response.data
         toast.success(data?.data?.message)
@@ -272,6 +275,8 @@ setErrors({});
         const err = error?.response?.data?.errors;
         if (err?.general) toast.error(err?.general)
         if (!err) toast.error('Something went wrong');
+      } finally {
+        setIsDeleting(false)
       }
     }
     useEffect(() => {
