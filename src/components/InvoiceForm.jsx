@@ -5,6 +5,7 @@
   import { AppRoutes } from '../constants/AppRoutes';
   import {handlePdfSave} from '../lib/helper/pdfGenerator'
 import { handleSend } from '../lib/helper/sendPdf';
+import PhoneNumberInput from './PhoneNumberInput';
   const InvoiceForm = ({cityList,branchList,loadingList}) => {
       
       const [errors, setErrors] = useState({});
@@ -61,7 +62,7 @@ import { handleSend } from '../lib/helper/sendPdf';
           const { name, value, type, checked, dataset } = e.target;
         
           // Charges section
-          if (dataset.charge) {
+          if (dataset && dataset.charge) {
             const chargeKey = dataset.charge;
             const field = dataset.field;
         
@@ -103,7 +104,9 @@ import { handleSend } from '../lib/helper/sendPdf';
             
     
       const handleSubmit = async(e) => {
-          e.preventDefault();
+        e.preventDefault();
+        console.log(formData);
+        
           const requiredFields = [
             'Branch',
   'SenderName',
@@ -136,7 +139,8 @@ for (let field of requiredFields) {
 
 // 🔍 Check number fields
 for (let field of numberFields) {
-  if (formData[field] && !/^\d+$/.test(formData[field])) {
+  // if (formData[field] && !/^\d+$/.test(formData[field])) {
+  if (formData[field] && !/^\+?\d+$/.test(formData[field])) {
     newErrors[field] = 'Only numbers allowed';
     toast.error(`${field.replace(/([A-Z])/g, ' $1')} must contain only numbers`);
     setErrors(newErrors);
@@ -418,15 +422,19 @@ setErrors({});
                               </option>
                             ))}
                           </select>
+                        ): 
+                          sender.key === "SenderMobile" ? (
+                        
+                            <PhoneNumberInput value={formData[sender.key]} handleChange={handleChange} name={sender.key} disable={isSubmitted && !isEditClicked}/>
                         ) 
                             : sender.key === "ItemDetails" ? (
                         <textarea
   name={sender.key}
   value={formData[sender.key] || ""}
   onChange={handleChange} // add this if you're using controlled components
-  cols="48"
-  rows="2"
-  className="w-full border rounded px-2 py-1"
+  cols="100"
+  rows="3"
+  className="w-[100%] border rounded px-2 py-1"
 />
 
                             
@@ -436,8 +444,8 @@ setErrors({});
   name={sender.key}
   value={formData[sender.key] || ""}
   onChange={handleChange} // add this if you're using controlled components
-  cols="48"
-  rows="2"
+  cols="60"
+  rows="3"
   className="w-full border rounded px-2 py-1"
 />
 
@@ -494,7 +502,17 @@ setErrors({});
                           </option>
                         ))}
                       </select>
-                    ):
+                      ) :
+                         reciever.key === "ReceiverMobile1" ? (
+                        
+                            <PhoneNumberInput value={formData[reciever.key]} handleChange={handleChange} name={reciever.key} disable={isSubmitted && !isEditClicked}/>
+                        ) 
+                            : 
+                         reciever.key === "ReceiverMobile2" ? (
+                        
+                            <PhoneNumberInput value={formData[reciever.key]} handleChange={handleChange} name={reciever.key} disable={isSubmitted && !isEditClicked}/>
+                        ) 
+                            : 
                     (<input 
                     readOnly={isSubmitted && !isEditClicked}
                     name={reciever.key}

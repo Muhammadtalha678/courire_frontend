@@ -6,6 +6,7 @@
 import { handlePdfSave } from '../lib/helper/pdfGenerator'
   import {useNavigate} from 'react-router-dom'
 import { handleSend } from '../lib/helper/sendPdf';
+import PhoneNumberInput from './PhoneNumberInput';
   const EditInvoiceForm = ({ id,
     branchList,
     cityList,
@@ -112,7 +113,7 @@ import { handleSend } from '../lib/helper/sendPdf';
   const handleChange = (e) => {
     const { name, value, type, checked, dataset } = e.target;
 
-    if (dataset.charge) {
+    if (dataset && dataset.charge) {
       const chargeKey = dataset.charge;
       const field = dataset.field;
 
@@ -252,7 +253,8 @@ import { handleSend } from '../lib/helper/sendPdf';
 
   // 🔍 Check number fields
   for (let field of numberFields) {
-    if (formData[field] && !/^\d+$/.test(formData[field])) {
+    // if (formData[field] && !/^\d+$/.test(formData[field])) {
+    if (formData[field] && !/^\+?\d+$/.test(formData[field])) {
       newErrors[field] = 'Only numbers allowed';
     }
   }
@@ -487,7 +489,11 @@ useEffect(() => {
 />
 
                             
+                        ) : sender.key === "SenderMobile" ? (
+                        
+                            <PhoneNumberInput value={formData[sender.key]} handleChange={handleChange} name={sender.key} disable={readonlyMode}/>
                         ) 
+                             
                         :(<input 
                           readOnly={readonlyMode}
                             name={sender.key}
@@ -538,7 +544,15 @@ useEffect(() => {
                           </option>
                         ))}
                       </select>
-                    ):
+                      ) :
+                        reciever.key === "ReceiverMobile1" ? (
+                        
+                            <PhoneNumberInput value={formData[reciever.key]} handleChange={handleChange} name={reciever.key} disable={readonlyMode}/>
+                        ) :
+                        reciever.key === "ReceiverMobile2" ? (
+                        
+                            <PhoneNumberInput value={formData[reciever.key]} handleChange={handleChange} name={reciever.key} disable={readonlyMode}/>
+                        ) :
                     (<input 
                     readOnly={readonlyMode}
                     name={reciever.key}
