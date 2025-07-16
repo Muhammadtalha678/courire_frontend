@@ -10,6 +10,7 @@ import {
   FaStore,
   FaCheckCircle,
 } from "react-icons/fa";
+import { formatDate } from "../lib/helper/britishDate";
 
 export default function TrackingStatus({ status,BuiltNo,BookingDate,InvoiceId,ContainerNumber }) {
   const steps = [
@@ -52,14 +53,15 @@ if (isManualStatus) {
         <div className="flex justify-between items-start mb-8 flex-wrap">
         <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
   <h5 className="text-md font-semibold">
-    BILTY#{" "}
+    {/* BILTY#{" "} */}
+    TRACKING ID{" "}
     <span className="text-indigo-600 font-bold">{BuiltNo}</span>
   </h5>
 
   {BookingDate && (
     <h5 className="text-md font-semibold">
       BOOKING DATE{" "}
-      <span className="text-indigo-600 font-bold">{BookingDate}</span>
+      <span className="text-indigo-600 font-bold">{formatDate(BookingDate)}</span>
     </h5>
   )}
 
@@ -67,6 +69,7 @@ if (isManualStatus) {
     <h5 className="text-md font-semibold">
       INVOICE{" "}
       <span className="text-indigo-600 font-bold">#{InvoiceId}</span>
+      {/* <span className="text-indigo-600 font-bold">#{InvoiceId}</span> */}
     </h5>
   )}
 
