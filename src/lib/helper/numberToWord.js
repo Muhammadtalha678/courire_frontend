@@ -61,11 +61,11 @@ export function numberToWords(amount) {
   const decimalPart = parseInt(decimalPartStr);
   const hasHalalah = decimalPart > 0;
 
-  // const intWords = toTitleCase(convertNumberToWords(intPart, !hasHalalah));
-  const intWords = convertNumberToWords(intPart, !hasHalalah).toUpperCase();
+  const intWords = toTitleCase(convertNumberToWords(intPart, !hasHalalah));
+  // const intWords = convertNumberToWords(intPart, !hasHalalah).toUpperCase();
 
-  const halalahWords = hasHalalah ? ` and ${decimalPart} HALALAH` : "";
-  const onlyWord = " ONLY";
+  const halalahWords = hasHalalah ? ` And ${decimalPart} Halalah` : "";
+  const onlyWord = " Only";
 
-  return `${intWords} SAUDI RIYAL${halalahWords}${onlyWord}`;
+  return `${intWords} Saudi Riyal${halalahWords}${onlyWord}`;
 }
