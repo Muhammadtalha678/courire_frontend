@@ -831,22 +831,22 @@ setErrors({});
                   {
                     label: "Save & Print",
                       onClick: () => {
-                        if (formData.BiltyNo && formData.SenderArea && formData.ReceiverArea && formData.Branch) {
+                        if (formData.BiltyNo && formData.Branch && formData.City && formData.InvoiceNo) {
                           handlePdfSave(formData, 'Save&PRINT','Shipment in Godown',formData.AmountInWords)
                         }
                         else {
-                          toast.error("Cannot Print PDF without Tracking Id,Invoice No,Branch,Reciever and Sender City")
+                          toast.error("Cannot Print PDF without Tracking Id,Invoice No,Branch and City")
                         }
                       },
                   },
                   {
                     label: "Save PDF",
                     onClick: () =>  {
-                       if (formData.BiltyNo && formData.SenderArea && formData.ReceiverArea && formData.Branch) {
+                       if (formData.BiltyNo && formData.Branch && formData.City && formData.InvoiceNo) {
                         handlePdfSave(formData, 'SavePDF','Shipment in Godown',formData.AmountInWords)
                       }
                       else {
-                        toast.error("Cannot create PDF without Tracking Id,Invoice No,Branch,Reciever and Sender City")
+                        toast.error("Cannot create PDF without Tracking Id,Invoice No,Branch and City")
                       }
                     },
                   },
@@ -879,12 +879,12 @@ setErrors({});
                     return    <button
                       key={index}
                       onClick={() => {
-                          if (formData.BiltyNo && formData.SenderArea && formData.ReceiverArea && formData.Branch) {
+                          if (formData.BiltyNo && formData.Branch && formData.City && formData.InvoiceNo) {
                         const file = handlePdfSave(formData, "SendToWhatsapp", 'Shipment in Godown', formData.AmountInWords);
                       if(file) handleSend(formData,file,setwhatsappLoading)
                       }
                       else {
-                        toast.error("Cannot send PDF without Tracking Id,Invoice No,Branch,Reciever and Sender City")
+                        toast.error("Cannot send PDF without Tracking Id,Invoice No,Branch and City")
                       }
                       
                     }}
