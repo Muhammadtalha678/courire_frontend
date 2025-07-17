@@ -45,7 +45,7 @@ export const handlePdfSave = (formData, buttonType, status,setwhatsappLoading) =
   doc.text(`Invoice #: ${safeText(formData.InvoiceNo)}`, 15, companyY + 6);
   doc.text(`Booking Date: ${formatDate(formData.BookingDate)}`, 15, companyY + 12);
   doc.text(`Tracking Id: ${safeText(formData.BiltyNo)}`, 15, companyY + 18);
-  doc.text(`City: ${formData.SenderArea}`, 15, companyY + 24);
+  doc.text(`City: ${formData.City}`, 15, companyY + 24);
   doc.text(`Branch: ${formData.Branch}`, 15, companyY + 30);
 
   doc.setFontSize(12);
