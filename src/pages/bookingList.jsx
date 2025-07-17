@@ -119,6 +119,7 @@ const BookingList = () => {
                   <th className="px-6 py-3">Receiver City</th>
                   <th className="px-6 py-3">No. of Pieces</th>
                   <th className="px-6 py-3">Branch</th>
+                  <th className="px-6 py-3">City</th>
                   <th className="px-6 py-3 text-center">Actions</th>
                 </tr>
               </thead>
@@ -144,6 +145,7 @@ const BookingList = () => {
                     <td className="px-4 py-2">{row.ReceiverArea || '-'}</td>
                     <td className="px-4 py-2">{row.NoOfPieces || '-'}</td>
                     <td className="px-4 py-2">{row.Branch || '-'}</td>
+                    <td className="px-4 py-2">{row.City || '-'}</td>
                     <td className="px-6 flex gap-4 py-4 text-center">
                       <button
                         onClick={() => navigate(`/edit-booking/edit/${row._id}`)}
