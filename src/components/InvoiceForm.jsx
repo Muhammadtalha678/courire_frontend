@@ -54,7 +54,8 @@ import PhoneNumberInput from './PhoneNumberInput';
       VatTotal:"",
       
       AmountInWords: '',
-      InvoiceTotal: ''
+        InvoiceTotal: '',
+      City: '',
       })
 
     
@@ -109,18 +110,19 @@ import PhoneNumberInput from './PhoneNumberInput';
         
           const requiredFields = [
             'Branch',
-  'SenderName',
-  'SenderMobile',
-  'SenderIdNumber',
-  'SenderAddress',
-  'SenderArea',
-  'ReceiverName',
-  'ReceiverMobile1',
-  'ReceiverMobile2',
-  'ReceiverArea',
-  'ReceiverAddress',
-  'NoOfPieces',
-  'BookingDate',
+            'City',
+            'SenderName',
+            'SenderMobile',
+            'SenderIdNumber',
+            'SenderAddress',
+            'SenderArea',
+            'ReceiverName',
+            'ReceiverMobile1',
+            'ReceiverMobile2',
+            'ReceiverArea',
+            'ReceiverAddress',
+            'NoOfPieces',
+            'BookingDate',
 ];
 
 const numberFields = ['SenderMobile', 'ReceiverMobile1', 'ReceiverMobile2', 'NoOfPieces'];
@@ -128,7 +130,9 @@ const numberFields = ['SenderMobile', 'ReceiverMobile1', 'ReceiverMobile2', 'NoO
 const newErrors = {};
 
 // 🔍 Check required fields first
-for (let field of requiredFields) {
+        for (let field of requiredFields) {
+  // console.log(field);
+  
   if (!formData[field]) {
     newErrors[field] = 'This field is required';
     toast.error(`${field.replace(/([A-Z])/g, ' $1')} is required`);
@@ -222,7 +226,8 @@ setErrors({});
       AmountInWords: '',
       InvoiceTotal: '',
       BiltyNo: '',
-      InvoiceNo: ''
+      InvoiceNo: '',
+      City: ''
       
       });
       setIsSubmitted(false);
@@ -343,7 +348,7 @@ setErrors({});
                 </h2>
             </div>
 
-            <div className="grid grid-cols-4 gap-4">
+            <div className="grid grid-cols-5 gap-4">
                 <div>
                 <label className="font-medium">Bilty No</label>
                 <input  type="text" readOnly className="w-full border rounded px-2 py-1" value={formData.BiltyNo}/>
@@ -384,6 +389,33 @@ setErrors({});
                
                 {errors["Branch"] && (
                         <p className="text-sm text-red-600 mt-1">{errors["Branch"]}</p>
+                        )}
+                </div>
+                <div>
+                <label  className="font-medium">City</label>
+                {
+                  loadingList ? (<h1>Loading...</h1>) : (
+                    <select
+                    disabled={isSubmitted && !isEditClicked}
+                    name="City"
+                    value={formData.City}
+                    // onChange={isSubmitted && !isEditClicked ? () => { }  :handleChange}
+                    onChange={handleChange}
+                    className="w-full px-4 py-2 border rounded"
+                  >
+                    <option value="">Select City</option>
+                    {cityList.map((city,index) => (
+                      <option key={index} value={city.city}>
+                        {city.city}
+                      </option>
+                    ))}
+                  </select>
+                  ) 
+               
+                }
+               
+                {errors["City"] && (
+                        <p className="text-sm text-red-600 mt-1">{errors["City"]}</p>
                         )}
                 </div>
             </div>
