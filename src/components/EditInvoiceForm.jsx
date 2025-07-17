@@ -108,6 +108,7 @@ import PhoneNumberInput from './PhoneNumberInput';
 
     AmountInWords: bookingData.AmountInWords || '',
     InvoiceTotal: bookingData.InvoiceTota || '',
+    City: bookingData.City || '',
   });
 
   const handleChange = (e) => {
@@ -226,6 +227,7 @@ import PhoneNumberInput from './PhoneNumberInput';
     e.preventDefault()
      const requiredFields = [
     'Branch',
+    'City',
     'SenderName',
     'SenderMobile',
     'SenderIdNumber',
@@ -384,7 +386,7 @@ useEffect(() => {
                 </h2>
             </div>
 
-            <div className="grid grid-cols-4 gap-4">
+            <div className="grid grid-cols-5 gap-4">
                 <div>
                 <label className="font-medium">Bilty No</label>
                 <input  type="text" readOnly className="w-full border rounded px-2 py-1" value={formData.BiltyNo}/>
@@ -427,6 +429,33 @@ useEffect(() => {
                
                 {errors["Branch"] && (
                         <p className="text-sm text-red-600 mt-1">{errors["Branch"]}</p>
+                        )}
+                </div>
+                <div>
+                <label  className="font-medium">City</label>
+                {
+                  loadingList ? (<h1>Loading...</h1>) : (
+                    <select
+                    disabled={readonlyMode}
+                    name="City"
+                    value={formData.City}
+                    // onChange={readonlyMode ? () => { }  :handleChange}
+                    onChange={handleChange}
+                    className="w-full px-4 py-2 border rounded"
+                  >
+                    <option value="">Select City</option>
+                    {cityList.map((city,index) => (
+                      <option key={index} value={city.city}>
+                        {city.city}
+                      </option>
+                    ))}
+                  </select>
+                  ) 
+               
+                }
+               
+                {errors["City"] && (
+                        <p className="text-sm text-red-600 mt-1">{errors["City"]}</p>
                         )}
                 </div>
             </div>
