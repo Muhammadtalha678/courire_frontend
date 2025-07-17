@@ -19,7 +19,7 @@ export const handlePdfSave = (formData, buttonType, status,setwhatsappLoading) =
   doc.setFontSize(12);
   doc.setFont("helvetica", "normal");
 
-  const companyLines = doc.splitTextToSize("ABCD – CARGO SERVICES", 60);
+  const companyLines = doc.splitTextToSize("ABCD â€“ CARGO SERVICES", 60);
   const addressLines = doc.splitTextToSize("Your Business Address", 60);
 
   const companyY = 15;
@@ -49,12 +49,12 @@ export const handlePdfSave = (formData, buttonType, status,setwhatsappLoading) =
   doc.text(`Branch: ${formData.Branch}`, 15, companyY + 30);
 
   doc.setFontSize(12);
-  companyLines.forEach((line, i) => doc.text(line, 150, companyY + i * 6));
-  addressLines.forEach((line, i) => doc.text(line, 150, addressY + i * 6));
+  companyLines.forEach((line, i) => doc.text(line, 120, companyY + i * 6));
+  addressLines.forEach((line, i) => doc.text(line, 120, addressY + i * 6));
 
-  doc.text("City", 150, footerY);
-  doc.text("Saudi Arabia", 150, footerY + 6);
-  doc.text("75311", 150, footerY + 12);
+  doc.text("City", 120, footerY);
+  doc.text("Saudi Arabia", 120, footerY + 6);
+  doc.text("75311", 120, footerY + 12);
 
   // ==== BODY START ====
   const bodyStartY = headerHeight + 10;
@@ -71,12 +71,40 @@ export const handlePdfSave = (formData, buttonType, status,setwhatsappLoading) =
     `Mobile: ${safeText(formData.SenderMobile)}`,
     `Address: ${safeText(formData.SenderAddress)}`,
     `City: ${safeText(formData.SenderArea)}`,
-    "Saudi Arabia"
   ];
-  senderLines.forEach((line, i) => doc.text(line, 15, bodyStartY + 6 + i * 6));
+// let currentY = bodyStartY + 5;
+
+// senderLines.forEach((line) => {
+//   const wrappedText = doc.splitTextToSize(line, 80); // 80 = max width
+//   doc.text(wrappedText, 15, currentY);
+//   currentY += wrappedText.length * 5; // move Y based on how many lines wrapped
+// });
+
+let currentY = bodyStartY + 5;
+
+senderLines.forEach((line) => {
+  const wrappedText = doc.splitTextToSize(line, 80); // wrap line to array
+
+  if (line.startsWith("Address:")) {
+    // First line x = 15
+    doc.text(wrappedText[0], 15, currentY);
+    currentY += 5;
+
+    // Remaining lines x = 30
+    for (let i = 1; i < wrappedText.length; i++) {
+      doc.text(wrappedText[i], 33, currentY);
+      currentY += 5;
+    }
+  } else {
+    // For all other lines
+    doc.text(wrappedText, 15, currentY);
+    currentY += wrappedText.length * 5;
+  }
+});
 
   doc.setFont("helvetica", "bold");
-  doc.text("RECEIVER DETAILS:", 140, bodyStartY);
+  // doc.text("RECEIVER DETAILS:", 130, bodyStartY);
+  doc.text("RECEIVER DETAILS:", 120, bodyStartY);
   doc.setFont("helvetica", "normal");
   const receiverLines = [
     `Name: ${safeText(formData.ReceiverName)}`,
@@ -84,9 +112,50 @@ export const handlePdfSave = (formData, buttonType, status,setwhatsappLoading) =
     `Mobile 2: ${safeText(formData.ReceiverMobile2)}`,
     `Address: ${safeText(formData.ReceiverAddress)}`,
     `City: ${safeText(formData.ReceiverArea)}`,
-    "Saudi Arabia"
   ];
-  receiverLines.forEach((line, i) => doc.text(line, 140, bodyStartY + 6 + i * 6));
+  let currentRY = bodyStartY + 5;
+
+  receiverLines.forEach((line) => {
+    const wrappedText = doc.splitTextToSize(line, 80); // wrap line to array
+
+    if (line.startsWith("Address:")) {
+      // First line x = 15
+      doc.text(wrappedText[0], 120, currentRY);
+      currentRY += 5;
+
+      // Remaining lines x = 30
+      for (let i = 1; i < wrappedText.length; i++) {
+        doc.text(wrappedText[i], 138, currentRY);
+        currentRY += 5;
+      }
+    } else {
+      // For all other lines
+      doc.text(wrappedText, 120, currentRY);
+      currentRY += wrappedText.length * 5;
+    }
+  });
+
+
+
+
+
+
+
+
+
+  // let currentRY = bodyStartY + 5;
+  // receiverLines.forEach((line) => {
+  //   const wrappedText = doc.splitTextToSize(line, 80); // 80 = max width
+  //   doc.text(wrappedText, 120, currentRY);
+  //   currentRY += wrappedText.length * 5; // move Y based on how many lines wrapped
+  // });
+
+
+
+
+
+
+
 
   const detailStartY = bodyStartY + Math.max(senderLines.length, receiverLines.length) * 6 + 10;
 
@@ -104,7 +173,7 @@ export const handlePdfSave = (formData, buttonType, status,setwhatsappLoading) =
   doc.setFont("helvetica", "normal");
   doc.text(otherLines, 15, otherDetailsY + 6);
 
-  const tableStartY = otherDetailsY + 6 + otherLines.length * 6 + 10;
+  const tableStartY = otherDetailsY + 6 + otherLines.length * 3 + 5;
   // ========== CHARGES TABLE ==========
 autoTable(doc, {
   head: [["#", "CHARGES", "UNIT/RATE", "QUANTITY", "SAR TOTAL"]],
@@ -118,7 +187,7 @@ autoTable(doc, {
   startY: tableStartY,
   theme: "grid",
 
-  // ✅ Center align body columns
+  // âœ… Center align body columns
   columnStyles: {
     0: { halign: 'center' },
     1: { halign: 'left' },
@@ -127,7 +196,7 @@ autoTable(doc, {
     4: { halign: 'center' },
   },
 
-  // ✅ Center align header text
+  // âœ… Center align header text
   headStyles: {
     halign: 'center',
   }
@@ -135,7 +204,7 @@ autoTable(doc, {
 
 
 
-  const finalY = doc.lastAutoTable?.finalY || tableStartY + 20;
+  const finalY = doc.lastAutoTable?.finalY || tableStartY + 5;
 
 const notesBoxX = 0;
 const notesBoxWidth = 120;
@@ -154,7 +223,7 @@ doc.setFontSize(10);
 const notesTitle = "NOTES:";
 const thankYouMsg = "Thank you for your business! If you have questions, let us know.";
 
-// Calculate vertical start (2 lines × 6px spacing)
+// Calculate vertical start (2 lines Ã— 6px spacing)
 const totalTextHeight = 2 * 6;
 const verticalStart = notesY + (boxHeight - totalTextHeight) / 2;
 
@@ -188,11 +257,12 @@ const totalsY = finalY + 10;
   const amountLines = doc.splitTextToSize(amountText, 210);
   const amountHeight = 6 + amountLines.length * 6 + 6;
 
-  let amountWordsY = totalsY + summaryItems.length * 10 + 15;
+  
+  let amountWordsY = totalsY + summaryItems.length * 10 + 7;
 
   if (amountWordsY + amountHeight > doc.internal.pageSize.getHeight()) {
     doc.addPage();
-    amountWordsY = 20;
+    amountWordsY = 5;
   }
 
   doc.setFont("helvetica", "bold");
@@ -229,5 +299,4 @@ const file = new File([blob], `${fileName}.pdf`, { type: "application/pdf" });
    return file
   }
 };
-
 
