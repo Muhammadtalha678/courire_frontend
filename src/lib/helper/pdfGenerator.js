@@ -217,20 +217,37 @@ doc.rect(notesBoxX, notesY, notesBoxWidth, boxHeight, "F");
 
 // Set styles
 doc.setTextColor(0, 0, 0);
-doc.setFontSize(10);
+doc.setFontSize(12);
 
 // Text content
-const notesTitle = "NOTES:";
-const thankYouMsg = "Thank you for your business! If you have questions, let us know.";
+const notesTitle = "Amount In Words:";
+const thankYouMsg = formData.AmountInWords;
+// // const thankYouMsg = "Thank you for your business! If you have questions, let us know.";
 
-// Calculate vertical start (2 lines Ã— 6px spacing)
-const totalTextHeight = 2 * 6;
-const verticalStart = notesY + (boxHeight - totalTextHeight) / 2;
+// // Calculate vertical start (2 lines Ã— 6px spacing)
+// const totalTextHeight = 2 * 6;
+// const verticalStart = notesY + (boxHeight - totalTextHeight) / 2;
 
-// Render text (LEFT aligned)
-doc.text(notesTitle, notesBoxX + 10, verticalStart);         // left offset: 10
-doc.text(thankYouMsg, notesBoxX + 10, verticalStart + 6);    // next line
+// // Render text (LEFT aligned)
+// doc.text(notesTitle, notesBoxX + 10, verticalStart);         // left offset: 10
+// doc.text(thankYouMsg, notesBoxX + 10, verticalStart + 6);    // next line
+// Wrap the amount text
+const wrappedText = doc.splitTextToSize(thankYouMsg, notesBoxWidth - 20); // padding 10 on both sides
+const lineHeight = 6;
+const textHeight = wrappedText.length * lineHeight;
 
+// Center content vertically in box
+const verticalStart = notesY + (boxHeight - textHeight - lineHeight) / 2;
+
+// Render bold title
+doc.setFont(undefined, 'bold');
+doc.text(notesTitle, notesBoxX + 10, verticalStart);
+
+// Render normal wrapped lines
+doc.setFont(undefined, 'normal');
+wrappedText.forEach((line, i) => {
+  doc.text(line, notesBoxX + 10, verticalStart + lineHeight * (i + 1));
+});
 
 // ========== TOTALS ==========
 const summaryItems = [
@@ -251,30 +268,30 @@ summaryItems.forEach((item, i) => {
 });
 
 // ========== AMOUNT IN WORDS ==========
-const totalsY = finalY + 10;
-  const amountHeading = "Amount in Words:";
-  const amountText = safeText(formData.AmountInWords);
-  const amountLines = doc.splitTextToSize(amountText, 210);
-  const amountHeight = 6 + amountLines.length * 6 + 6;
+// const totalsY = finalY + 10;
+//   const amountHeading = "Amount in Words:";
+//   const amountText = safeText(formData.AmountInWords);
+//   const amountLines = doc.splitTextToSize(amountText, 210);
+//   const amountHeight = 6 + amountLines.length * 6 + 6;
 
   
-  let amountWordsY = totalsY + summaryItems.length * 10 + 7;
+//   let amountWordsY = totalsY + summaryItems.length * 10 + 7;
 
-  if (amountWordsY + amountHeight > doc.internal.pageSize.getHeight()) {
-    doc.addPage();
-    amountWordsY = 5;
-  }
+//   if (amountWordsY + amountHeight > doc.internal.pageSize.getHeight()) {
+//     doc.addPage();
+//     amountWordsY = 5;
+//   }
 
-  doc.setFont("helvetica", "bold");
-  doc.setFontSize(12);
-  doc.setTextColor(0, 0, 0);
-  doc.text(amountHeading, 15, amountWordsY);
+//   doc.setFont("helvetica", "bold");
+//   doc.setFontSize(12);
+//   doc.setTextColor(0, 0, 0);
+//   doc.text(amountHeading, 15, amountWordsY);
 
-  doc.setFont("helvetica", "normal");
-  doc.setFontSize(11);
-  amountLines.forEach((line, i) => {
-    doc.text(line, 15, amountWordsY + 6 + i * 6);
-  });
+//   doc.setFont("helvetica", "normal");
+//   doc.setFontSize(11);
+//   amountLines.forEach((line, i) => {
+//     doc.text(line, 15, amountWordsY + 6 + i * 6);
+//   });
   const fileName = `booking_${safeText(formData.BiltyNo || "record")}`;
 
   if (buttonType === "SavePDF") {
