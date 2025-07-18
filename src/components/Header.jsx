@@ -51,6 +51,12 @@ const Header = () => {
           <Link to="/login" className="text-gray-800 font-medium hover:cursor-pointer underline hover:text-gray-600">
             Admin Login
           </Link> 
+          <Link to="/privacy-policy" className="text-gray-800 font-medium hover:cursor-pointer underline hover:text-gray-600">
+            Privacy Policy
+          </Link> 
+          <Link to="/terms-of-services" className="text-gray-800 font-medium hover:cursor-pointer underline hover:text-gray-600">
+            Terms of Services
+          </Link> 
                 </>
               ) :
               user && location.pathname === '/' ?
@@ -82,15 +88,60 @@ const Header = () => {
                     <Link  to={'/'} className="text-gray-800 font-medium underline hover:text-gray-600">
                       Home
                     </Link>
+                    <Link  to={'/privacy-policy'} className="text-gray-800 font-medium underline hover:text-gray-600">
+                      Privacy Policy
+                      </Link>
+                      <Link to="/terms-of-services" className="text-gray-800 font-medium hover:cursor-pointer underline hover:text-gray-600">
+            Terms of Services
+          </Link>
+                    </>
+                  ) :
+                    !user && location.pathname === '/user-login' ? (
+                    <>
+                    <Link  to={'/'} className="text-gray-800 font-medium underline hover:text-gray-600">
+                      Home
+                          </Link>
+                          <Link to="/privacy-policy" className="text-gray-800 font-medium hover:cursor-pointer underline hover:text-gray-600">
+            Privacy Policy
+          </Link>
+                          <Link to="/terms-of-services" className="text-gray-800 font-medium hover:cursor-pointer underline hover:text-gray-600">
+            Terms of Services
+          </Link>
                     </>
                   ):
-                  !user && location.pathname === '/user-login' ? (
+                  !user && location.pathname === '/privacy-policy' ? (
                     <>
                     <Link  to={'/'} className="text-gray-800 font-medium underline hover:text-gray-600">
                       Home
                     </Link>
+                    <Link  to={'/user-login'} className="text-gray-800 font-medium underline hover:text-gray-600">
+                      User Login
+                    </Link>
+                    <Link  to={'/login'} className="text-gray-800 font-medium underline hover:text-gray-600">
+                      Admin Login
+                    </Link>
+                    <Link to="/terms-of-services" className="text-gray-800 font-medium hover:cursor-pointer underline hover:text-gray-600">
+            Terms of Services
+          </Link>
                     </>
                   ):
+                  !user && location.pathname === '/terms-of-services' ? (
+                    <>
+                    <Link  to={'/'} className="text-gray-800 font-medium underline hover:text-gray-600">
+                      Home
+                    </Link>
+                    <Link  to={'/user-login'} className="text-gray-800 font-medium underline hover:text-gray-600">
+                      User Login
+                    </Link>
+                    <Link  to={'/login'} className="text-gray-800 font-medium underline hover:text-gray-600">
+                      Admin Login
+                    </Link>
+                    <Link to="/privacy-policy" className="text-gray-800 font-medium hover:cursor-pointer underline hover:text-gray-600">
+            Privacy Policy
+          </Link>
+                    </>
+                  ):
+                  
                     user && location.pathname === '/add-booking' ?
                       (
                         <>

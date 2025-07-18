@@ -21,6 +21,8 @@ import UserLogin from './pages/user-login.jsx'
 import AdminPannelAction from './pages/AdminPannelAction.jsx'
 import ContainerBulkStatus from './pages/container-bulk-status.jsx'
 import WhatsAppMarketing from './pages/whatsapp-marketing.jsx'
+import PrivacyPolicy from './pages/privacy-policy.jsx'
+import Terms from './pages/terms.jsx'
 function App() {
   const { loading } = useAuth()
   if (loading) {
@@ -54,16 +56,23 @@ function App() {
           <Route element={<PublicRoute/>}>
             <Route path={'/login'} element={<Login/>}/>        
             <Route path={'/user-login'} element={<UserLogin/>}/>        
+            {/* <Route path={'/privacy-policy'} element={<PrivacyPolicy/>}/>         */}
          </Route>
         
           <Route path='/' element={<CargoServicesLanding/>}/> 
           <Route element={<ProtectedRoute/>}>
-          <Route path='/services' element={<Services/>}/> 
-          {/* <Route path={'/user-login'} element={<UserLogin/>}/>  */}
+            <Route path='/services' element={<Services/>}/> 
+            {/* <Route path={'/user-login'} element={<UserLogin/>}/>  */}
         </Route>
       </Route>
       <Route path='*' element={<NotFound />} />
-      
+       <Route element={<PublicRoute/>}>
+            {/* <Route path={'/login'} element={<Login/>}/>        
+            <Route path={'/user-login'} element={<UserLogin/>}/>         */}
+            <Route path={'/privacy-policy'} element={<PrivacyPolicy/>}/>        
+            <Route path={'/terms-of-services'} element={<Terms/>}/>        
+         </Route>
+        
       </Routes>
       <ToastContainer position='top-center' autoClose={2000} />
     </>
