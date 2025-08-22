@@ -248,8 +248,13 @@ const BookingList = () => {
           </>
         )
       }
-    
-    </div>
+      <div className='flex justify-center  mb-5'>
+      <button className={` px-3 py-1 border rounded bg-blue-500 text-white disabled:opacity-50 cursor-pointer`}>
+          Export Csv
+        </button>
+      </div>
+
+      </div>
   );
 };
 
