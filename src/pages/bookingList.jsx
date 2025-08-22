@@ -11,9 +11,13 @@ const BookingList = () => {
   const [deleteLoadingId, setDeleteLoadingId] = useState(null);
     
   const [searchQuery, setSearchQuery] = useState(""); // ✅ NEW
+  const [currentPage,setCurrentPage] = useState(1)
+  const [itemsPerPage,setItemsPerPage] = useState(10)
+  
   const navigate = useNavigate();
 
-  const getBookings = async () => {
+
+  const getBookings = async () => { 
     try {
       setbookingLoading(true)
       const response = await axios.get(AppRoutes.allBookings);
@@ -73,7 +77,19 @@ const BookingList = () => {
   const filteredBookings = bookings.filter(booking =>
     booking.InvoiceNo?.toString().includes(searchQuery.trim())
   );
-
+  // ✅ PAGINATION LOGIC
+  const totalPages = Math.ceil(filteredBookings.length / itemsPerPage) //ceil mtlb 1.3 ha to 2 krdy ga yani ky length/10 = 13/10 =1.3=2
+  // console.log("totalPages",totalPages);
+  
+  //set the item on curent page through index
+  const startIndex = (currentPage - 1) * itemsPerPage
+  // console.log("startIndex",startIndex);
+  // set items to show on page  according to number
+  const currentBookings = filteredBookings.slice(startIndex,startIndex + itemsPerPage)
+  // console.log("currentBookings",currentBookings);
+  
+  // const currentIndex = filteredBookings.
+  
   return (
     <div className="bg-gray-50 min-h-screen">
       <Header />
@@ -101,7 +117,7 @@ const BookingList = () => {
 
       <div className="p-4">
         <div className="relative overflow-x-auto shadow-md sm:rounded-lg">
-          {filteredBookings.length > 0 ? (
+          {currentBookings.length > 0 ? (
             <table className="w-full text-sm text-left text-gray-700 bg-white">
               <thead className="text-xl uppercase bg-gray-200 text-gray-800">
                 <tr className="border-b border-gray-300 text-center">
@@ -124,11 +140,11 @@ const BookingList = () => {
                 </tr>
               </thead>
               <tbody>
-                        {filteredBookings.map((row, index) => {
+                        {currentBookings.map((row, index) => {
                           // console.log(row);
                           
                   return  <tr key={index} className="bg-white border-b hover:bg-gray-50 text-center">
-                    <td className="px-4 py-2">{index + 1}</td>
+                    <td className="px-4 py-2">{startIndex + index + 1}</td>
                     <td className="px-4 py-2">{row.BiltyNo || '-'}</td>
                     <td className="px-4 py-2">{row.InvoiceNo || '-'}</td>
                     <td className="px-4 py-2">{row.BookingDate || '-'}</td>
@@ -172,6 +188,40 @@ const BookingList = () => {
               No Bookings Found
             </div>
           )}
+          
+                  <div className="flex justify-center items-center mt-4 space-x-2">
+                     <button
+                  onClick={() => setCurrentPage(currentPage - 1)}
+                  disabled={currentPage === 1}
+                  className={`px-3 py-1 border rounded disabled:opacity-50 ${currentPage === 1 ? '':'cursor-pointer'}`}
+                >
+                  Prev
+                    </button>
+                    {
+                      Array.from({ length: totalPages }, (_, i) => {
+                        // console.log(i);
+                        // i is index numb of total pages
+                        return <button
+                          key={i}
+                          onClick={() => setCurrentPage(i + 1)}
+                          className={`px-3 py-1 border rounded ${
+                            currentPage === i + 1
+                              ? "bg-blue-500 text-white"
+                              : "bg-white"
+                    } cursor-pointer`}
+                  >
+                    {i + 1}
+                  </button>
+                      })
+                    }
+                       <button
+                  onClick={() => setCurrentPage(currentPage + 1)}
+                  disabled={currentPage === totalPages}
+                  className={`px-3 py-1 border rounded disabled:opacity-50 ${currentPage === totalPages ? '':'cursor-pointer'}`}
+                >
+                  Next
+                    </button>
+                  </div>
         </div>
       </div>
           </>
