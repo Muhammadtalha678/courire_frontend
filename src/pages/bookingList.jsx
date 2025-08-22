@@ -210,7 +210,7 @@ const BookingList = () => {
             </div>
           )}
           
-                  <div className="flex justify-center items-center mt-4 space-x-2">
+                  <div className="flex justify-center items-center mt-4 space-x-2 mb-4">
                      <button
                   onClick={() => setCurrentPage(currentPage - 1)}
                   disabled={currentPage === 1}
