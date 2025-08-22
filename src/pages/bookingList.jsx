@@ -110,10 +110,31 @@ const BookingList = () => {
           type="text"
           placeholder="Search by Invoice No..."
           value={searchQuery}
-          onChange={(e) => setSearchQuery(e.target.value)}
+          onChange={(e) =>{ setSearchQuery(e.target.value);setCurrentPage(1)}}
           className="w-1/2 px-4 py-2 border border-gray-300 rounded shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
         />
       </div>
+      
+              {/* ✅ Per Page Dropdown */}
+          <div className="flex justify-center px-6 mb-2">
+            <label className="mr-2 font-semibold">Rows per page:</label>
+            <select
+              value={itemsPerPage}
+              onChange={(e) => {
+                setItemsPerPage(Number(e.target.value));
+                setCurrentPage(1); // reset to first page
+
+              }}
+              className="border rounded px-2 py-1"
+            >
+              {[5, 10, 20, 50].map((num) => (
+                <option key={num} value={num}>
+                  {num}
+                </option>
+              ))}
+            </select>
+          </div>
+
 
       <div className="p-4">
         <div className="relative overflow-x-auto shadow-md sm:rounded-lg">
