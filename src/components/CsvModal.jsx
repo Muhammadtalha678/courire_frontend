@@ -1,6 +1,8 @@
 import {useEffect, useState} from 'react'
 import { toast } from 'react-toastify';
-const CsvModal = ({ setShowModal, branches,bookings }) => {
+import { exportToExcel } from '../lib/helper/excel-booking';
+// import {CSVLink} from 'react-csv'
+const CsvModal = ({ setShowModal, branches, bookings }) => {
     // console.log(branches);
     const [branch,setBranch] = useState('')   
     const [startDate, setStartDate] = useState("");
@@ -21,20 +23,24 @@ const CsvModal = ({ setShowModal, branches,bookings }) => {
             setError("End Date cannot be earlier than Start Date");
         }
         else {
-            setError('')
-            const filtered = bookings.filter((b) => {
-                const bookingDate = new Date(b.BookingDate);
-                return (
-                    b.Branch === branch &&                
-                    bookingDate >= new Date(startDate) &&
-                    bookingDate <= new Date(endDate)       
-                );
-            });
-            if (filtered.length === 0) {
-                 toast.error("No bookings found for selected filters");
-      return;
-            }
-            console.log(filtered);
+          setError('')
+          const filtered = bookings.filter((b) => {
+              const bookingDate = new Date(b.BookingDate);
+              return (
+                  b.Branch === branch &&               
+                  bookingDate >= new Date(startDate) &&
+                  bookingDate <= new Date(endDate)       
+              );
+          });
+          if (filtered.length === 0) {
+               toast.error("No bookings found for selected filters");
+                return;
+          }
+          console.log(filtered);
+          
+          // finally export tocsv file
+
+          exportToExcel(filtered)
             
 
         }
@@ -47,7 +53,11 @@ const CsvModal = ({ setShowModal, branches,bookings }) => {
         }; // cleanup on unmount/re-render
     }
     }, [error]);
-    console.log(bookings);
+    // console.log(bookings);
+    let bookingDate =  bookings.map(booking=> booking.BookingDate )
+  
+  bookingDate =  [...new Set(bookingDate)] //Set duplicates hata diye, ... (spread)  Set ko wapas array bana diya.
+    console.log(bookingDate);
     
     return (
    <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-40 z-50">
@@ -94,8 +104,8 @@ const CsvModal = ({ setShowModal, branches,bookings }) => {
               >
                         <option value="">-- Select Start Date --</option>
                         {
-                            bookings.map((booking, index) => (
-                                <option value={booking.bookingDate} key={index}>{booking.BookingDate}</option>
+                            bookingDate.map((bookingDate, index) => (
+                                <option value={bookingDate} key={index}>{bookingDate}</option>
                                 
                             ))
                         }
@@ -116,8 +126,8 @@ const CsvModal = ({ setShowModal, branches,bookings }) => {
               >
                         <option value="">-- Select End Date --</option>
                         {
-                            bookings.map((booking, index) => (
-                                <option value={booking.bookingDate} key={index}>{booking.BookingDate}</option>
+                            bookingDate.map((bookingDate, index) => (
+                                <option value={bookingDate} key={index}>{bookingDate}</option>
                                 
                             ))
                         }
