@@ -125,6 +125,7 @@ import PhoneNumberInput from './PhoneNumberInput';
         
         const requiredFields = [
             // 'BiltyNo',
+            'BookingDate',
             'Branch',
             'City',
             'SenderName',
@@ -135,10 +136,9 @@ import PhoneNumberInput from './PhoneNumberInput';
             'ReceiverName',
             'ReceiverMobile1',
             'ReceiverMobile2',
-            'ReceiverArea',
             'ReceiverAddress',
+            'ReceiverArea',
             'NoOfPieces',
-            'BookingDate',
 ];
 
 const numberFields = ['SenderMobile', 'ReceiverMobile1', 'ReceiverMobile2', 'NoOfPieces'];
