@@ -18,7 +18,9 @@ import PhoneNumberInput from './PhoneNumberInput';
       const  [isEditClicked,setIsEditClicked] = useState(false)
       
 
-      const [formData, setFormData] = useState({
+    const [formData, setFormData] = useState({
+      BiltyNo: "",
+      
       SenderName: "",
       SenderMobile: "",
       SenderIdNumber:"",
@@ -54,13 +56,26 @@ import PhoneNumberInput from './PhoneNumberInput';
       VatTotal:"",
       
       AmountInWords: '',
-        InvoiceTotal: '',
+      InvoiceTotal: '',
       City: '',
       })
 
     
       const handleChange = (e) => {
           const { name, value, type, checked, dataset } = e.target;
+   
+        if (name === "BiltyNo") {
+            // Sirf digits allow karo aur max 12 tak
+            const onlyNumbers = value.replace(/\D/g, ""); // non-digits remove
+            if (onlyNumbers.length <= 12) {
+              setFormData((prev) => ({
+                ...prev,
+                BiltyNo: onlyNumbers,
+              }));
+            }
+            return;
+          }
+
         
           // Charges section
           if (dataset && dataset.charge) {
@@ -108,7 +123,8 @@ import PhoneNumberInput from './PhoneNumberInput';
         e.preventDefault();
         console.log(formData);
         
-          const requiredFields = [
+        const requiredFields = [
+            'BiltyNo',
             'Branch',
             'City',
             'SenderName',
@@ -150,6 +166,14 @@ for (let field of numberFields) {
     setErrors(newErrors);
     return; // ✅ Stop at first error
   }
+
+  // 🔍 Bilty No validation (12 digits exact)
+if (formData.BiltyNo.length !== 12) {
+  newErrors.BiltyNo = "Bilty No must be exactly 12 digits";
+  toast.error("Bilty No must be exactly 12 digits");
+  setErrors(newErrors);
+  return;
+}
 }
 
 setErrors({});
@@ -351,7 +375,7 @@ setErrors({});
             <div className="grid grid-cols-5 gap-4">
                 <div>
                 <label className="font-medium">Bilty No</label>
-                <input  type="text" readOnly className="w-full border rounded px-2 py-1" value={formData.BiltyNo}/>
+                <input  type="text" className="w-full border rounded px-2 py-1" value={formData.BiltyNo} onChange={handleChange} name='BiltyNo'/>
                 </div>
                 <div>
                 <label className="font-medium">Invoice No</label>
