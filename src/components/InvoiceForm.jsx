@@ -124,7 +124,7 @@ import PhoneNumberInput from './PhoneNumberInput';
         console.log(formData);
         
         const requiredFields = [
-            'BiltyNo',
+            // 'BiltyNo',
             'Branch',
             'City',
             'SenderName',
@@ -145,17 +145,27 @@ const numberFields = ['SenderMobile', 'ReceiverMobile1', 'ReceiverMobile2', 'NoO
 
 const newErrors = {};
 
-// 🔍 Check required fields first
+ // 🔍 Bilty No validation (12 digits exact)
+if (formData.BiltyNo.length !== 12) {
+  newErrors.BiltyNo = "Bilty No must be exactly 12 digits";
+  toast.error("Bilty No must be exactly 12 digits");
+  setErrors(newErrors);
+  return;
+}
+        // 🔍 Check required fields first
         for (let field of requiredFields) {
   // console.log(field);
   
+
   if (!formData[field]) {
     newErrors[field] = 'This field is required';
     toast.error(`${field.replace(/([A-Z])/g, ' $1')} is required`);
     setErrors(newErrors);
     return; // ✅ Stop at first error
   }
+  
 }
+
 
 // 🔍 Check number fields
 for (let field of numberFields) {
@@ -167,13 +177,7 @@ for (let field of numberFields) {
     return; // ✅ Stop at first error
   }
 
-  // 🔍 Bilty No validation (12 digits exact)
-if (formData.BiltyNo.length !== 12) {
-  newErrors.BiltyNo = "Bilty No must be exactly 12 digits";
-  toast.error("Bilty No must be exactly 12 digits");
-  setErrors(newErrors);
-  return;
-}
+ 
 }
 
 setErrors({});
