@@ -262,11 +262,8 @@ const BookingList = () => {
                     </button>
                   </div>
         </div>
-      </div>
-          </>
-        )
-      }
-        <div className='flex justify-center  mb-5'>
+              </div>
+              <div className='flex justify-center  mb-5'>
         <button className={` px-3 py-1 border rounded bg-blue-500 text-white disabled:opacity-50 cursor-pointer`} onClick={() => {
           if (branch.length > 0 && bookings.length > 0) {
             setShowModal(true)
@@ -279,6 +276,11 @@ const BookingList = () => {
             Export Csv
           </button>
         </div>
+          </>
+          
+        )
+      }
+        
 
       </div>
   );
