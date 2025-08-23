@@ -4,6 +4,7 @@ import Header from '../components/Header';
 import { AppRoutes } from '../constants/AppRoutes';
 import { useNavigate } from 'react-router-dom';
 import { toast } from 'react-toastify';
+import CsvModal from '../components/CsvModal';
 
 const BookingList = () => {
   const [bookings, setBookings] = useState([]);
@@ -14,6 +15,8 @@ const BookingList = () => {
   const [currentPage,setCurrentPage] = useState(1)
   const [itemsPerPage,setItemsPerPage] = useState(10)
   
+  const [showModal, setShowModal] = useState(false);
+  const [branch, setBranch] = useState([]);
   const navigate = useNavigate();
 
 
@@ -33,6 +36,7 @@ const BookingList = () => {
 
   useEffect(() => {
     getBookings();
+    fetchBranches()
   }, []);
   // console.log(bookings);
   
@@ -90,8 +94,22 @@ const BookingList = () => {
   
   // const currentIndex = filteredBookings.
   
+  
+  const fetchBranches = async () => {
+      try {
+        const res = await axios.get(AppRoutes.allBranch);
+        setBranch(res.data?.data?.allBranches || []);
+      } catch (error) {
+        const err = error?.response?.data?.errors;
+        if (err?.general) toast.error(err.general);
+        else toast.error('Something went wrong');
+      }
+    };
   return (
     <div className="bg-gray-50 min-h-screen">
+      {
+        showModal &&  (<CsvModal setShowModal={setShowModal} branches={branch} bookings={bookings}/>)
+      }
       <Header />
       {
         bookingLoading ? (
@@ -248,11 +266,19 @@ const BookingList = () => {
           </>
         )
       }
-      <div className='flex justify-center  mb-5'>
-      <button className={` px-3 py-1 border rounded bg-blue-500 text-white disabled:opacity-50 cursor-pointer`}>
-          Export Csv
-        </button>
-      </div>
+        <div className='flex justify-center  mb-5'>
+        <button className={` px-3 py-1 border rounded bg-blue-500 text-white disabled:opacity-50 cursor-pointer`} onClick={() => {
+          if (branch.length > 0 && bookings.length > 0) {
+            setShowModal(true)
+            
+          }
+          else {
+            toast.error("Branch and Bookings Data required to open")
+          }
+        }}>
+            Export Csv
+          </button>
+        </div>
 
       </div>
   );
