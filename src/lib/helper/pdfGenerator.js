@@ -173,7 +173,7 @@ senderLines.forEach((line) => {
   doc.setFont("helvetica", "normal");
   doc.text(otherLines, 15, otherDetailsY + 6);
 
-  const tableStartY = otherDetailsY + 6 + otherLines.length * 3 + 5;
+  const tableStartY = otherDetailsY + 6 + otherLines.length * 3 + 10;
   // ========== CHARGES TABLE ==========
 autoTable(doc, {
   head: [["#", "CHARGES", "UNIT/RATE", "QUANTITY", "SAR TOTAL"]],
@@ -267,6 +267,55 @@ summaryItems.forEach((item, i) => {
   doc.text(item.value, 205, y + 7, { align: "right" });
 });
 
+  // Footer Box (Head Office & Branches)
+  
+// const notesBoxX = 0;
+// const notesBoxWidth = 120;
+// const notesY = finalY + 10;
+//   const boxHeight = 30;
+  const pageHeight = doc.internal.pageSize.height;
+const footerBoxHeight = 30;
+
+// Equal space between totals and footer
+const availableSpace = pageHeight - currentY - footerBoxHeight;
+const footerBoxY = currentY + availableSpace;
+
+doc.setFillColor(240, 240, 240);
+doc.rect(0, footerBoxY, 210, footerBoxHeight, "F");
+
+doc.setTextColor(0, 0, 0);
+doc.setFontSize(10);
+doc.setFont("helvetica", "bold");
+doc.text("Head Office:", 10, footerBoxY + 10);
+  doc.setFont("helvetica", "normal");
+doc.setFontSize(10);
+
+const address = safeText("123 Main Road, Riyadh, Saudi Arabia 123 Main Road, Riyadh, Saudi Arabia, 123 Main Road, Riyadh, Saudi Arabia");
+
+const maxWidth = 210 - 35 - 10; // page width - left X - padding
+const otherLinesHeadQuater = doc.splitTextToSize(address, maxWidth);
+
+doc.text(otherLinesHeadQuater, 35, footerBoxY + 10);
+
+doc.setFont("helvetica", "bold");
+doc.text("Branches:", 10, footerBoxY + 20);
+
+  doc.setFont("helvetica", "normal");
+doc.setFontSize(10);
+
+const branchAddress = safeText("Dammam Branch: ABC Street, Dammam Jeddah Branch: XYZ Street, Jeddah Jeddah Branch: XYZ Street, Jeddah");
+const maxWidthBranchAddress = 210 - 35 - 10;
+const otherLinesBranchQuater = doc.splitTextToSize(branchAddress, maxWidthBranchAddress);
+doc.text(otherLinesBranchQuater, 35, footerBoxY + 20);
+  // doc.setFont("helvetica", "normal");
+  // ["Dammam Branch: ABC Street, Dammam",
+  //   "Jeddah Branch: XYZ Street, Jeddah",
+  //   "Jeddah Branch: XYZ Street, Jeddah",
+  // ].forEach((line, i) => {
+  // doc.text(line, 35, footerBoxY + 20 + i * 6);
+// });
+
+  
 // ========== AMOUNT IN WORDS ==========
 // const totalsY = finalY + 10;
 //   const amountHeading = "Amount in Words:";
